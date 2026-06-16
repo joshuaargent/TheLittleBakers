@@ -79,16 +79,10 @@ async function getDashboardData() {
     }),
     // Low stock ingredients
     prisma.ingredient.findMany({
-      where: {
-        currentStock: { lt: prisma.ingredient.fields.reorderPoint },
-      },
       orderBy: { currentStock: 'asc' },
     }),
     // Low stock packaging
     prisma.packaging.findMany({
-      where: {
-        currentStock: { lt: prisma.packaging.fields.minStock },
-      },
       orderBy: { currentStock: 'asc' },
     }),
     // Orders by category (last 30 days)
@@ -113,6 +107,10 @@ async function getDashboardData() {
     categoryCounts[category] = (categoryCounts[category] || 0) + (o._sum.quantity || 0);
   });
 
+  // Filter low stock items
+  const lowStockIngredientsFiltered = lowStockIngredients.filter(i => i.currentStock < i.reorderPoint);
+  const lowStockPackagingFiltered = lowStockPackaging.filter(p => p.currentStock < p.minStock);
+
   return {
     stats: {
       todayOrders,
@@ -124,11 +122,11 @@ async function getDashboardData() {
         ? (((todayRevenue._sum.total || 0) - (yesterdayRevenue._sum.total || 0)) / (yesterdayRevenue._sum.total || 1)) * 100
         : 0,
       pendingOrders,
-      lowStockAlerts: lowStockIngredients.length + lowStockPackaging.length,
+      lowStockAlerts: lowStockIngredientsFiltered.length + lowStockPackagingFiltered.length,
     },
     recentOrders,
-    lowStockIngredients,
-    lowStockPackaging,
+    lowStockIngredients: lowStockIngredientsFiltered,
+    lowStockPackaging: lowStockPackagingFiltered,
     categoryDistribution: categoryCounts,
   };
 }
