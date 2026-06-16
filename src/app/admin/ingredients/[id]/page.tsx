@@ -285,11 +285,6 @@ export default async function IngredientDetailPage({
                       • {ph.supplier}
                     </span>
                   )}
-                  {ph.reason && (
-                    <span className="text-[var(--color-text-muted)]">
-                      • {ph.reason}
-                    </span>
-                  )}
                 </div>
                 <span className="font-medium text-[var(--color-text-primary)]">
                   {formatCurrency(Math.round(ph.costPerUnit * 100))}/{ingredient.unit}
