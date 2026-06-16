@@ -42,12 +42,18 @@ model Ingredient {
   category        String   // FLOUR, SUGAR, EGGS, DAIRY, FRUITS, NUTS, FLAVORINGS, RAISING_AGENTS, FATS, SALT, OTHER
   unit            String   // kg, g, L, mL, pcs, dozen, tsp, tbsp
   currentStock    Float    @default(0) @map("current_stock")
-  reorderPoint    Float    @default(0) @map("reorder_point")
+  reorderPoint    Float    @default(0) @map("reorder_point") // Alert when stock falls below this
+  reorderQty      Float    @default(0) @map("reorder_qty") // How much to order when reordering
   costPerUnit     Float    @default(0) @map("cost_per_unit") // Cost in £ per unit
+  packSize        Float?   @map("pack_size") // How much comes in one purchase (e.g., 38mL bottle)
+  packUnit        String?  @map("pack_unit") // Unit of the pack (mL, g, kg, etc.)
   supplierId      String?  @map("supplier_id")
   supplierSku     String?  @map("supplier_sku") // Supplier's product code
   minOrderQty     Float?   @map("min_order_qty") // Minimum order quantity
+  leadTimeDays    Int      @default(7) @map("lead_time_days") // Days between order and delivery
+  avgUsagePerWeek Float    @default(0) @map("avg_usage_per_week") // Calculated average usage
   notes           String?
+  isActive        Boolean  @default(true) @map("is_active")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -315,8 +321,10 @@ model Transaction {
   receiptUrl  String?  @map("receipt_url")
   createdAt   DateTime @default(now())
 
-  order Order? @relation(fields: [orderId], references: [id])
-  orderId String? @unique @map("order_id")
+  order    Order?    @relation(fields: [orderId], references: [id])
+  orderId  String?   @unique @map("order_id")
+  purchase Purchase? @relation(fields: [purchaseId], references: [id])
+  purchaseId String? @unique @map("purchase_id")
 
   @@index([date])
   @@index([type])
@@ -331,12 +339,14 @@ model Purchase {
   id          String   @id @default(cuid())
   supplierId  String   @map("supplier_id")
   orderNumber String?  @map("order_number") // Supplier's order number
-  status      String   @default("ORDERED") // ORDERED, PARTIAL, RECEIVED, CANCELLED
+  invoiceNumber String? @map("invoice_number") // Supplier's invoice
+  status      String   @default("DRAFT") // DRAFT, ORDERED, PARTIAL, RECEIVED, CANCELLED
   notes       String?
   
   // Financials (stored as pence/cents)
   subtotal    Int      @default(0)
   delivery    Int      @default(0)
+  discount    Int      @default(0)
   total       Int      @default(0)
   
   orderDate   DateTime @default(now()) @map("order_date")
@@ -347,6 +357,7 @@ model Purchase {
   supplier    Supplier @relation(fields: [supplierId], references: [id])
   ingredients PurchaseIngredient[]
   packaging   PurchasePackaging[]
+  transaction Transaction?
 }
 
 model PurchaseIngredient {
