@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { StatCard, Badge } from '@/components/admin/ui';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';

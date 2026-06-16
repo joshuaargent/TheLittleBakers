@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import prisma from '@/lib/prisma';
 import { formatCurrency, CATEGORY_LABELS, PRODUCT_STATUS_COLORS } from '@/types';
 import { Badge, Button } from '@/components/admin/ui';

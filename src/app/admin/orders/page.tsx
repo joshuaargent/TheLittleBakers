@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import prisma from '@/lib/prisma';
 import { Badge, Button } from '@/components/admin/ui';
 import {

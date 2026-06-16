@@ -3,11 +3,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
 	reactStrictMode: true,
 
-	// Disable TypeScript type checking during build
-	typescript: {
-		ignoreBuildErrors: true,
-	},
-
 	images: {
 		remotePatterns: [
 			{
