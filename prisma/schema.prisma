@@ -1,12 +1,12 @@
 // The Little Bakers - Admin Dashboard Database Schema
-// SQLite for local development
+// PostgreSQL for production
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
