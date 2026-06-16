@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { Badge, Button } from '@/components/admin/ui';
 import {

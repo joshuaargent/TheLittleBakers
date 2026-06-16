@@ -1,5 +1,5 @@
 import { StatCard, Badge } from '@/components/admin/ui';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import Link from 'next/link';
 import { formatCurrency, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/types';
 import {

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { StatCard, Badge, Button, DataTable } from '@/components/admin/ui';
 import { Column } from '@/components/admin/ui';
 import { formatCurrency, EXPENSE_CATEGORIES } from '@/types';

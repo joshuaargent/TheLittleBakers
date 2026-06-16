@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { ORDER_STATUS_FLOW, OrderStatus } from '@/types';
 
 // PATCH /api/orders/[id]/status - Update order status

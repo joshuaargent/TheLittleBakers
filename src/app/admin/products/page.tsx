@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { formatCurrency, CATEGORY_LABELS, PRODUCT_STATUS_COLORS } from '@/types';
 import { Badge, Button } from '@/components/admin/ui';
 import { ProductCategory, ProductStatus } from '@/types';

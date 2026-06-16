@@ -1,7 +1,6 @@
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { Badge, Button } from '@/components/admin/ui';
 import {
-  INGREDIENT_CATEGORY_LABELS,
   INGREDIENT_CATEGORY_LABELS,
   IngredientCategory,
   STOCK_LEVEL_COLORS,
