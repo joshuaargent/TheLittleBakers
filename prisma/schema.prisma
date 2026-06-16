@@ -1,6 +1,8 @@
-// The Little Bakers - Admin Dashboard Database Schema
-// PostgreSQL for production
-// Comprehensive schema for thorough bakery management and cost tracking
+// ============================================================================
+// THE LITTLE BAKERS - COMPREHENSIVE BAKERY MANAGEMENT DATABASE SCHEMA
+// ============================================================================
+// Designed for: Business Investors | E-commerce Ready | 3NF Normalized
+// ============================================================================
 
 generator client {
   provider = "prisma-client-js"
@@ -11,99 +13,422 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ============================================
-// Customers
-// ============================================
+// ============================================================================
+// LOOKUP TABLES (3NF: Eliminates redundant string storage)
+// ============================================================================
 
-model Customer {
-  id String @id @default(cuid())
+model Allergen {
+  id          String  @id @default(cuid())
+  code        String  @unique // GLUTEN, DAIRY, EGGS, NUTS, PEANUTS, SOYA, FISH, SHELLFISH, SESAME, CELERY, MUSTARD, LUPIN, SULPHITES
+  name        String // Gluten, Dairy, Eggs, Nuts, Peanuts, Soy, Fish, Shellfish, Sesame, Celery, Mustard, Lupin, Sulphites
+  description String?
+  icon        String? // Emoji or icon name
+  severity    String  @default("CONTAINS") // CONTAINS, TRACES, MAY_CONTAIN, FREE_FROM
 
-  // Contact info
+  ingredients IngredientAllergen[]
+  products    ProductAllergen[]
+
+  @@index([code])
+}
+
+model DietaryLabel {
+  id          String  @id @default(cuid())
+  code        String  @unique // VEGAN, VEGETARIAN, HALAL, KOSHER, GLUTEN_FREE, DAIRY_FREE, NUT_FREE, LOW_SUGAR, LOW_SODIUM
+  name        String
+  description String?
+  icon        String?
+
+  products ProductDietary[]
+
+  @@index([code])
+}
+
+model IngredientCategory {
+  id          String  @id @default(cuid())
+  code        String  @unique // FLOUR, SUGAR, EGGS, DAIRY, FRUITS, NUTS, CHOCOLATE, FLAVORINGS, RAISING_AGENTS, FATS, SALT, SPICES, OTHER
+  name        String
+  description String?
+  parentId    String? @map("parent_id")
+
+  parent      IngredientCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    IngredientCategory[] @relation("CategoryHierarchy")
+  ingredients Ingredient[]
+
+  @@index([code])
+}
+
+model PackagingCategory {
+  id          String  @id @default(cuid())
+  code        String  @unique // BOX, BAG, WRAP, LABEL, CONTAINER, SLEEVE, TRAY, CUTLERY, NAPKIN, LINER, OTHER
+  name        String
+  description String?
+
+  packaging Packaging[]
+
+  @@index([code])
+}
+
+model ProductCategory {
+  id          String  @id @default(cuid())
+  code        String  @unique // BREAD, PASTRIES, CAKES, COOKIES, SAVOURY, SEASONAL, DRINKS, SPECIAL
+  name        String
+  description String?
+  imageUrl    String? @map("image_url")
+  sortOrder   Int     @default(0) @map("sort_order")
+  isActive    Boolean @default(true) @map("is_active")
+
+  products Product[]
+
+  @@index([code])
+}
+
+model StorageLocation {
+  id          String  @id @default(cuid())
+  code        String  @unique // FRIDGE, FREEZER, AMBIENT, COOLER, PROOFING_BOX
+  name        String // Fridge, Freezer, Ambient, Cooler, Proofing Box
+  temperature String? // -18C, 0-4C, 18-22C, etc.
+  humidity    String? // Low, Medium, High
+  notes       String?
+
+  ingredients Ingredient[]
+
+  @@index([code])
+}
+
+model OrderStatus {
+  id          String  @id @default(cuid())
+  code        String  @unique // PENDING, CONFIRMED, IN_PROGRESS, READY, COMPLETED, CANCELLED
+  name        String
+  description String?
+  sortOrder   Int     @default(0) @map("sort_order")
+  color       String? // For UI - hex color
+  isFinal     Boolean @default(false) @map("is_final")
+
+  orders        Order[]
+  orderItems    OrderItem[]
+  statusHistory OrderStatusHistory[]
+
+  @@index([code])
+}
+
+model TransactionCategory {
+  id          String  @id @default(cuid())
+  code        String  @unique
+  name        String
+  type        String // INCOME, EXPENSE
+  description String?
+  isActive    Boolean @default(true) @map("is_active")
+
+  transactions Transaction[]
+
+  @@index([code])
+  @@index([type])
+}
+
+model WasteType {
+  id              String  @id @default(cuid())
+  code            String  @unique // EXPIRED, DAMAGED, SPOILED, OVERPRODUCTION, QUALITY_FAIL, CONTAMINATION, RETURNED, OTHER
+  name            String
+  description     String?
+  costRecoverable Boolean @default(false) @map("cost_recoverable")
+
+  wasteEntries WasteEntry[]
+
+  @@index([code])
+}
+
+// ============================================================================
+// USERS & AUTHENTICATION (For e-commerce & admin)
+// ============================================================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+
+  // Auth providers
+  passwordHash String? @map("password_hash")
+  googleId     String? @unique @map("google_id")
+  appleId      String? @unique @map("apple_id")
+
+  // Profile
   firstName String  @map("first_name")
   lastName  String  @map("last_name")
-  email     String? @unique
   phone     String?
-  address   String?
+  avatarUrl String? @map("avatar_url")
 
-  // Preferences
-  notes       String? // Allergies, preferences, notes from conversations
-  dietaryReqs String  @default("[]") // JSON array: ["vegetarian", "gluten-free", etc.]
-  isVip       Boolean @default(false) @map("is_vip")
+  // Role & permissions
+  role String @default("CUSTOMER") // ADMIN, STAFF, CUSTOMER
 
   // Marketing
-  marketingOptIn Boolean @default(false) @map("marketing_opt_in")
-  source         String? // How they found us: FRIEND, GOOGLE, INSTAGRAM, FACEBOOK, OTHER
+  marketingConsent Boolean   @default(false) @map("marketing_consent")
+  consentDate      DateTime? @map("consent_date")
+
+  // Status
+  isActive   Boolean   @default(true) @map("is_active")
+  isVerified Boolean   @default(false) @map("is_verified")
+  bannedAt   DateTime? @map("banned_at")
+  banReason  String?   @map("ban_reason")
+
+  // Security
+  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
+  lockedUntil         DateTime? @map("locked_until")
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastLoginAt DateTime? @map("last_login_at")
+
+  customer      Customer?
+  addresses     UserAddress[]
+  orders        Order[]
+  reviews       ProductReview[]
+  wishlistItems WishlistItem[]
+  sessions      Session[]
+  auditLogs     AuditLog[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model Session {
+  id           String  @id @default(cuid())
+  userId       String  @map("user_id")
+  token        String  @unique
+  refreshToken String? @map("refresh_token")
+
+  userAgent String? @map("user_agent")
+  ipAddress String? @map("ip_address")
+
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model UserAddress {
+  id     String @id @default(cuid())
+  userId String @map("user_id")
+
+  label        String  @default("Home")
+  addressLine1 String  @map("address_line_1")
+  addressLine2 String? @map("address_line_2")
+  city         String
+  county       String?
+  postcode     String  @map("postcode")
+  country      String  @default("UK")
+
+  instructions String?
+  accessCode   String? @map("access_code")
+
+  latitude  Float?
+  longitude Float?
+
+  isDefault Boolean @default(false) @map("is_default")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orders          Order[]
-  CustomerAddress CustomerAddress[]
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  orders Delivery[] @relation("DeliveryUserAddress")
+
+  @@index([userId])
+  @@index([postcode])
+}
+
+// ============================================================================
+// CUSTOMERS (E-commerce ready with full profile)
+// ============================================================================
+
+model Customer {
+  id     String  @id @default(cuid())
+  userId String? @unique @map("user_id")
+
+  email String?
+  phone String?
+
+  firstName String @map("first_name")
+  lastName  String @map("last_name")
+
+  type String @default("RETAIL") // RETAIL, WHOLESALE, TRADE, INTERNAL
+  tier String @default("STANDARD") // STANDARD, SILVER, GOLD, PLATINUM, VIP
+
+  notes        String?
+  dietaryNotes String? @map("dietary_notes")
+
+  marketingSource  String? @map("marketing_source")
+  marketingConsent Boolean @default(false) @map("marketing_consent")
+
+  loyaltyPoints Int @default(0) @map("loyalty_points")
+  totalSpent    Int @default(0) @map("total_spent")
+  orderCount    Int @default(0) @map("order_count")
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastOrderAt DateTime? @map("last_order_at")
+
+  birthday         DateTime?
+  birthdayReminder Boolean   @default(true) @map("birthday_reminder")
+
+  user      User?             @relation(fields: [userId], references: [id])
+  addresses CustomerAddress[]
+  orders    Order[]
+
+  @@index([email])
+  @@index([type])
+  @@index([tier])
 }
 
 model CustomerAddress {
-  id           String  @id @default(cuid())
-  customerId   String  @map("customer_id")
-  label        String  @default("Home") // Home, Work, Other
+  id         String @id @default(cuid())
+  customerId String @map("customer_id")
+
+  label        String  @default("Home")
   addressLine1 String  @map("address_line_1")
   addressLine2 String? @map("address_line_2")
-  city         String?
+  city         String
   county       String?
   postcode     String  @map("postcode")
-  instructions String? // Delivery instructions
+  country      String  @default("UK")
 
-  isDefault Boolean  @default(false) @map("is_default")
+  instructions String?
+  accessNotes  String? @map("access_notes")
+
+  isDefault Boolean @default(false) @map("is_default")
+
   createdAt DateTime @default(now())
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
+  orders Delivery[] @relation("DeliveryCustomerAddress")
+
   @@index([customerId])
 }
 
-// ============================================
-// Suppliers
-// ============================================
+// ============================================================================
+// DELIVERY ZONES (For e-commerce)
+// ============================================================================
+
+model DeliveryZone {
+  id             String  @id @default(cuid())
+  name           String
+  postcodePrefix String? @map("postcode_prefix")
+
+  freeOver  Int @default(0) @map("free_over")
+  baseCost  Int @default(0) @map("base_cost")
+  perKmCost Int @default(0) @map("per_km_cost")
+
+  isActive     Boolean @default(true) @map("is_active")
+  minLeadTime  Int     @default(24) @map("min_lead_time")
+  maxDaysAhead Int     @default(14) @map("max_days_ahead")
+
+  availableSlots String @default("[]")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deliveries Delivery[]
+
+  @@index([postcodePrefix])
+}
+
+model Delivery {
+  id String @id @default(cuid())
+
+  orderId           String? @unique @map("order_id")
+  userAddressId     String? @map("user_address_id")
+  customerAddressId String? @map("customer_address_id")
+  deliveryAddress   String? @map("delivery_address")
+
+  zoneId String? @map("zone_id")
+
+  deliveryDate  DateTime @map("delivery_date")
+  timeSlotStart String?  @map("time_slot_start")
+  timeSlotEnd   String?  @map("time_slot_end")
+
+  status      String  @default("SCHEDULED")
+  trackingUrl String? @map("tracking_url")
+
+  driverName  String? @map("driver_name")
+  driverPhone String? @map("driver_phone")
+
+  cost Int @default(0) @map("cost")
+
+  instructions String?
+
+  createdAt   DateTime  @default(now())
+  deliveredAt DateTime? @map("delivered_at")
+
+  zone            DeliveryZone?    @relation(fields: [zoneId], references: [id])
+  userAddress     UserAddress?     @relation("DeliveryUserAddress", fields: [userAddressId], references: [id])
+  customerAddress CustomerAddress? @relation("DeliveryCustomerAddress", fields: [customerAddressId], references: [id])
+
+  @@index([deliveryDate])
+  @@index([status])
+}
+
+// ============================================================================
+// SUPPLIERS (Complete vendor management)
+// ============================================================================
 
 model Supplier {
-  id          String  @id @default(cuid())
-  name        String
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
+
   contactName String? @map("contact_name")
   email       String?
   phone       String?
   mobile      String?
   address     String?
 
-  // Business details
-  website   String?
-  vatNumber String? @map("vat_number")
+  website       String?
+  vatNumber     String? @map("vat_number")
+  companyNumber String? @map("company_number")
 
-  // Certifications
-  certifications String @default("[]") // JSON: ["organic", "fair-trade", "local"]
+  certifications String @default("[]")
 
-  // Ordering
-  orderEmail    String? @map("order_email")
-  orderPhone    String? @map("order_phone")
-  paymentTerms  String? @map("payment_terms") // NET30, NET60, PREPAY
-  minOrderValue Int?    @map("min_order_value") // Minimum order in pence
+  orderEmail String? @map("order_email")
+  orderPhone String? @map("order_phone")
+  orderUrl   String? @map("order_url")
 
-  // Notes and tracking
-  notes    String?
+  paymentTerms  String? @map("payment_terms")
+  creditLimit   Int?    @map("credit_limit")
+  paymentMethod String? @map("payment_method")
+
+  rating         Float?
+  onTimeRate     Float? @default(100) @map("on_time_rate")
+  qualityRate    Float? @default(100) @map("quality_rate")
+  complaintCount Int    @default(0) @map("complaint_count")
+
   isActive Boolean @default(true) @map("is_active")
-  rating   Int? // 1-5 stars
+
+  notes String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  ingredients  Ingredient[]
-  packaging    Packaging[]
-  purchases    Purchase[]
-  SupplierNote SupplierNote[]
+  ingredients        Ingredient[]
+  packaging          Packaging[]
+  purchases          Purchase[]
+  supplierNotes      SupplierNote[]
+  performanceMetrics SupplierMetric[]
+
+  @@index([name])
+  @@index([isActive])
 }
 
 model SupplierNote {
   id         String   @id @default(cuid())
   supplierId String   @map("supplier_id")
+  type       String   @default("GENERAL")
   content    String
+  isPrivate  Boolean  @default(false) @map("is_private")
   createdBy  String?  @map("created_by")
   createdAt  DateTime @default(now())
 
@@ -112,80 +437,144 @@ model SupplierNote {
   @@index([supplierId])
 }
 
-// ============================================
-// Ingredients
-// ============================================
+model SupplierMetric {
+  id         String @id @default(cuid())
+  supplierId String @map("supplier_id")
+
+  periodStart DateTime @map("period_start")
+  periodEnd   DateTime @map("period_end")
+
+  ordersPlaced Int @default(0) @map("orders_placed")
+  ordersOnTime Int @default(0) @map("orders_on_time")
+  ordersLate   Int @default(0) @map("orders_late")
+  itemsDamaged Int @default(0) @map("items_damaged")
+
+  totalSpend Int @default(0) @map("total_spend")
+
+  onTimeRate  Float @default(0) @map("on_time_rate")
+  qualityRate Float @default(0) @map("quality_rate")
+
+  createdAt DateTime @default(now())
+
+  supplier Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  @@index([supplierId])
+}
+
+// ============================================================================
+// INGREDIENTS (Comprehensive tracking)
+// ============================================================================
 
 model Ingredient {
   id          String  @id @default(cuid())
   name        String
-  category    String // FLOUR, SUGAR, EGGS, DAIRY, FRUITS, NUTS, FLAVORINGS, RAISING_AGENTS, FATS, SALT, CHOCOLATE, SPICES, OTHER
-  subcategory String? // e.g., "strong bread flour", "caster sugar"
+  slug        String  @unique
+  description String?
 
-  // Units - use units that make sense for recipes
-  unit           String @map("recipe_unit") // g, kg, mL, L, pcs, dozen, tsp, tbsp
-  unitEquivalent Float  @default(1) @map("unit_equivalent") // How many mL/g in 1 unit (for conversions)
+  categoryId String @map("category_id")
 
-  // Stock levels
-  currentStock Float @default(0) @map("current_stock")
+  recipeUnit  String @map("recipe_unit") // g, kg, mL, L, pcs, dozen, tsp, tbsp
+  unitToGrams Float  @default(1) @map("unit_to_grams")
+
+  currentStock Float  @default(0) @map("current_stock")
+  unit         String @default("g")
+
   reorderPoint Float @default(0) @map("reorder_point")
   reorderQty   Float @default(0) @map("reorder_qty")
+  leadTimeDays Int   @default(7) @map("lead_time_days")
 
-  // Cost tracking - stored as pence per unit
-  costPerUnit Int @default(0) @map("cost_per_unit")
+  costPerUnit Int @default(0) @map("cost_per_unit") // Pence per recipe unit
 
-  // Purchase info
-  packSize Float?  @map("pack_size") // Size of one pack (e.g., 1000 for 1kg bag)
-  packUnit String? @map("pack_unit") // kg, g, L, mL
-  packCost Int?    @map("pack_cost") // Cost of one pack in pence
+  packSize Float?  @map("pack_size")
+  packUnit String? @map("pack_unit")
+  packCost Int?    @map("pack_cost")
 
-  // Supplier
-  supplierId   String? @map("supplier_id")
-  supplierSku  String? @map("supplier_sku")
-  minOrderQty  Float?  @map("min_order_qty")
-  leadTimeDays Int     @default(7) @map("lead_time_days")
+  supplierId  String? @map("supplier_id")
+  supplierSku String? @map("supplier_sku")
+  minOrderQty Float?  @map("min_order_qty")
 
-  // Usage tracking
+  storageLocationId String? @map("storage_location_id")
+  shelfLifeDays     Int?    @map("shelf_life_days")
+  storageNotes      String? @map("storage_notes")
+
+  qualityNotes   String? @map("quality_notes")
+  isOrganic      Boolean @default(false) @map("is_organic")
+  certifications String  @default("[]")
+
+  // Dietary flags
+  isVegan      Boolean @default(true) @map("is_vegan")
+  isVegetarian Boolean @default(true) @map("is_vegetarian")
+  isGlutenFree Boolean @default(false) @map("is_gluten_free")
+  isHalal      Boolean @default(false) @map("is_halal")
+  isKosher     Boolean @default(false) @map("is_kosher")
+
   avgUsagePerWeek Float     @default(0) @map("avg_usage_per_week")
   lastUsedDate    DateTime? @map("last_used_date")
+  usageCount      Int       @default(0) @map("usage_count")
 
-  // Storage
-  storageLocation String? @map("storage_location") // FRIDGE, FREEZER, DRY, AMBIENT
-  storageTemp     String? @map("storage_temp") // -18C, 0-4C, Room temp
-  shelfLifeDays   Int?    @map("shelf_life_days")
-
-  // Quality
-  qualityNotes String? @map("quality_notes")
-
-  // Allergens
-  allergens  String @default("[]") // JSON array
-  mayContain String @default("[]") // JSON array of "may contain" allergens
-
-  // Metadata
   notes     String?
   isActive  Boolean @default(true) @map("is_active")
-  isOrganic Boolean @default(false) @map("is_organic")
+  sortOrder Int     @default(0) @map("sort_order")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  supplier             Supplier?                @relation(fields: [supplierId], references: [id])
+  category        IngredientCategory @relation(fields: [categoryId], references: [id])
+  supplier        Supplier?          @relation(fields: [supplierId], references: [id])
+  storageLocation StorageLocation?   @relation(fields: [storageLocationId], references: [id])
+
+  allergens            IngredientAllergen[]
   stockMovements       StockMovement[]
   priceHistory         IngredientPriceHistory[]
   products             ProductIngredient[]
   purchases            PurchaseIngredient[]
+  substitutes          IngredientSubstitute[]   @relation("MainIngredient")
+  substitutedBy        IngredientSubstitute[]   @relation("SubstituteIngredient")
   ProductionIngredient ProductionIngredient[]
+
+  @@index([categoryId])
+  @@index([supplierId])
+  @@index([isActive])
+}
+
+model IngredientAllergen {
+  id           String @id @default(cuid())
+  ingredientId String @map("ingredient_id")
+  allergenId   String @map("allergen_id")
+  severity     String @default("CONTAINS") // CONTAINS, TRACES, MAY_CONTAIN
+
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  allergen   Allergen   @relation(fields: [allergenId], references: [id])
+
+  @@unique([ingredientId, allergenId])
+  @@index([allergenId])
+}
+
+model IngredientSubstitute {
+  id           String  @id @default(cuid())
+  ingredientId String  @map("ingredient_id")
+  substituteId String  @map("substitute_id")
+  ratio        String  @default("1:1")
+  notes        String?
+
+  mainIngredient Ingredient @relation("MainIngredient", fields: [ingredientId], references: [id], onDelete: Cascade)
+  substitute     Ingredient @relation("SubstituteIngredient", fields: [substituteId], references: [id])
+
+  @@unique([ingredientId, substituteId])
 }
 
 model IngredientPriceHistory {
-  id            String   @id @default(cuid())
-  ingredientId  String   @map("ingredient_id")
-  costPerUnit   Int      @map("cost_per_unit") // In pence
-  packCost      Int?     @map("pack_cost")
+  id           String @id @default(cuid())
+  ingredientId String @map("ingredient_id")
+
+  costPerUnit Int  @map("cost_per_unit")
+  packCost    Int? @map("pack_cost")
+
   effectiveDate DateTime @default(now()) @map("effective_date")
   supplier      String?
-  reason        String? // PRICE_INCREASE, PRICE_DROP, NEW_SUPPLIER, PROMO, BULK_DISCOUNT
-  createdAt     DateTime @default(now())
+  reason        String
+
+  createdAt DateTime @default(now())
 
   ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
 
@@ -196,23 +585,21 @@ model IngredientPriceHistory {
 model StockMovement {
   id           String @id @default(cuid())
   ingredientId String @map("ingredient_id")
-  type         String // STOCK_IN, STOCK_OUT, WASTE, ADJUSTMENT, RETURN, PRODUCTION
+  type         String // STOCK_IN, STOCK_OUT, WASTE, ADJUSTMENT, RETURN, PRODUCTION, EXPIRY
 
-  // Quantity - positive for in, negative for out
   quantity  Float
-  balance   Float // Running balance after this movement
-  costValue Int   @default(0) @map("cost_value") // Value of movement in pence
+  balance   Float
+  costValue Int   @default(0) @map("cost_value")
 
-  // Reference tracking
-  reference     String? // Purchase ID, Order ID, Production batch ID, etc.
-  referenceType String? @map("reference_type") // PURCHASE, ORDER, PRODUCTION, MANUAL
+  reference     String?
+  referenceType String?
 
   reason String?
   notes  String?
 
-  // Batch tracking
   batchNumber String?   @map("batch_number")
   expiryDate  DateTime? @map("expiry_date")
+  supplierLot String?   @map("supplier_lot")
 
   createdAt DateTime @default(now())
   createdBy String?  @map("created_by")
@@ -224,61 +611,76 @@ model StockMovement {
   @@index([type])
 }
 
-// ============================================
-// Packaging
-// ============================================
+// ============================================================================
+// PACKAGING
+// ============================================================================
 
 model Packaging {
-  id         String  @id @default(cuid())
-  name       String
-  type       String // BOX, BAG, WRAP, LABEL, CONTAINER, SLEEVE, TRAY, CUTLERY, NAPKIN, OTHER
-  size       String? // e.g., "6 inch", "A4", "1kg"
-  dimensions String? // L x W x H in cm
-  colour     String?
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
 
-  // Cost - stored as pence
-  costPerUnit  Int @default(0) @map("cost_per_unit")
+  categoryId String @map("category_id")
+
+  size        String?
+  dimensions  String?
+  colour      String?
+  material    String?
+  weightGrams Float?  @map("weight_grams")
+
   currentStock Int @default(0) @map("current_stock")
-  minStock     Int @default(0) @map("min_stock")
+
   reorderPoint Int @default(0) @map("reorder_point")
   reorderQty   Int @default(0) @map("reorder_qty")
 
-  // Purchase info
-  unitsPerPack Int  @default(1) @map("units_per_pack")
-  packCost     Int? @map("pack_cost") // Cost per pack in pence
+  costPerUnit Int @default(0) @map("cost_per_unit")
 
-  // Supplier
+  unitsPerPack Int  @default(1) @map("units_per_pack")
+  packCost     Int? @map("pack_cost")
+
   supplierId  String? @map("supplier_id")
   supplierSku String? @map("supplier_sku")
 
-  // Sustainability
-  isRecyclable  Boolean @default(true) @map("is_recyclable")
-  isCompostable Boolean @default(false) @map("is_compostable")
-  material      String? // Cardboard, Plastic, Paper, Bioplastic, etc.
+  isRecyclable    Boolean @default(true) @map("is_recyclable")
+  isCompostable   Boolean @default(false) @map("is_compostable")
+  isBiodegradable Boolean @default(false) @map("is_biodegradable")
 
-  // Barcode
-  barcode String? @map("barcode")
+  barcode String?
+  eanCode String? @map("ean_code")
+
+  avgUsagePerWeek Float @default(0) @map("avg_usage_per_week")
 
   notes     String?
-  isActive  Boolean  @default(true) @map("is_active")
+  isActive  Boolean @default(true) @map("is_active")
+  sortOrder Int     @default(0) @map("sort_order")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  supplier       Supplier?                @relation(fields: [supplierId], references: [id])
+  category PackagingCategory @relation(fields: [categoryId], references: [id])
+  supplier Supplier?         @relation(fields: [supplierId], references: [id])
+
   priceHistory   PackagingPriceHistory[]
   orderItems     OrderItem[]
   products       ProductPackaging[]
   stockMovements PackagingStockMovement[]
   purchases      PurchasePackaging[]
+
+  @@index([categoryId])
+  @@index([supplierId])
+  @@index([isActive])
 }
 
 model PackagingPriceHistory {
-  id            String   @id @default(cuid())
-  packagingId   String   @map("packaging_id")
-  costPerUnit   Int      @map("cost_per_unit") // In pence
+  id          String @id @default(cuid())
+  packagingId String @map("packaging_id")
+
+  costPerUnit   Int      @map("cost_per_unit")
   effectiveDate DateTime @default(now()) @map("effective_date")
   reason        String?
-  createdAt     DateTime @default(now())
+
+  createdAt DateTime @default(now())
 
   packaging Packaging @relation(fields: [packagingId], references: [id], onDelete: Cascade)
 
@@ -288,7 +690,7 @@ model PackagingPriceHistory {
 model PackagingStockMovement {
   id          String @id @default(cuid())
   packagingId String @map("packaging_id")
-  type        String // STOCK_IN, STOCK_OUT, WASTE, ADJUSTMENT, PRODUCTION
+  type        String
 
   quantity  Int
   balance   Int
@@ -306,136 +708,185 @@ model PackagingStockMovement {
   @@index([createdAt])
 }
 
-// ============================================
-// Products / Recipes
-// ============================================
+// ============================================================================
+// PRODUCTS (Full recipe management)
+// ============================================================================
 
 model Product {
   id          String  @id @default(cuid())
   name        String
+  slug        String  @unique
   description String?
-  category    String // BREAD, PASTRIES, CAKES, COOKIES, SEASONAL, SPECIAL, SAVOURY, DRINKS
-  subcategory String? @map("subcategory") // e.g., "sourdough", "croissants"
-  status      String  @default("ACTIVE") // ACTIVE, DISCONTINUED, SEASONAL, HIDDEN
 
-  // Display
+  categoryId String @map("category_id")
+
+  status String @default("ACTIVE") // DRAFT, ACTIVE, SEASONAL, DISCONTINUED, HIDDEN
+
   imageUrl     String? @map("image_url")
+  galleryUrls  String  @default("[]")
   thumbnailUrl String? @map("thumbnail_url")
 
-  // Allergens
-  allergens  String @default("[]") // JSON array
-  mayContain String @default("[]")
-
-  // Pricing - stored as pence
   currentPrice Int @default(0) @map("current_price")
 
-  // Cost breakdown - stored as pence
-  ingredientCost Int @default(0) @map("ingredient_cost")
-  packagingCost  Int @default(0) @map("packaging_cost")
-  laborCost      Int @default(0) @map("labor_cost")
-  totalCost      Int @default(0) @map("total_cost")
+  ingredientCost Int  @default(0) @map("ingredient_cost")
+  packagingCost  Int  @default(0) @map("packaging_cost")
+  laborCost      Int  @default(0) @map("labor_cost")
+  totalCost      Int  @default(0) @map("total_cost")
+  suggestedPrice Int? @map("suggested_price")
 
-  // Time tracking (in minutes)
   prepTimeMins  Int @default(0) @map("prep_time_mins")
   bakeTimeMins  Int @default(0) @map("bake_time_mins")
   coolTimeMins  Int @default(0) @map("cool_time_mins")
   totalTimeMins Int @default(0) @map("total_time_mins")
 
-  // Production
-  batchSize      Int    @default(1) @map("batch_size") // How many made per batch
-  servesPortions Int    @default(1) @map("serves_portions")
-  weightGrams    Float? @map("weight_grams")
+  batchSize   Int     @default(1) @map("batch_size")
+  yield       Int?
+  weightGrams Float?  @map("weight_grams")
+  servingSize String? @map("serving_size")
 
-  // Equipment needed
-  equipment String @default("[]") // JSON array of equipment names
+  equipment String @default("[]")
 
-  // Quality
   shelfLifeHours      Int?    @map("shelf_life_hours")
+  bestWithinHours     Int?    @map("best_within_hours")
   storageInstructions String? @map("storage_instructions")
 
-  // Metadata
+  // Dietary flags
+  isVegan      Boolean @default(false) @map("is_vegan")
+  isVegetarian Boolean @default(true) @map("is_vegetarian")
+  isGlutenFree Boolean @default(false) @map("is_gluten_free")
+  isHalal      Boolean @default(false) @map("is_halal")
+  isKosher     Boolean @default(false) @map("is_kosher")
+
+  nutrition String? // JSON
+
   isFeatured   Boolean @default(false) @map("is_featured")
   isBestSeller Boolean @default(false) @map("is_best_seller")
+  isNew        Boolean @default(false) @map("is_new")
+  isSeasonal   Boolean @default(false) @map("is_seasonal")
   sortOrder    Int     @default(0) @map("sort_order")
+
+  metaTitle       String? @map("meta_title")
+  metaDescription String? @map("meta_description")
+
+  availableStock Int?    @map("available_stock")
+  allowPreorder  Boolean @default(true) @map("allow_preorder")
+
+  minOrderQty Int  @default(1) @map("min_order_qty")
+  maxOrderQty Int? @map("max_order_qty")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  category ProductCategory @relation(fields: [categoryId], references: [id])
+
+  allergens       ProductAllergen[]
+  dietary         ProductDietary[]
   priceHistory    ProductPriceHistory[]
   ingredients     ProductIngredient[]
   packaging       ProductPackaging[]
   recipeSteps     ProductRecipeStep[]
   orderItems      OrderItem[]
+  reviews         ProductReview[]
+  wishlistItems   WishlistItem[]
   ProductionBatch ProductionBatch[]
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([isFeatured])
+}
+
+model ProductAllergen {
+  id         String @id @default(cuid())
+  productId  String @map("product_id")
+  allergenId String @map("allergen_id")
+  severity   String @default("CONTAINS")
+
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  allergen Allergen @relation(fields: [allergenId], references: [id])
+
+  @@unique([productId, allergenId])
+}
+
+model ProductDietary {
+  id        String @id @default(cuid())
+  productId String @map("product_id")
+  labelId   String @map("label_id")
+
+  product Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  label   DietaryLabel @relation(fields: [labelId], references: [id])
+
+  @@unique([productId, labelId])
 }
 
 model ProductPriceHistory {
-  id            String   @id @default(cuid())
-  productId     String   @map("product_id")
-  price         Int // In pence
-  cost          Int?     @map("cost") // Cost at time of price change
+  id        String @id @default(cuid())
+  productId String @map("product_id")
+
+  price          Int
+  ingredientCost Int? @map("ingredient_cost")
+  totalCost      Int? @map("total_cost")
+
   effectiveDate DateTime @default(now()) @map("effective_date")
-  reason        String? // COST_INCREASE, COMPETITOR, SEASONAL, PROMO, REPOSITIONING
-  createdAt     DateTime @default(now())
+  reason        String
+
+  createdAt DateTime @default(now())
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([productId])
 }
 
-// Recipe - ingredients with quantities
 model ProductIngredient {
   id           String @id @default(cuid())
   productId    String @map("product_id")
   ingredientId String @map("ingredient_id")
 
-  // Quantity needed per batch (not per item - use Product.batchSize)
   quantity  Float
-  costValue Int   @default(0) @map("cost_value") // Calculated cost in pence
+  costValue Int   @default(0) @map("cost_value")
 
-  // Optional notes
-  notes String? // "sifted", "room temperature", "sieved"
+  notes      String?
+  stepNumber Int?    @map("step_number")
 
-  // Step reference
-  stepNumber Int? @map("step_number") // Which step this is added
+  isOptional Boolean @default(false) @map("is_optional")
 
   product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
   ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
 
   @@unique([productId, ingredientId])
   @@index([productId])
-  @@index([ingredientId])
 }
 
-// Recipe - packaging with quantities
 model ProductPackaging {
   id          String @id @default(cuid())
   productId   String @map("product_id")
   packagingId String @map("packaging_id")
-  quantity    Int    @default(1)
-  costValue   Int    @default(0) @map("cost_value")
+
+  quantity  Int @default(1)
+  costValue Int @default(0) @map("cost_value")
+
+  isOptional Boolean @default(false) @map("is_optional")
 
   product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   packaging Packaging @relation(fields: [packagingId], references: [id], onDelete: Cascade)
 
   @@unique([productId, packagingId])
-  @@index([productId])
-  @@index([packagingId])
 }
 
-// Recipe - step by step method
 model ProductRecipeStep {
-  id          String  @id @default(cuid())
-  productId   String  @map("product_id")
-  stepNumber  Int     @map("step_number")
+  id         String @id @default(cuid())
+  productId  String @map("product_id")
+  stepNumber Int    @map("step_number")
+
   title       String?
   instruction String  @map("instruction")
-  duration    Int? // Minutes for this step
-  temperature String? @map("temperature") // e.g., "180C", "medium heat"
-  notes       String?
 
-  // Ingredients added in this step
-  ingredients String @default("[]") // JSON array of ingredient names/IDs
+  duration    Int?
+  temperature String?
+
+  ingredients String  @default("[]")
+  tips        String?
+
+  imageUrl String? @map("image_url")
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
@@ -443,187 +894,287 @@ model ProductRecipeStep {
   @@index([productId])
 }
 
-// ============================================
-// Orders
-// ============================================
+model ProductReview {
+  id        String  @id @default(cuid())
+  productId String  @map("product_id")
+  userId    String  @map("user_id")
+  orderId   String? @map("order_id")
+
+  rating  Int
+  title   String?
+  content String?
+
+  isVerifiedPurchase Boolean @default(false) @map("is_verified_purchase")
+  isApproved         Boolean @default(true) @map("is_approved")
+
+  isFeatured    Boolean   @default(false) @map("is_featured")
+  adminResponse String?   @map("admin_response")
+  respondedAt   DateTime? @map("responded_at")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@index([productId])
+  @@index([rating])
+}
+
+model WishlistItem {
+  id        String @id @default(cuid())
+  userId    String @map("user_id")
+  productId String @map("product_id")
+
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+// ============================================================================
+// ORDERS (Complete order management)
+// ============================================================================
 
 model Order {
   id          String @id @default(cuid())
   orderNumber String @unique @map("order_number")
 
-  // Customer
-  customerId    String? @map("customer_id")
-  customerName  String  @map("customer_name") // Fallback if no customer
+  userId     String? @map("user_id")
+  customerId String? @map("customer_id")
+
+  customerName  String  @map("customer_name")
   customerEmail String? @map("customer_email")
   customerPhone String? @map("customer_phone")
 
-  // Order type
-  type   String @default("CUSTOMER") @map("order_type") // CUSTOMER, WHOLESALE, INTERNAL
-  source String @default("WEBSITE") // WEBSITE, PHONE, IN_PERSON, INSTAGRAM, FACEBOOK, REFERRAL
+  type   String @default("CUSTOMER") // CUSTOMER, WHOLESALE, INTERNAL, TRADE
+  source String @default("WEBSITE") // WEBSITE, PHONE, IN_PERSON, INSTAGRAM, FACEBOOK, UBER_EATS, JUST_EAT, DELIVEROO
 
-  // Status
-  status   String @default("PENDING")
+  statusId String @map("status_id")
+
   priority String @default("NORMAL") // LOW, NORMAL, HIGH, URGENT
 
-  // Fulfillment
   fulfillmentMethod String?   @map("fulfillment_method") // COLLECTION, DELIVERY
   collectionDate    DateTime? @map("collection_date")
-  collectionTime    String?   @map("collection_time") // e.g., "14:00-15:00"
-  deliveryAddress   String?   @map("delivery_address")
+  collectionTime    String?   @map("collection_time")
+  collectionPoint   String?   @map("collection_point")
 
-  // Financials - all in pence
-  subtotal      Int @default(0)
-  packagingCost Int @default(0)
-  deliveryCost  Int @default(0)
-  discount      Int @default(0)
-  total         Int @default(0)
+  // Delivery address (stored directly for simplicity)
+  deliveryAddress  String?   @map("delivery_address")
+  deliveryDate     DateTime? @map("delivery_date")
+  deliveryTimeSlot String?   @map("delivery_time_slot")
 
-  // Cost tracking
+  subtotal      Int     @default(0)
+  packagingCost Int     @default(0) @map("packaging_cost")
+  deliveryCost  Int     @default(0) @map("delivery_cost")
+  discount      Int     @default(0)
+  discountCode  String? @map("discount_code")
+  vatAmount     Int     @default(0) @map("vat_amount")
+  total         Int     @default(0)
+
   costOfGoods  Int   @default(0) @map("cost_of_goods")
-  profit       Int   @default(0)
+  grossProfit  Int   @default(0) @map("gross_profit")
   profitMargin Float @default(0) @map("profit_margin")
 
-  // Payment
-  paymentMethod String?   @map("payment_method") // CARD, CASH, BANK_TRANSFER, PAYPAL
-  paymentStatus String    @default("PENDING") @map("payment_status") // PENDING, PAID, REFUNDED
+  paymentMethod String?   @map("payment_method")
+  paymentStatus String    @default("PENDING")
+  paymentId     String?   @map("payment_id")
   paidAt        DateTime? @map("paid_at")
 
-  // Notes
-  notes         String?
-  internalNotes String? @map("internal_notes") // Not shown to customer
-  dietaryNotes  String? @map("dietary_notes") // Dietary requirements
+  promoCodeId String? @map("promo_code_id")
 
-  // Dates
+  notes         String?
+  internalNotes String? @map("internal_notes")
+  dietaryNotes  String? @map("dietary_notes")
+
+  occasion        String?
+  occasionDate    DateTime? @map("occasion_date")
+  personalisation String?
+
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+  confirmedAt  DateTime? @map("confirmed_at")
   completedAt  DateTime? @map("completed_at")
   cancelledAt  DateTime? @map("cancelled_at")
   cancelReason String?   @map("cancel_reason")
 
-  customer      Customer?            @relation(fields: [customerId], references: [id])
+  loyaltyPointsEarned Int @default(0) @map("loyalty_points_earned")
+  loyaltyPointsUsed   Int @default(0) @map("loyalty_points_used")
+
+  utmSource   String? @map("utm_source")
+  utmMedium   String? @map("utm_medium")
+  utmCampaign String? @map("utm_campaign")
+
+  user     User?       @relation(fields: [userId], references: [id])
+  customer Customer?   @relation(fields: [customerId], references: [id])
+  status   OrderStatus @relation(fields: [statusId], references: [id])
+
   items         OrderItem[]
   statusHistory OrderStatusHistory[]
   transaction   Transaction?
+
+  @@index([statusId])
+  @@index([customerId])
+  @@index([createdAt])
+  @@index([collectionDate])
 }
 
 model OrderItem {
   id        String @id @default(cuid())
   orderId   String @map("order_id")
   productId String @map("product_id")
-  quantity  Int
 
-  // Pricing - in pence
+  quantity Int
+
   unitPrice  Int @map("unit_price")
   totalPrice Int @map("total_price")
 
-  // Cost breakdown
   ingredientCost Int @default(0) @map("ingredient_cost")
   packagingCost  Int @default(0) @map("packaging_cost")
   laborCost      Int @default(0) @map("labor_cost")
   lineCost       Int @default(0) @map("line_cost")
   lineProfit     Int @default(0) @map("line_profit")
 
-  // Customisation
   packagingId  String? @map("packaging_id")
   packagingQty Int     @default(1) @map("packaging_qty")
 
-  // Special instructions
-  notes        String? // "Happy birthday Sarah!", "No nuts"
-  dietaryCheck Boolean @default(false) @map("dietary_check") // Confirmed dietary requirements met
+  personalisation String?
 
-  // Status
-  status String @default("PENDING") // PENDING, IN_PROGRESS, READY, HANDED_OVER
+  dietaryCheck     Boolean   @default(false) @map("dietary_check")
+  dietaryCheckedBy String?   @map("dietary_checked_by")
+  dietaryCheckedAt DateTime? @map("dietary_checked_at")
+
+  statusId String @map("status_id")
+
+  notes String?
+
+  refundQty    Int @default(0) @map("refund_qty")
+  refundAmount Int @default(0) @map("refund_amount")
 
   createdAt DateTime @default(now())
 
-  order     Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product   Product    @relation(fields: [productId], references: [id])
-  packaging Packaging? @relation(fields: [packagingId], references: [id])
+  order     Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product     @relation(fields: [productId], references: [id])
+  status    OrderStatus @relation(fields: [statusId], references: [id])
+  packaging Packaging?  @relation(fields: [packagingId], references: [id])
 
   @@index([orderId])
   @@index([productId])
 }
 
 model OrderStatusHistory {
-  id        String   @id @default(cuid())
-  orderId   String   @map("order_id")
-  status    String
+  id       String @id @default(cuid())
+  orderId  String @map("order_id")
+  statusId String @map("status_id")
+
   note      String?
-  changedBy String?  @map("changed_by")
+  changedBy String? @map("changed_by")
+
   createdAt DateTime @default(now())
 
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order  Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status OrderStatus @relation(fields: [statusId], references: [id])
 
   @@index([orderId])
 }
 
-// ============================================
-// Financial Transactions
-// ============================================
+// ============================================================================
+// PROMOTIONS
+// ============================================================================
+
+model PromoCode {
+  id   String @id @default(cuid())
+  code String @unique
+  name String
+
+  type  String // PERCENTAGE, FIXED, FREE_DELIVERY
+  value Int
+
+  minOrderValue      Int?    @map("min_order_value")
+  maxDiscount        Int?    @map("max_discount")
+  applicableProducts String? @map("applicable_products")
+
+  maxUses        Int?
+  maxUsesPerUser Int?
+  currentUses    Int  @default(0) @map("current_uses")
+
+  startsAt  DateTime @map("starts_at")
+  expiresAt DateTime @map("expires_at")
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now())
+
+  @@index([code])
+}
+
+// ============================================================================
+// FINANCIAL TRANSACTIONS
+// ============================================================================
 
 model Transaction {
-  id          String  @id @default(cuid())
-  type        String // INCOME, EXPENSE
-  category    String // SALE, ORDER_REFUND, INGREDIENT_PURCHASE, PACKAGING_PURCHASE, UTILITIES, RENT, EQUIPMENT, MARKETING, WAGES, INSURANCE, MAINTENANCE, OTHER
+  id String @id @default(cuid())
+
+  type        String
+  categoryId  String  @map("category_id")
   subcategory String? @map("subcategory")
 
-  amount    Int // In pence (always positive)
+  amount    Int
   vatAmount Int @default(0) @map("vat_amount")
 
   description String?
   date        DateTime @default(now())
 
-  // References
-  reference  String? // External reference (invoice number, etc.)
+  reference  String?
   receiptUrl String? @map("receipt_url")
 
-  // Links
   orderId    String? @unique @map("order_id")
   purchaseId String? @unique @map("purchase_id")
 
-  // VAT
+  paymentMethod String? @map("payment_method")
+
   vatRate   Float   @default(0) @map("vat_rate")
   isVatable Boolean @default(false) @map("is_vatable")
 
+  cashFlowCategory String? @map("cash_flow_category")
+
   createdAt DateTime @default(now())
 
-  order    Order?    @relation(fields: [orderId], references: [id])
-  purchase Purchase? @relation(fields: [purchaseId], references: [id])
+  category TransactionCategory @relation(fields: [categoryId], references: [id])
+  order    Order?              @relation(fields: [orderId], references: [id])
+  purchase Purchase?           @relation(fields: [purchaseId], references: [id])
 
   @@index([date])
   @@index([type])
-  @@index([category])
+  @@index([categoryId])
 }
 
-// ============================================
-// Purchases (Supplier Orders)
-// ============================================
+// ============================================================================
+// PURCHASES
+// ============================================================================
 
 model Purchase {
   id         String @id @default(cuid())
   supplierId String @map("supplier_id")
 
-  // Reference numbers
   orderNumber   String? @map("order_number")
   invoiceNumber String? @map("invoice_number")
-  reference     String? // Internal reference
+  reference     String?
 
-  // Status
-  status        String @default("DRAFT") // DRAFT, QUOTE, ORDERED, PARTIAL, RECEIVED, CANCELLED
-  paymentStatus String @default("PENDING") @map("payment_status") // PENDING, PAID, PARTIAL
+  status        String @default("DRAFT")
+  paymentStatus String @default("PENDING")
 
-  // Financials - in pence
   subtotal  Int @default(0)
   delivery  Int @default(0)
   discount  Int @default(0)
   vatAmount Int @default(0) @map("vat_amount")
   total     Int @default(0)
 
-  // Payment
   paymentMethod String?   @map("payment_method")
   paidAt        DateTime? @map("paid_at")
 
-  // Dates
   orderDate      DateTime  @default(now()) @map("order_date")
   expectedDate   DateTime? @map("expected_date")
   receivedDate   DateTime? @map("received_date")
@@ -639,6 +1190,9 @@ model Purchase {
   ingredients PurchaseIngredient[]
   packaging   PurchasePackaging[]
   transaction Transaction?
+
+  @@index([supplierId])
+  @@index([status])
 }
 
 model PurchaseIngredient {
@@ -646,23 +1200,19 @@ model PurchaseIngredient {
   purchaseId   String @map("purchase_id")
   ingredientId String @map("ingredient_id")
 
-  // Quantity ordered
   quantity Float
-  unit     String? // Override ingredient unit if different
+  unit     String?
 
-  // Cost
-  costPerUnit Int   @map("cost_per_unit") // In pence per unit
+  costPerUnit Int   @map("cost_per_unit")
   packCost    Int?  @map("pack_cost")
-  totalCost   Float @map("total_cost")
+  totalCost   Float
 
-  // Fulfillment
-  quantityOrdered  Float     @default(0) @map("quantity_ordered")
-  quantityReceived Float     @default(0) @map("quantity_received")
-  received         Boolean   @default(false)
-  stockAdded       Boolean   @default(false) @map("stock_added")
-  stockAddedAt     DateTime? @map("stock_added_at")
+  qtyOrdered   Float     @default(0) @map("qty_ordered")
+  qtyReceived  Float     @default(0) @map("qty_received")
+  received     Boolean   @default(false)
+  stockAdded   Boolean   @default(false) @map("stock_added")
+  stockAddedAt DateTime? @map("stock_added_at")
 
-  // Batch info
   batchNumber String?   @map("batch_number")
   expiryDate  DateTime? @map("expiry_date")
 
@@ -678,13 +1228,13 @@ model PurchasePackaging {
   packagingId String @map("packaging_id")
 
   quantity    Int
-  costPerUnit Int   @map("cost_per_unit") // In pence
+  costPerUnit Int   @map("cost_per_unit")
   totalCost   Float
 
-  quantityReceived Int       @default(0) @map("quantity_received")
-  received         Boolean   @default(false)
-  stockAdded       Boolean   @default(false) @map("stock_added")
-  stockAddedAt     DateTime? @map("stock_added_at")
+  qtyReceived  Int       @default(0) @map("qty_received")
+  received     Boolean   @default(false)
+  stockAdded   Boolean   @default(false) @map("stock_added")
+  stockAddedAt DateTime? @map("stock_added_at")
 
   purchase  Purchase  @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
   packaging Packaging @relation(fields: [packagingId], references: [id])
@@ -692,52 +1242,49 @@ model PurchasePackaging {
   @@index([purchaseId])
 }
 
-// ============================================
-// Production Tracking
-// ============================================
+// ============================================================================
+// PRODUCTION TRACKING
+// ============================================================================
 
 model ProductionBatch {
   id          String @id @default(cuid())
   batchNumber String @unique @map("batch_number")
 
-  // What was made
   productId String @map("product_id")
   quantity  Int
 
-  // Planned vs actual
-  plannedStart DateTime? @map("planned_start")
-  actualStart  DateTime? @map("actual_start")
-  completedAt  DateTime? @map("completed_at")
+  plannedDate DateTime? @map("planned_date")
+  plannedBy   String?   @map("planned_by")
 
-  // Times (in minutes)
-  prepTime  Int? @map("prep_time")
-  bakeTime  Int? @map("bake_time")
-  totalTime Int? @map("total_time")
+  actualStart DateTime? @map("actual_start")
+  completedAt DateTime? @map("completed_at")
 
-  // Quality
-  status       String   @default("PLANNED") // PLANNED, IN_PROGRESS, COMPLETED, QUALITY_CHECK, REJECTED
-  qualityNotes String?  @map("quality_notes")
-  passedQc     Boolean? @map("passed_qc")
+  prepTimeMins  Int? @map("prep_time_mins")
+  bakeTimeMins  Int? @map("bake_time_mins")
+  totalTimeMins Int? @map("total_time_mins")
 
-  // Yield tracking
-  targetYield Int? @map("target_yield") // Expected number of items
+  status  String    @default("PLANNED")
+  qaNotes String?   @map("qa_notes")
+  qaBy    String?   @map("qa_by")
+  qaAt    DateTime? @map("qa_at")
+
+  targetYield Int? @map("target_yield")
   actualYield Int? @map("actual_yield")
+  wasteQty    Int  @default(0) @map("waste_qty")
 
-  // Cost
   ingredientCost Int @default(0) @map("ingredient_cost")
   laborCost      Int @default(0) @map("labor_cost")
-
-  // Ingredients used
-  ingredients ProductionIngredient[]
+  totalCost      Int @default(0) @map("total_cost")
 
   notes     String?
   createdAt DateTime @default(now())
   createdBy String?  @map("created_by")
 
-  product Product @relation(fields: [productId], references: [id])
+  product     Product                @relation(fields: [productId], references: [id])
+  ingredients ProductionIngredient[]
 
   @@index([productId])
-  @@index([batchNumber])
+  @@index([status])
 }
 
 model ProductionIngredient {
@@ -745,14 +1292,11 @@ model ProductionIngredient {
   batchId      String @map("batch_id")
   ingredientId String @map("ingredient_id")
 
-  // Usage
   plannedQty Float  @map("planned_qty")
   actualQty  Float? @map("actual_qty")
 
-  // From stock
   stockMovementId String? @map("stock_movement_id")
 
-  // Cost
   costValue Int @default(0) @map("cost_value")
 
   batch      ProductionBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
@@ -761,80 +1305,179 @@ model ProductionIngredient {
   @@index([batchId])
 }
 
-// ============================================
-// Waste Tracking
-// ============================================
+// ============================================================================
+// WASTE TRACKING (For investor metrics)
+// ============================================================================
 
 model WasteEntry {
-  id   String   @id @default(cuid())
-  date DateTime @default(now())
+  id          String @id @default(cuid())
+  wasteTypeId String @map("waste_type_id")
 
-  type     String // EXPIRED, DAMAGED, SPOILED, OVERPRODUCTION, QUALITY_FAIL, OTHER
-  category String // INGREDIENT, PACKAGING, PRODUCT
+  date     DateTime @default(now())
+  category String // INGREDIENT, PACKAGING, PRODUCT, PRODUCTION
 
-  // Reference
   productId    String? @map("product_id")
   ingredientId String? @map("ingredient_id")
   packagingId  String? @map("packaging_id")
   batchId      String? @map("batch_id")
+  orderId      String? @map("order_id")
 
-  // Quantity and value
   quantity  Float
-  unitCost  Int?  @map("unit_cost") // In pence
-  totalCost Int   @default(0) @map("total_cost")
+  unit      String?
+  unitCost  Int?    @map("unit_cost")
+  totalCost Int     @default(0) @map("total_cost")
 
-  // Reason
   reason String
   notes  String?
 
-  // Stock movements created
+  recovered      Boolean @default(false)
+  recoveryAmount Int     @default(0) @map("recovery_amount")
+
   stockMovementId String? @map("stock_movement_id")
 
   createdAt DateTime @default(now())
   createdBy String?  @map("created_by")
 
+  wasteType WasteType @relation(fields: [wasteTypeId], references: [id])
+
   @@index([date])
-  @@index([type])
+  @@index([category])
+  @@index([wasteTypeId])
 }
 
-// ============================================
-// Business Settings
-// ============================================
+// ============================================================================
+// REPORTING & ANALYTICS (Pre-computed for investors)
+// ============================================================================
+
+model DailySummary {
+  id   String   @id @default(cuid())
+  date DateTime @default(now()) @map("date")
+
+  ordersPlaced    Int @default(0) @map("orders_placed")
+  ordersCompleted Int @default(0) @map("orders_completed")
+  ordersCancelled Int @default(0) @map("orders_cancelled")
+
+  grossSales   Int @default(0) @map("gross_sales")
+  discounts    Int @default(0)
+  netSales     Int @default(0) @map("net_sales")
+  vatCollected Int @default(0) @map("vat_collected")
+
+  ingredientCost Int @default(0) @map("ingredient_cost")
+  packagingCost  Int @default(0) @map("packaging_cost")
+  laborCost      Int @default(0) @map("labor_cost")
+  costOfGoods    Int @default(0) @map("cost_of_goods")
+
+  grossProfit  Int   @default(0) @map("gross_profit")
+  profitMargin Float @default(0) @map("profit_margin")
+
+  expenses   Int @default(0)
+  wasteValue Int @default(0) @map("waste_value")
+
+  stockIn  Float @default(0) @map("stock_in")
+  stockOut Float @default(0) @map("stock_out")
+
+  newCustomers       Int @default(0) @map("new_customers")
+  returningCustomers Int @default(0) @map("returning_customers")
+
+  @@unique([date])
+  @@index([date])
+}
+
+model ProductSalesSummary {
+  id        String   @id @default(cuid())
+  date      DateTime @default(now()) @map("date")
+  productId String   @map("product_id")
+
+  quantitySold Int @default(0) @map("quantity_sold")
+  revenue      Int @default(0)
+  cost         Int @default(0)
+  profit       Int @default(0)
+
+  @@unique([date, productId])
+  @@index([productId])
+}
+
+// ============================================================================
+// AUDIT & COMPLIANCE
+// ============================================================================
+
+model AuditLog {
+  id     String @id @default(cuid())
+  userId String @map("user_id")
+
+  action   String // CREATE, READ, UPDATE, DELETE, LOGIN, LOGOUT, EXPORT
+  entity   String
+  entityId String? @map("entity_id")
+
+  changes  String?
+  metadata String?
+
+  ipAddress String? @map("ip_address")
+  userAgent String? @map("user_agent")
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([entity])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// BUSINESS SETTINGS
+// ============================================================================
 
 model BusinessSettings {
   id String @id @default(cuid())
 
-  // Business info
   businessName String  @default("The Little Bakers") @map("business_name")
+  tradingName  String? @map("trading_name")
   tagline      String?
-  address      String?
-  phone        String?
-  email        String?
-  website      String?
+  description  String?
 
-  // VAT
-  vatNumber String? @map("vat_number")
-  vatRate   Float   @default(20) @map("vat_rate") // Percentage
+  address   String?
+  phone     String?
+  email     String?
+  website   String?
+  facebook  String?
+  instagram String?
 
-  // Currency
+  vatNumber     String? @map("vat_number")
+  companyNumber String? @map("company_number")
+  vatRate       Float   @default(20) @map("vat_rate")
+  vatRegistered Boolean @default(false) @map("vat_registered")
+
   currency       String @default("GBP")
   currencySymbol String @default("£")
 
-  // Labor
   hourlyRate   Float @default(12.00) @map("hourly_rate")
   prepRate     Float @default(15.00) @map("prep_rate")
+  bakeRate     Float @default(12.00) @map("bake_rate")
   overtimeRate Float @default(18.00) @map("overtime_rate")
 
-  // Cost allocation
   overheadPercent Float @default(20) @map("overhead_percent")
   targetMargin    Float @default(40) @map("target_margin")
 
-  // Order settings
-  orderLeadTime  Int @default(72) @map("order_lead_time") // Hours notice required
-  maxDailyOrders Int @default(10) @map("max_daily_orders")
+  orderLeadTime  Int    @default(72) @map("order_lead_time")
+  maxDailyOrders Int    @default(10) @map("max_daily_orders")
+  cutoffTime     String @default("15:00") @map("cutoff_time")
 
-  // Operating hours
-  openingHours String @default("{}") // JSON object
+  deliveryEnabled     Boolean @default(false) @map("delivery_enabled")
+  minDeliveryOrder    Int     @default(2500) @map("min_delivery_order")
+  maxDeliveryDistance Int     @default(10) @map("max_delivery_distance")
+
+  collectionPoints String @default("[]")
+  openingHours     String @default("{}")
+
+  termsUrl   String? @map("terms_url")
+  privacyUrl String? @map("privacy_url")
+
+  shopEnabled     Boolean @default(false) @map("shop_enabled")
+  preorderEnabled Boolean @default(true) @map("preorder_enabled")
+
+  emailNotifications Boolean @default(true) @map("email_notifications")
+  orderAlerts        Boolean @default(true) @map("order_alerts")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
