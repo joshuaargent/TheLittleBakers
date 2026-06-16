@@ -1,8 +1,8 @@
 {
-  "name": "nextjstemplate",
+  "name": "thelittlebakers",
   "version": "1.0.0",
   "private": true,
-  "description": "Reusable Next.js template for any project. Built with Next.js, TypeScript, and Tailwind CSS.",
+  "description": "The Little Bakers - Local artisan bakery website with admin dashboard",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -16,11 +16,13 @@
     "test:run": "vitest run"
   },
   "dependencies": {
+    "@prisma/client": "^5.22.0",
     "@tailwindcss/postcss": "^4.2.4",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.4.2",
     "framer-motion": "^12.38.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.563.0",
@@ -28,6 +30,7 @@
     "next": "^16.2.6",
     "next-mdx-remote": "^6.0.0",
     "postcss": "^8.5.10",
+    "prisma": "^5.22.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-hot-toast": "^2.5.2",
@@ -54,6 +57,7 @@
     "jsdom": "^29.1.1",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.7.1",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "vitest": "^4.1.6"
   },

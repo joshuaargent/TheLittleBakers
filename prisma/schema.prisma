@@ -1,0 +1,200 @@
+// The Little Bakers - Admin Dashboard Database Schema
+// SQLite for local development
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// Core Entities
+// ============================================
+
+model Product {
+  id          String          @id @default(cuid())
+  name        String
+  description String?
+  category    String          // BREAD, PASTRIES, CAKES, COOKIES, SEASONAL, SPECIAL
+  status      String          @default("ACTIVE") // ACTIVE, DISCONTINUED
+  imageUrl    String?
+  allergens   String          @default("[]") // JSON array stored as string
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  // Pricing - stored as integers (pence/cents) to avoid floating point issues
+  currentPrice Int           @default(0) @map("current_price")
+  priceHistory ProductPriceHistory[]
+
+  // Relations
+  ingredients ProductIngredient[]
+  orderItems  OrderItem[]
+}
+
+model ProductPriceHistory {
+  id            String   @id @default(cuid())
+  productId     String   @map("product_id")
+  price         Int      // stored as pence/cents
+  effectiveDate DateTime @default(now()) @map("effective_date")
+  reason        String?
+  createdAt     DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model Ingredient {
+  id              String   @id @default(cuid())
+  name            String
+  category        String   // FLOUR, SUGAR, EGGS, DAIRY, FRUITS, NUTS, FLAVORINGS, RAISING_AGENTS, FATS, SALT, OTHER
+  unit            String   // kg, g, L, mL, pcs, dozen
+  currentStock    Float    @default(0) @map("current_stock")
+  reorderPoint    Float    @default(0) @map("reorder_point")
+  costPerUnit     Float    @default(0) @map("cost_per_unit")
+  supplier        String?
+  supplierContact String?  @map("supplier_contact")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // History
+  stockMovements  StockMovement[]
+  priceHistory    IngredientPriceHistory[]
+  products        ProductIngredient[]
+}
+
+model StockMovement {
+  id           String   @id @default(cuid())
+  ingredientId String   @map("ingredient_id")
+  type         String   // STOCK_IN, STOCK_OUT, ADJUSTMENT, WASTE
+  quantity     Float    // Can be positive or negative
+  balance      Float    // Stock level after this movement
+  reason       String?
+  reference    String?  // Optional link to order
+  createdAt    DateTime @default(now())
+
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@index([ingredientId])
+  @@index([createdAt])
+}
+
+model IngredientPriceHistory {
+  id            String   @id @default(cuid())
+  ingredientId  String   @map("ingredient_id")
+  costPerUnit   Float    @map("cost_per_unit")
+  effectiveDate DateTime @default(now()) @map("effective_date")
+  supplier      String?
+  createdAt     DateTime @default(now())
+
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@index([ingredientId])
+}
+
+model ProductIngredient {
+  id           String   @id @default(cuid())
+  productId    String   @map("product_id")
+  ingredientId String   @map("ingredient_id")
+  quantity     Float    // Amount needed per unit of product
+
+  product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, ingredientId])
+  @@index([productId])
+  @@index([ingredientId])
+}
+
+model Packaging {
+  id           String   @id @default(cuid())
+  name         String
+  type         String   // BOXES, BAGS, WRAPS, LABELS, CONTAINERS, OTHER
+  dimensions   String?  // L x W x H
+  costPerUnit  Int      @default(0) @map("cost_per_unit") // stored as pence/cents
+  currentStock Int      @default(0) @map("current_stock")
+  minStock     Int      @default(0) @map("min_stock")
+  supplier     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  priceHistory PackagingPriceHistory[]
+  orderItems   OrderItem[]
+}
+
+model PackagingPriceHistory {
+  id            String   @id @default(cuid())
+  packagingId   String   @map("packaging_id")
+  costPerUnit   Int      @map("cost_per_unit") // stored as pence/cents
+  effectiveDate DateTime @default(now()) @map("effective_date")
+  createdAt     DateTime @default(now())
+
+  packaging Packaging @relation(fields: [packagingId], references: [id], onDelete: Cascade)
+
+  @@index([packagingId])
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  orderNumber     String   @unique @map("order_number")
+  customerName    String   @map("customer_name")
+  customerContact String?  @map("customer_contact")
+  customerEmail   String?  @map("customer_email")
+  status          String   @default("PENDING") // PENDING, CONFIRMED, IN_PROGRESS, READY, COMPLETED, CANCELLED
+  notes           String?
+  subtotal        Int      @default(0) @map("subtotal") // stored as pence/cents
+  packagingCost   Int      @default(0) @map("packaging_cost") // stored as pence/cents
+  total           Int      @default(0) @map("total") // stored as pence/cents
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  completedAt     DateTime? @map("completed_at")
+
+  items         OrderItem[]
+  statusHistory OrderStatusHistory[]
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String   @map("order_id")
+  productId   String   @map("product_id")
+  quantity    Int
+  unitPrice   Int      @map("unit_price") // stored as pence/cents
+  totalPrice  Int      @map("total_price") // stored as pence/cents
+  packagingId String?  @map("packaging_id")
+
+  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product   @relation(fields: [productId], references: [id])
+  packaging Packaging? @relation(fields: [packagingId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model OrderStatusHistory {
+  id        String   @id @default(cuid())
+  orderId   String   @map("order_id")
+  status    String
+  note      String?
+  createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  type        String   // INCOME, EXPENSE
+  category    String
+  amount      Int      // stored as pence/cents
+  description String?
+  date        DateTime @default(now())
+  reference   String?  // Link to order or expense receipt
+  createdAt   DateTime @default(now())
+
+  @@index([date])
+  @@index([type])
+}
