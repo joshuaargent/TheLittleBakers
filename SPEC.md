@@ -1,5 +1,47 @@
 # The Little Bakers - Admin Dashboard Specification
 
+## Deployment
+
+### Prerequisites
+
+A PostgreSQL database is required for production deployment (SQLite doesn't work on Vercel's serverless environment).
+
+### Getting Started
+
+1. **Set up a PostgreSQL database** (choose one):
+   - [Supabase](https://supabase.com) - Free tier available
+   - [Neon](https://neon.tech) - Free tier available
+   - [Railway](https://railway.app) - Free tier available
+
+2. **Get your connection string** from your database provider:
+   ```
+   postgresql://user:password@host:5432/database
+   ```
+
+3. **Configure in Vercel:**
+   - Go to your project settings → Environment Variables
+   - Add `DATABASE_URL` with your PostgreSQL connection string
+
+4. **Deploy** - The build will automatically run `prisma generate && next build`
+
+### Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Generate Prisma client
+npx prisma generate
+
+# Push schema to SQLite database
+npx prisma db push
+
+# Start development server
+npm run dev
+```
+
+---
+
 ## 1. Concept & Vision
 
 A warm, professional admin dashboard for a local artisan bakery called "The Little Bakers." The interface balances functional efficiency with the artisanal warmth of a small-batch bakery—clean data presentation with subtle craft touches that reflect the handmade nature of the products. The dashboard empowers you and Chloe to manage every aspect of the business from orders to ingredient inventory with clarity and confidence.
