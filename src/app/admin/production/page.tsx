@@ -1,10 +1,10 @@
 export const dynamic = 'force-dynamic';
 import prisma from '@/lib/prisma';
-import { Badge, Button, EnhancedDataTable } from '@/components/admin/ui';
-import { Column } from '@/components/admin/ui';
+import { Button } from '@/components/admin/ui';
+import { ProductionTable } from '@/components/admin/ui/ProductionTable';
 import { formatCurrency } from '@/types';
 import Link from 'next/link';
-import { Plus, Factory, Clock, Check, AlertTriangle, Timer } from 'lucide-react';
+import { Plus, Factory, Timer, Check } from 'lucide-react';
 
 async function getProductionBatches() {
   return prisma.productionBatch.findMany({
@@ -20,125 +20,6 @@ async function getProductionBatches() {
 
 export default async function ProductionPage() {
   const batches = await getProductionBatches();
-
-  const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
-    PLANNED: { label: 'Planned', color: 'bg-blue-100 text-blue-800', icon: <Clock className="h-4 w-4" /> },
-    IN_PROGRESS: { label: 'In Progress', color: 'bg-amber-100 text-amber-800', icon: <Timer className="h-4 w-4" /> },
-    COMPLETED: { label: 'Completed', color: 'bg-green-100 text-green-800', icon: <Check className="h-4 w-4" /> },
-    CANCELLED: { label: 'Cancelled', color: 'bg-red-100 text-red-800', icon: <AlertTriangle className="h-4 w-4" /> },
-    QA_FAILED: { label: 'QA Failed', color: 'bg-red-100 text-red-800', icon: <AlertTriangle className="h-4 w-4" /> },
-  };
-
-  const columns: Column<(typeof batches)[0]>[] = [
-    {
-      key: 'batchNumber',
-      header: 'Batch',
-      sortable: true,
-      render: (batch) => (
-        <div>
-          <p className="font-medium text-[var(--color-text-primary)]">
-            {batch.batchNumber}
-          </p>
-          <p className="text-xs text-[var(--color-text-muted)]">
-            {batch.product.name}
-          </p>
-        </div>
-      ),
-    },
-    {
-      key: 'status',
-      header: 'Status',
-      render: (batch) => {
-        const config = statusConfig[batch.status] || statusConfig.PLANNED;
-        return (
-          <Badge className={config.color}>
-            {config.label}
-          </Badge>
-        );
-      },
-    },
-    {
-      key: 'quantity',
-      header: 'Quantity',
-      sortable: true,
-      render: (batch) => (
-        <span className="font-medium text-[var(--color-text-primary)]">
-          {batch.quantity} units
-        </span>
-      ),
-    },
-    {
-      key: 'plannedDate',
-      header: 'Planned',
-      sortable: true,
-      render: (batch) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
-          {batch.plannedDate
-            ? new Date(batch.plannedDate).toLocaleDateString('en-GB')
-            : '-'}
-        </span>
-      ),
-    },
-    {
-      key: 'actualStart',
-      header: 'Started',
-      render: (batch) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
-          {batch.actualStart
-            ? new Date(batch.actualStart).toLocaleDateString('en-GB')
-            : '-'}
-        </span>
-      ),
-    },
-    {
-      key: 'completedAt',
-      header: 'Completed',
-      sortable: true,
-      render: (batch) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
-          {batch.completedAt
-            ? new Date(batch.completedAt).toLocaleDateString('en-GB')
-            : '-'}
-        </span>
-      ),
-    },
-    {
-      key: 'totalCost',
-      header: 'Cost',
-      sortable: true,
-      render: (batch) => (
-        <span className="font-medium text-[var(--color-text-primary)]">
-          {formatCurrency(batch.totalCost)}
-        </span>
-      ),
-    },
-    {
-      key: 'wasteQty',
-      header: 'Waste',
-      render: (batch) => (
-        batch.wasteQty > 0 ? (
-          <span className="font-medium text-red-600">
-            {batch.wasteQty} units
-          </span>
-        ) : (
-          <span className="text-[var(--color-text-muted)]">None</span>
-        )
-      ),
-    },
-    {
-      key: 'id',
-      header: '',
-      width: '60px',
-      render: (batch) => (
-        <Link
-          href={`/admin/production/${batch.id}`}
-          className="text-sm font-medium text-[var(--color-primary)] hover:underline"
-        >
-          View →
-        </Link>
-      ),
-    },
-  ];
 
   const activeBatches = batches.filter(b => ['PLANNED', 'IN_PROGRESS'].includes(b.status));
   const completedToday = batches.filter(b => 
@@ -222,14 +103,7 @@ export default async function ProductionPage() {
       </div>
 
       {/* Batches Table */}
-      <EnhancedDataTable
-        data={batches}
-        columns={columns}
-        keyField="id"
-        pageSize={15}
-        searchPlaceholder="Search batches..."
-        emptyMessage="No production batches found. Create your first batch to get started."
-      />
+      <ProductionTable batches={batches} />
     </div>
   );
 }

@@ -16,3 +16,11 @@ export { EmptyState } from './EmptyState';
 export { LoadingState, CardSkeleton } from './LoadingState';
 export { ActionMenu, QuickActions } from './ActionMenu';
 export { StatsGrid } from './StatsGrid';
+
+// Table components
+export { SuppliersTable } from './SuppliersTable';
+export { CustomersTable } from './CustomersTable';
+export { ProductionTable } from './ProductionTable';
+export { PurchasesTable } from './PurchasesTable';
+export { WasteTable } from './WasteTable';
+export { TransactionsTable } from './TransactionsTable';

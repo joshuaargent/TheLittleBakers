@@ -1,10 +1,9 @@
 export const dynamic = 'force-dynamic';
 import prisma from '@/lib/prisma';
-import { Badge, Button, EnhancedDataTable } from '@/components/admin/ui';
-import { Column } from '@/components/admin/ui';
+import { Button } from '@/components/admin/ui';
+import { CustomersTable } from '@/components/admin/ui/CustomersTable';
 import { formatCurrency } from '@/types';
-import Link from 'next/link';
-import { Plus, Search, Users, Mail, Phone, MapPin } from 'lucide-react';
+import { Plus, Users } from 'lucide-react';
 
 async function getCustomers() {
   return prisma.customer.findMany({
@@ -19,121 +18,6 @@ async function getCustomers() {
 
 export default async function CustomersPage() {
   const customers = await getCustomers();
-
-  const columns: Column<(typeof customers)[0]>[] = [
-    {
-      key: 'firstName',
-      header: 'Customer',
-      sortable: true,
-      render: (customer) => (
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary-light)]">
-            <span className="text-sm font-semibold text-[var(--color-primary)]">
-              {customer.firstName[0]}{customer.lastName[0]}
-            </span>
-          </div>
-          <div>
-            <p className="font-medium text-[var(--color-text-primary)]">
-              {customer.firstName} {customer.lastName}
-            </p>
-            <p className="text-xs text-[var(--color-text-muted)]">
-              {customer.type} • {customer.tier}
-            </p>
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: 'email',
-      header: 'Contact',
-      render: (customer) => (
-        <div className="space-y-1">
-          {customer.email && (
-            <p className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
-              <Mail className="h-3 w-3" />
-              {customer.email}
-            </p>
-          )}
-          {customer.phone && (
-            <p className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
-              <Phone className="h-3 w-3" />
-              {customer.phone}
-            </p>
-          )}
-        </div>
-      ),
-    },
-    {
-      key: 'loyaltyPoints',
-      header: 'Loyalty Points',
-      sortable: true,
-      render: (customer) => (
-        <Badge variant={customer.loyaltyPoints > 100 ? 'success' : 'neutral'}>
-          {customer.loyaltyPoints.toLocaleString()} pts
-        </Badge>
-      ),
-    },
-    {
-      key: 'totalSpent',
-      header: 'Total Spent',
-      sortable: true,
-      render: (customer) => (
-        <span className="font-medium text-[var(--color-text-primary)]">
-          {formatCurrency(customer.totalSpent)}
-        </span>
-      ),
-    },
-    {
-      key: 'orderCount',
-      header: 'Orders',
-      sortable: true,
-      render: (customer) => (
-        <span className="text-[var(--color-text-secondary)]">
-          {customer._count.orders}
-        </span>
-      ),
-    },
-    {
-      key: 'tier',
-      header: 'Tier',
-      render: (customer) => {
-        const tierColors: Record<string, string> = {
-          STANDARD: 'bg-gray-100 text-gray-800',
-          SILVER: 'bg-gray-200 text-gray-800',
-          GOLD: 'bg-amber-100 text-amber-800',
-          PLATINUM: 'bg-purple-100 text-purple-800',
-          VIP: 'bg-pink-100 text-pink-800',
-        };
-        return (
-          <Badge className={tierColors[customer.tier] || 'bg-gray-100 text-gray-800'}>
-            {customer.tier}
-          </Badge>
-        );
-      },
-    },
-    {
-      key: 'isActive',
-      header: 'Status',
-      render: (customer) => (
-        <Badge variant={customer.isActive ? 'success' : 'danger'}>
-          {customer.isActive ? 'Active' : 'Inactive'}
-        </Badge>
-      ),
-    },
-    {
-      key: 'id',
-      header: '',
-      width: '60px',
-      render: (customer) => (
-        <Link
-          href={`/admin/customers/${customer.id}`}
-          className="text-sm font-medium text-[var(--color-primary)] hover:underline"
-        >
-          View →
-        </Link>
-      ),
-    },
-  ];
 
   return (
     <div className="space-y-6">
@@ -207,14 +91,7 @@ export default async function CustomersPage() {
       </div>
 
       {/* Customers Table */}
-      <EnhancedDataTable
-        data={customers}
-        columns={columns}
-        keyField="id"
-        pageSize={15}
-        searchPlaceholder="Search customers..."
-        emptyMessage="No customers found. Add your first customer to get started."
-      />
+      <CustomersTable customers={customers} />
     </div>
   );
 }

@@ -1,10 +1,10 @@
 export const dynamic = 'force-dynamic';
 import prisma from '@/lib/prisma';
-import { Badge, Button, EnhancedDataTable } from '@/components/admin/ui';
-import { Column } from '@/components/admin/ui';
+import { Badge, Button } from '@/components/admin/ui';
+import { WasteTable } from '@/components/admin/ui/WasteTable';
 import { formatCurrency } from '@/types';
 import Link from 'next/link';
-import { Plus, Trash2, AlertTriangle, TrendingDown, DollarSign, Calendar } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle, DollarSign } from 'lucide-react';
 
 async function getWasteEntries() {
   return prisma.wasteEntry.findMany({
@@ -25,98 +25,6 @@ export default async function WastePage() {
     PRODUCT: { label: 'Product', color: 'bg-purple-100 text-purple-800' },
     PRODUCTION: { label: 'Production', color: 'bg-red-100 text-red-800' },
   };
-
-  const columns: Column<(typeof wasteEntries)[0]>[] = [
-    {
-      key: 'date',
-      header: 'Date',
-      sortable: true,
-      render: (entry) => (
-        <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-[var(--color-text-muted)]" />
-          <span className="text-sm text-[var(--color-text-secondary)]">
-            {new Date(entry.date).toLocaleDateString('en-GB')}
-          </span>
-        </div>
-      ),
-    },
-    {
-      key: 'category',
-      header: 'Category',
-      render: (entry) => {
-        const config = categoryConfig[entry.category] || categoryConfig.INGREDIENT;
-        return (
-          <Badge className={config.color}>
-            {config.label}
-          </Badge>
-        );
-      },
-    },
-    {
-      key: 'wasteType',
-      header: 'Type',
-      render: (entry) => (
-        <span className="text-sm text-[var(--color-text-primary)]">
-          {entry.wasteType.name}
-        </span>
-      ),
-    },
-    {
-      key: 'quantity',
-      header: 'Quantity',
-      sortable: true,
-      render: (entry) => (
-        <span className="font-medium text-[var(--color-text-primary)]">
-          {entry.quantity} {entry.unit || ''}
-        </span>
-      ),
-    },
-    {
-      key: 'totalCost',
-      header: 'Value Lost',
-      sortable: true,
-      render: (entry) => (
-        <span className="font-medium text-red-600">
-          {formatCurrency(entry.totalCost)}
-        </span>
-      ),
-    },
-    {
-      key: 'reason',
-      header: 'Reason',
-      render: (entry) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
-          {entry.reason}
-        </span>
-      ),
-    },
-    {
-      key: 'recovered',
-      header: 'Recovered',
-      render: (entry) => (
-        entry.recovered ? (
-          <span className="text-green-600 font-medium">
-            {formatCurrency(entry.recoveryAmount)}
-          </span>
-        ) : (
-          <span className="text-[var(--color-text-muted)]">No</span>
-        )
-      ),
-    },
-    {
-      key: 'id',
-      header: '',
-      width: '60px',
-      render: (entry) => (
-        <Link
-          href={`/admin/waste/${entry.id}`}
-          className="text-sm font-medium text-[var(--color-primary)] hover:underline"
-        >
-          View →
-        </Link>
-      ),
-    },
-  ];
 
   // Calculate stats
   const today = new Date();
@@ -239,14 +147,7 @@ export default async function WastePage() {
       </div>
 
       {/* Waste Entries Table */}
-      <EnhancedDataTable
-        data={wasteEntries}
-        columns={columns}
-        keyField="id"
-        pageSize={15}
-        searchPlaceholder="Search waste entries..."
-        emptyMessage="No waste entries found. Start tracking waste to reduce losses."
-      />
+      <WasteTable entries={wasteEntries} />
     </div>
   );
 }

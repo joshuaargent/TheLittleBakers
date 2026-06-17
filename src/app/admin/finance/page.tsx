@@ -1,10 +1,10 @@
 export const dynamic = 'force-dynamic';
 import prisma from '@/lib/prisma';
-import { StatCard, Badge, Button, DataTable } from '@/components/admin/ui';
-import { Column } from '@/components/admin/ui';
+import { StatCard, Button } from '@/components/admin/ui';
+import { TransactionsTable } from '@/components/admin/ui/TransactionsTable';
 import { formatCurrency, EXPENSE_CATEGORIES } from '@/types';
 import Link from 'next/link';
-import { Plus, Search, DollarSign, TrendingUp, TrendingDown, Banknote } from 'lucide-react';
+import { Plus, DollarSign, TrendingUp, TrendingDown, Banknote } from 'lucide-react';
 
 async function getFinanceData() {
   const now = new Date();
@@ -104,63 +104,6 @@ export default async function FinancePage() {
     ? ((thisMonthExpenses - lastMonthExpenses) / lastMonthExpenses) * 100
     : 0;
 
-  const transactionColumns: Column<{
-    id: string;
-    type: string;
-    category: { code: string; name: string };
-    amount: number;
-    description: string | null;
-    date: Date;
-  }>[] = [
-    {
-      key: 'date',
-      header: 'Date',
-      sortable: true,
-      render: (item) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
-          {new Date(item.date).toLocaleDateString('en-GB')}
-        </span>
-      ),
-    },
-    {
-      key: 'type',
-      header: 'Type',
-      render: (item) => (
-        <Badge className={item.type === 'INCOME' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
-          {item.type}
-        </Badge>
-      ),
-    },
-    {
-      key: 'category',
-      header: 'Category',
-      render: (item) => (
-        <span className="text-sm text-[var(--color-text-primary)]">
-          {item.category.name || item.category.code}
-        </span>
-      ),
-    },
-    {
-      key: 'description',
-      header: 'Description',
-      render: (item) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
-          {item.description || '-'}
-        </span>
-      ),
-    },
-    {
-      key: 'amount',
-      header: 'Amount',
-      sortable: true,
-      render: (item) => (
-        <span className={`font-medium ${item.type === 'INCOME' ? 'text-green-600' : 'text-red-600'}`}>
-          {item.type === 'INCOME' ? '+' : '-'}{formatCurrency(item.amount)}
-        </span>
-      ),
-    },
-  ];
-
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -179,21 +122,21 @@ export default async function FinancePage() {
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="This Month's Revenue"
+          title="This Month&apos;s Revenue"
           value={formatCurrency(thisMonthIncome)}
           icon={TrendingUp}
           trend={incomeTrend}
           trendLabel="vs last month"
         />
         <StatCard
-          title="This Month's Expenses"
+          title="This Month&apos;s Expenses"
           value={formatCurrency(thisMonthExpenses)}
           icon={TrendingDown}
           trend={expenseTrend}
           trendLabel="vs last month"
         />
         <StatCard
-          title="This Month's Profit"
+          title="This Month&apos;s Profit"
           value={formatCurrency(thisMonthProfit)}
           icon={DollarSign}
         />
@@ -248,12 +191,7 @@ export default async function FinancePage() {
               </p>
             </div>
           ) : (
-            <DataTable
-              data={recentTransactions}
-              columns={transactionColumns}
-              keyField="id"
-              pageSize={10}
-            />
+            <TransactionsTable transactions={recentTransactions} />
           )}
         </div>
       </div>

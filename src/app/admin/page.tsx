@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic';
-import { StatsGrid, Badge, EmptyState } from '@/components/admin/ui';
+import { StatsGrid, Badge } from '@/components/admin/ui';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
 import { formatCurrency, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, OrderStatus } from '@/types';

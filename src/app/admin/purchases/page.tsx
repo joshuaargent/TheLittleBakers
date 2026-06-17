@@ -1,10 +1,10 @@
 export const dynamic = 'force-dynamic';
 import prisma from '@/lib/prisma';
-import { Badge, Button, EnhancedDataTable } from '@/components/admin/ui';
-import { Column } from '@/components/admin/ui';
+import { Button } from '@/components/admin/ui';
+import { PurchasesTable } from '@/components/admin/ui/PurchasesTable';
 import { formatCurrency } from '@/types';
 import Link from 'next/link';
-import { Plus, FileText, Truck, Check, Clock, AlertTriangle } from 'lucide-react';
+import { Plus, FileText, Truck, Check, Clock } from 'lucide-react';
 
 async function getPurchases() {
   return prisma.purchase.findMany({
@@ -20,113 +20,6 @@ async function getPurchases() {
 
 export default async function PurchasesPage() {
   const purchases = await getPurchases();
-
-  const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
-    DRAFT: { label: 'Draft', color: 'bg-gray-100 text-gray-800', icon: <FileText className="h-4 w-4" /> },
-    ORDERED: { label: 'Ordered', color: 'bg-blue-100 text-blue-800', icon: <Clock className="h-4 w-4" /> },
-    PARTIAL: { label: 'Partial', color: 'bg-amber-100 text-amber-800', icon: <AlertTriangle className="h-4 w-4" /> },
-    RECEIVED: { label: 'Received', color: 'bg-green-100 text-green-800', icon: <Check className="h-4 w-4" /> },
-    CANCELLED: { label: 'Cancelled', color: 'bg-red-100 text-red-800', icon: <FileText className="h-4 w-4" /> },
-  };
-
-  const columns: Column<(typeof purchases)[0]>[] = [
-    {
-      key: 'orderNumber',
-      header: 'Purchase Order',
-      sortable: true,
-      render: (purchase) => (
-        <div>
-          <p className="font-medium text-[var(--color-text-primary)]">
-            {purchase.orderNumber || purchase.invoiceNumber || purchase.id.slice(0, 8)}
-          </p>
-          <p className="text-xs text-[var(--color-text-muted)]">
-            {purchase.supplier.name}
-          </p>
-        </div>
-      ),
-    },
-    {
-      key: 'status',
-      header: 'Status',
-      render: (purchase) => {
-        const config = statusConfig[purchase.status] || statusConfig.DRAFT;
-        return (
-          <Badge className={config.color}>
-            {config.label}
-          </Badge>
-        );
-      },
-    },
-    {
-      key: 'paymentStatus',
-      header: 'Payment',
-      render: (purchase) => {
-        const colors: Record<string, string> = {
-          PENDING: 'bg-amber-100 text-amber-800',
-          PAID: 'bg-green-100 text-green-800',
-          OVERDUE: 'bg-red-100 text-red-800',
-        };
-        return (
-          <Badge className={colors[purchase.paymentStatus] || 'bg-gray-100 text-gray-800'}>
-            {purchase.paymentStatus}
-          </Badge>
-        );
-      },
-    },
-    {
-      key: 'items',
-      header: 'Items',
-      render: (purchase) => (
-        <span className="text-[var(--color-text-secondary)]">
-          {purchase._count.ingredients + purchase._count.packaging} items
-        </span>
-      ),
-    },
-    {
-      key: 'total',
-      header: 'Total',
-      sortable: true,
-      render: (purchase) => (
-        <span className="font-medium text-[var(--color-text-primary)]">
-          {formatCurrency(purchase.total)}
-        </span>
-      ),
-    },
-    {
-      key: 'orderDate',
-      header: 'Order Date',
-      sortable: true,
-      render: (purchase) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
-          {new Date(purchase.orderDate).toLocaleDateString('en-GB')}
-        </span>
-      ),
-    },
-    {
-      key: 'expectedDate',
-      header: 'Expected',
-      render: (purchase) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
-          {purchase.expectedDate
-            ? new Date(purchase.expectedDate).toLocaleDateString('en-GB')
-            : '-'}
-        </span>
-      ),
-    },
-    {
-      key: 'id',
-      header: '',
-      width: '60px',
-      render: (purchase) => (
-        <Link
-          href={`/admin/purchases/${purchase.id}`}
-          className="text-sm font-medium text-[var(--color-primary)] hover:underline"
-        >
-          View →
-        </Link>
-      ),
-    },
-  ];
 
   const pendingPurchases = purchases.filter(p => ['DRAFT', 'ORDERED', 'PARTIAL'].includes(p.status));
   const totalPending = pendingPurchases.reduce((sum, p) => sum + p.total, 0);
@@ -205,14 +98,7 @@ export default async function PurchasesPage() {
       </div>
 
       {/* Purchases Table */}
-      <EnhancedDataTable
-        data={purchases}
-        columns={columns}
-        keyField="id"
-        pageSize={15}
-        searchPlaceholder="Search purchases..."
-        emptyMessage="No purchase orders found. Create your first purchase order to get started."
-      />
+      <PurchasesTable purchases={purchases} />
     </div>
   );
 }
