@@ -1,12 +1,28 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { TrendingUp, TrendingDown, LucideIcon } from 'lucide-react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
+import {
+  DollarSign,
+  Banknote,
+  TrendingUp as TrendingUpIcon,
+  TrendingDown as TrendingDownIcon,
+  LucideIcon,
+} from 'lucide-react';
+
+type IconName = 'DollarSign' | 'Banknote' | 'TrendingUp' | 'TrendingDown';
+
+const iconMap: Record<IconName, LucideIcon> = {
+  DollarSign,
+  Banknote,
+  TrendingUp: TrendingUpIcon,
+  TrendingDown: TrendingDownIcon,
+};
 
 interface StatCardProps {
   title: string;
   value: string | number;
-  icon: LucideIcon;
+  icon: IconName;
   trend?: number;
   trendLabel?: string;
   onClick?: () => void;
@@ -16,13 +32,14 @@ interface StatCardProps {
 export function StatCard({
   title,
   value,
-  icon: Icon,
+  icon,
   trend,
   trendLabel,
   onClick,
   className,
 }: StatCardProps) {
   const isPositive = trend !== undefined && trend >= 0;
+  const Icon = iconMap[icon];
   const TrendIcon = isPositive ? TrendingUp : TrendingDown;
 
   return (

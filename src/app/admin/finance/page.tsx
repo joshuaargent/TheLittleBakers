@@ -124,26 +124,26 @@ export default async function FinancePage() {
         <StatCard
           title="This Month&apos;s Revenue"
           value={formatCurrency(thisMonthIncome)}
-          icon={TrendingUp}
+          icon='TrendingUp'
           trend={incomeTrend}
           trendLabel="vs last month"
         />
         <StatCard
           title="This Month&apos;s Expenses"
           value={formatCurrency(thisMonthExpenses)}
-          icon={TrendingDown}
+          icon='TrendingDown'
           trend={expenseTrend}
           trendLabel="vs last month"
         />
         <StatCard
           title="This Month&apos;s Profit"
           value={formatCurrency(thisMonthProfit)}
-          icon={DollarSign}
+          icon='DollarSign'
         />
         <StatCard
           title="Profit Margin"
           value={`${profitMargin.toFixed(1)}%`}
-          icon={Banknote}
+          icon='Banknote'
         />
       </div>
 
