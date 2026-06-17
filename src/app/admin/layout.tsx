@@ -6,32 +6,31 @@ import {
   LayoutDashboard,
   Package,
   ShoppingCart,
-  Boxes,
   DollarSign,
-  Users,
-  Truck,
-  ShoppingBag,
-  Factory,
-  Trash2,
   Settings,
   Menu,
   X,
-  FileText,
+  MoreHorizontal,
 } from 'lucide-react'
 import { useState } from 'react'
 
-const adminNav = [
+// Main nav - only essential items
+const mainNav = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Products', href: '/admin/products', icon: Package },
-  { name: 'Ingredients', href: '/admin/ingredients', icon: Boxes },
-  { name: 'Packaging', href: '/admin/packaging', icon: ShoppingBag },
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
-  { name: 'Customers', href: '/admin/customers', icon: Users },
-  { name: 'Suppliers', href: '/admin/suppliers', icon: Truck },
-  { name: 'Purchases', href: '/admin/purchases', icon: FileText },
-  { name: 'Production', href: '/admin/production', icon: Factory },
-  { name: 'Waste', href: '/admin/waste', icon: Trash2 },
   { name: 'Finance', href: '/admin/finance', icon: DollarSign },
+]
+
+// More nav - accessible via dropdown on desktop
+const moreNav = [
+  { name: 'Ingredients', href: '/admin/ingredients' },
+  { name: 'Packaging', href: '/admin/packaging' },
+  { name: 'Customers', href: '/admin/customers' },
+  { name: 'Suppliers', href: '/admin/suppliers' },
+  { name: 'Purchases', href: '/admin/purchases' },
+  { name: 'Production', href: '/admin/production' },
+  { name: 'Waste', href: '/admin/waste' },
 ]
 
 export default function AdminLayout({
@@ -41,25 +40,23 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showMoreMenu, setShowMoreMenu] = useState(false)
 
   return (
     <div className="min-h-screen bg-[var(--color-bg-primary)]">
       {/* Header - Horizontal Navbar */}
       <header className="bg-[#C2703E] text-white sticky top-0 z-50 shadow-md">
         <div className="container">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-14">
             {/* Logo */}
-            <Link href="/admin" className="flex items-center gap-3">
-              <span className="text-2xl">🥐</span>
-              <div>
-                <span className="font-serif font-bold text-lg">The Little Bakers</span>
-                <span className="block text-xs text-white/70">Admin</span>
-              </div>
+            <Link href="/admin" className="flex items-center gap-2">
+              <span className="text-xl">🥐</span>
+              <span className="font-serif font-bold">The Little Bakers</span>
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden xl:flex items-center gap-1">
-              {adminNav.map((item) => {
+            {/* Desktop Navigation - Compact */}
+            <nav className="hidden lg:flex items-center gap-1">
+              {mainNav.map((item) => {
                 const Icon = item.icon
                 const isActive = pathname === item.href ||
                   (item.href !== '/admin' && pathname.startsWith(item.href))
@@ -68,7 +65,7 @@ export default function AdminLayout({
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm ${
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
                       isActive
                         ? 'bg-white/20 text-white'
                         : 'text-white/80 hover:bg-white/10 hover:text-white'
@@ -79,14 +76,59 @@ export default function AdminLayout({
                   </Link>
                 )
               })}
+              
+              {/* More dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowMoreMenu(!showMoreMenu)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                    showMoreMenu
+                      ? 'bg-white/20 text-white'
+                      : 'text-white/80 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <MoreHorizontal className="w-4 h-4" />
+                  More
+                </button>
+                
+                {showMoreMenu && (
+                  <div 
+                    className="absolute right-0 top-full mt-1 w-48 bg-[var(--color-bg-card)] rounded-lg shadow-lg border border-[var(--color-border)] py-1 z-50"
+                    onMouseLeave={() => setShowMoreMenu(false)}
+                  >
+                    {moreNav.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`block px-4 py-2 text-sm transition-colors ${
+                          pathname.startsWith(item.href)
+                            ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)]'
+                            : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)]'
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             </nav>
 
             {/* Right Side */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              {/* View Website */}
+              <Link
+                href="/"
+                target="_blank"
+                className="hidden lg:flex items-center gap-2 px-3 py-1.5 text-white/80 hover:bg-white/10 hover:text-white rounded-lg transition-colors text-sm"
+              >
+                View Site
+              </Link>
+
               {/* Settings */}
               <Link
                 href="/admin/settings"
-                className={`hidden xl:flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm ${
+                className={`hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
                   pathname === '/admin/settings'
                     ? 'bg-white/20 text-white'
                     : 'text-white/80 hover:bg-white/10 hover:text-white'
@@ -96,66 +138,81 @@ export default function AdminLayout({
                 Settings
               </Link>
 
-              {/* View Website */}
-              <Link
-                href="/"
-                target="_blank"
-                className="hidden xl:flex items-center gap-2 px-3 py-2 text-white/80 hover:bg-white/10 hover:text-white rounded-lg transition-colors text-sm"
-              >
-                View Website →
-              </Link>
-
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="xl:hidden p-2 text-white/80 hover:text-white"
+                className="lg:hidden p-2 text-white/80 hover:text-white"
               >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
           </div>
 
-          {/* Mobile Navigation */}
+          {/* Mobile Navigation - Full list */}
           {mobileMenuOpen && (
-            <nav className="xl:hidden border-t border-white/10 py-4 max-h-[80vh] overflow-y-auto">
-              {adminNav.map((item) => {
-                const Icon = item.icon
-                const isActive = pathname === item.href ||
-                  (item.href !== '/admin' && pathname.startsWith(item.href))
+            <nav className="lg:hidden border-t border-white/10 py-3 max-h-[70vh] overflow-y-auto">
+              <div className="space-y-1">
+                {mainNav.map((item) => {
+                  const Icon = item.icon
+                  const isActive = pathname === item.href ||
+                    (item.href !== '/admin' && pathname.startsWith(item.href))
 
-                return (
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-lg mx-2 transition-colors text-sm ${
+                        isActive
+                          ? 'bg-white/20 text-white'
+                          : 'text-white/80 hover:bg-white/10'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {item.name}
+                    </Link>
+                  )
+                })}
+                
+                <div className="border-t border-white/10 mx-3 my-2 pt-2">
+                  <p className="px-3 py-1 text-xs text-white/50 uppercase tracking-wide">More</p>
+                  {moreNav.map((item) => {
+                    const isActive = pathname.startsWith(item.href)
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 px-3 py-2 rounded-lg mx-0 transition-colors text-sm ${
+                          isActive
+                            ? 'bg-white/20 text-white'
+                            : 'text-white/80 hover:bg-white/10'
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                    )
+                  })}
+                </div>
+                
+                <div className="border-t border-white/10 mx-3 my-2 pt-2 space-y-1">
                   <Link
-                    key={item.name}
-                    href={item.href}
+                    href="/admin/settings"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 transition-colors ${
-                      isActive
-                        ? 'bg-white/20 text-white'
-                        : 'text-white/80 hover:bg-white/10 hover:text-white'
-                    }`}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg mx-0 text-white/80 hover:bg-white/10 text-sm"
                   >
-                    <Icon className="w-5 h-5" />
-                    {item.name}
+                    <Settings className="w-4 h-4" />
+                    Settings
                   </Link>
-                )
-              })}
-              <div className="border-t border-white/10 mt-2 pt-2">
-                <Link
-                  href="/admin/settings"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white"
-                >
-                  <Settings className="w-5 h-5" />
-                  Settings
-                </Link>
-                <Link
-                  href="/"
-                  target="_blank"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white"
-                >
-                  View Website →
-                </Link>
+                  <Link
+                    href="/"
+                    target="_blank"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg mx-0 text-white/80 hover:bg-white/10 text-sm"
+                  >
+                    View Site
+                  </Link>
+                </div>
               </div>
             </nav>
           )}
@@ -163,7 +220,7 @@ export default function AdminLayout({
       </header>
 
       {/* Main Content */}
-      <main className="container py-8">
+      <main className="container py-6">
         {children}
       </main>
     </div>
