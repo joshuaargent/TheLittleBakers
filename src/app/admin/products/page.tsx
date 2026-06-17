@@ -1,8 +1,7 @@
 export const dynamic = 'force-dynamic';
 import prisma from '@/lib/prisma';
-import { formatCurrency, CATEGORY_LABELS, PRODUCT_STATUS_COLORS } from '@/types';
+import { formatCurrency } from '@/types';
 import { Badge, Button } from '@/components/admin/ui';
-import { ProductCategory, ProductStatus } from '@/types';
 import Link from 'next/link';
 import { Plus, Search, Filter, ChefHat } from 'lucide-react';
 
@@ -10,6 +9,7 @@ async function getProducts() {
   return prisma.product.findMany({
     orderBy: { createdAt: 'desc' },
     include: {
+      category: true,
       _count: {
         select: { orderItems: true },
       },
@@ -80,7 +80,9 @@ export default async function ProductsPage() {
                 </div>
                 <Badge
                   className={
-                    PRODUCT_STATUS_COLORS[product.status as ProductStatus]
+                    product.status === 'ACTIVE' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-gray-100 text-gray-800'
                   }
                 >
                   {product.status === 'ACTIVE' ? 'Active' : 'Discontinued'}
@@ -91,7 +93,7 @@ export default async function ProductsPage() {
                 {product.name}
               </h3>
               <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-                {CATEGORY_LABELS[product.category as ProductCategory]}
+                {product.category?.name || 'Product'}
               </p>
               
               <div className="mt-4 flex items-center justify-between border-t border-[var(--color-border)] pt-4">

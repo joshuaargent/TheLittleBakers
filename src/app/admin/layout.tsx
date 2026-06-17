@@ -8,9 +8,15 @@ import {
   ShoppingCart,
   Boxes,
   DollarSign,
+  Users,
+  Truck,
+  ShoppingBag,
+  Factory,
+  Trash2,
   Settings,
   Menu,
   X,
+  FileText,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -18,8 +24,13 @@ const adminNav = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Products', href: '/admin/products', icon: Package },
   { name: 'Ingredients', href: '/admin/ingredients', icon: Boxes },
-  { name: 'Packaging', href: '/admin/packaging', icon: Package },
+  { name: 'Packaging', href: '/admin/packaging', icon: ShoppingBag },
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
+  { name: 'Customers', href: '/admin/customers', icon: Users },
+  { name: 'Suppliers', href: '/admin/suppliers', icon: Truck },
+  { name: 'Purchases', href: '/admin/purchases', icon: FileText },
+  { name: 'Production', href: '/admin/production', icon: Factory },
+  { name: 'Waste', href: '/admin/waste', icon: Trash2 },
   { name: 'Finance', href: '/admin/finance', icon: DollarSign },
 ]
 
@@ -47,7 +58,7 @@ export default function AdminLayout({
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden xl:flex items-center gap-1">
               {adminNav.map((item) => {
                 const Icon = item.icon
                 const isActive = pathname === item.href ||
@@ -57,7 +68,7 @@ export default function AdminLayout({
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm ${
                       isActive
                         ? 'bg-white/20 text-white'
                         : 'text-white/80 hover:bg-white/10 hover:text-white'
@@ -75,7 +86,7 @@ export default function AdminLayout({
               {/* Settings */}
               <Link
                 href="/admin/settings"
-                className={`hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                className={`hidden xl:flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm ${
                   pathname === '/admin/settings'
                     ? 'bg-white/20 text-white'
                     : 'text-white/80 hover:bg-white/10 hover:text-white'
@@ -88,7 +99,8 @@ export default function AdminLayout({
               {/* View Website */}
               <Link
                 href="/"
-                className="hidden lg:flex items-center gap-2 px-3 py-2 text-white/80 hover:bg-white/10 hover:text-white rounded-lg transition-colors"
+                target="_blank"
+                className="hidden xl:flex items-center gap-2 px-3 py-2 text-white/80 hover:bg-white/10 hover:text-white rounded-lg transition-colors text-sm"
               >
                 View Website →
               </Link>
@@ -96,7 +108,7 @@ export default function AdminLayout({
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 text-white/80 hover:text-white"
+                className="xl:hidden p-2 text-white/80 hover:text-white"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -105,7 +117,7 @@ export default function AdminLayout({
 
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
-            <nav className="lg:hidden border-t border-white/10 py-4">
+            <nav className="xl:hidden border-t border-white/10 py-4 max-h-[80vh] overflow-y-auto">
               {adminNav.map((item) => {
                 const Icon = item.icon
                 const isActive = pathname === item.href ||
@@ -127,21 +139,24 @@ export default function AdminLayout({
                   </Link>
                 )
               })}
-              <Link
-                href="/admin/settings"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white"
-              >
-                <Settings className="w-5 h-5" />
-                Settings
-              </Link>
-              <Link
-                href="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white"
-              >
-                View Website →
-              </Link>
+              <div className="border-t border-white/10 mt-2 pt-2">
+                <Link
+                  href="/admin/settings"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white"
+                >
+                  <Settings className="w-5 h-5" />
+                  Settings
+                </Link>
+                <Link
+                  href="/"
+                  target="_blank"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white"
+                >
+                  View Website →
+                </Link>
+              </div>
             </nav>
           )}
         </div>

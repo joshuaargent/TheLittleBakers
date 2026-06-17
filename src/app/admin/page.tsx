@@ -1,8 +1,8 @@
 export const dynamic = 'force-dynamic';
-import { StatCard, Badge } from '@/components/admin/ui';
+import { StatsGrid, Badge, EmptyState } from '@/components/admin/ui';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
-import { formatCurrency, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/types';
+import { formatCurrency, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, OrderStatus } from '@/types';
 import {
   ShoppingCart,
   DollarSign,
@@ -11,6 +11,12 @@ import {
   ArrowRight,
   Package,
   TrendingUp,
+  TrendingDown,
+  Users,
+  Boxes,
+  Factory,
+  Trash2,
+  FileText,
 } from 'lucide-react';
 
 async function getDashboardData() {
@@ -20,114 +26,178 @@ async function getDashboardData() {
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
 
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  // Get status IDs for filtering
+  const completedStatuses = await prisma.orderStatus.findMany({
+    where: { code: { in: ['COMPLETED', 'READY'] } },
+    select: { id: true },
+  });
+  const pendingStatuses = await prisma.orderStatus.findMany({
+    where: { code: { in: ['PENDING', 'CONFIRMED', 'IN_PROGRESS'] } },
+    select: { id: true },
+  });
+  const completedStatusIds = completedStatuses.map(s => s.id);
+  const pendingStatusIds = pendingStatuses.map(s => s.id);
+
   const [
+    // Orders stats
     todayOrders,
     yesterdayOrders,
-    todayRevenue,
-    yesterdayRevenue,
-    pendingOrders,
+    todayRevenueOrders,
+    yesterdayRevenueOrders,
+    pendingOrdersCount,
     recentOrders,
+    
+    // Customers stats
+    totalCustomers,
+    newCustomersToday,
+    
+    // Inventory stats
     lowStockIngredients,
     lowStockPackaging,
-    ordersByCategory,
+    
+    // Production stats
+    activeProductionBatches,
+    completedBatchesToday,
+    
+    // Waste stats
+    wasteToday,
+    
+    // Finance stats
+    thisMonthIncome,
+    thisMonthExpenses,
+    
+    // Purchase orders stats
+    pendingPurchases,
+    
+    // All-time counts
+    totalProducts,
+    totalIngredients,
+    totalPackaging,
+    totalOrders,
   ] = await Promise.all([
     // Today's orders count
     prisma.order.count({
-      where: {
-        createdAt: { gte: today },
-      },
+      where: { createdAt: { gte: today } },
     }),
     // Yesterday's orders count
     prisma.order.count({
-      where: {
-        createdAt: { gte: yesterday, lt: today },
-      },
+      where: { createdAt: { gte: yesterday, lt: today } },
     }),
-    // Today's revenue (completed orders)
-    prisma.order.aggregate({
-      where: {
-        createdAt: { gte: today },
-        status: { in: ['COMPLETED', 'READY'] },
-      },
-      _sum: { total: true },
+    // Today's revenue orders
+    prisma.order.findMany({
+      where: { createdAt: { gte: today }, statusId: { in: completedStatusIds } },
+      select: { total: true },
     }),
-    // Yesterday's revenue
-    prisma.order.aggregate({
-      where: {
-        createdAt: { gte: yesterday, lt: today },
-        status: { in: ['COMPLETED', 'READY'] },
-      },
-      _sum: { total: true },
+    // Yesterday's revenue orders
+    prisma.order.findMany({
+      where: { createdAt: { gte: yesterday, lt: today }, statusId: { in: completedStatusIds } },
+      select: { total: true },
     }),
-    // Pending orders
+    // Pending orders count
     prisma.order.count({
-      where: {
-        status: { in: ['PENDING', 'CONFIRMED', 'IN_PROGRESS'] },
-      },
+      where: { statusId: { in: pendingStatusIds } },
     }),
     // Recent orders (last 5)
     prisma.order.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
       include: {
-        items: {
-          include: {
-            product: true,
-          },
-        },
+        items: { include: { product: true } },
+        status: true,
       },
     }),
+    
+    // Total customers
+    prisma.customer.count(),
+    // New customers today
+    prisma.customer.count({
+      where: { createdAt: { gte: today } },
+    }),
+    
     // Low stock ingredients
     prisma.ingredient.findMany({
+      where: { isActive: true },
       orderBy: { currentStock: 'asc' },
     }),
     // Low stock packaging
     prisma.packaging.findMany({
       orderBy: { currentStock: 'asc' },
     }),
-    // Orders by category (last 30 days)
-    prisma.orderItem.groupBy({
-      by: ['productId'],
-      _sum: { quantity: true },
+    
+    // Active production batches
+    prisma.productionBatch.count({
+      where: { status: { in: ['PLANNED', 'IN_PROGRESS'] } },
+    }),
+    // Completed batches today
+    prisma.productionBatch.count({
+      where: { status: 'COMPLETED', completedAt: { gte: today } },
+    }),
+    
+    // Waste today
+    prisma.wasteEntry.aggregate({
+      where: { date: { gte: today } },
+      _sum: { totalCost: true },
       _count: true,
     }),
+    
+    // This month income
+    prisma.transaction.aggregate({
+      where: { type: 'INCOME', date: { gte: startOfMonth } },
+      _sum: { amount: true },
+    }),
+    // This month expenses
+    prisma.transaction.aggregate({
+      where: { type: 'EXPENSE', date: { gte: startOfMonth } },
+      _sum: { amount: true },
+    }),
+    
+    // Pending purchases
+    prisma.purchase.count({
+      where: { status: { in: ['DRAFT', 'ORDERED', 'PARTIAL'] } },
+    }),
+    
+    // All-time counts
+    prisma.product.count({ where: { status: 'ACTIVE' } }),
+    prisma.ingredient.count({ where: { isActive: true } }),
+    prisma.packaging.count(),
+    prisma.order.count(),
   ]);
 
-  // Get product details for category distribution
-  const productIds = ordersByCategory.map((o) => o.productId);
-  const products = await prisma.product.findMany({
-    where: { id: { in: productIds } },
-    select: { id: true, category: true },
-  });
-
-  const productMap = new Map(products.map((p) => [p.id, p.category]));
-  const categoryCounts: Record<string, number> = {};
-  ordersByCategory.forEach((o) => {
-    const category = productMap.get(o.productId) || 'OTHER';
-    categoryCounts[category] = (categoryCounts[category] || 0) + (o._sum.quantity || 0);
-  });
+  const todayRevenue = todayRevenueOrders.reduce((sum, o) => sum + o.total, 0);
+  const yesterdayRevenue = yesterdayRevenueOrders.reduce((sum, o) => sum + o.total, 0);
 
   // Filter low stock items
   const lowStockIngredientsFiltered = lowStockIngredients.filter(i => i.currentStock < i.reorderPoint);
-  const lowStockPackagingFiltered = lowStockPackaging.filter(p => p.currentStock < p.minStock);
+  const lowStockPackagingFiltered = lowStockPackaging.filter(p => p.currentStock < p.reorderPoint);
 
   return {
     stats: {
       todayOrders,
-      todayOrdersTrend: yesterdayOrders > 0 
-        ? ((todayOrders - yesterdayOrders) / yesterdayOrders) * 100 
-        : 0,
-      todayRevenue: todayRevenue._sum.total || 0,
-      todayRevenueTrend: yesterdayRevenue._sum.total
-        ? (((todayRevenue._sum.total || 0) - (yesterdayRevenue._sum.total || 0)) / (yesterdayRevenue._sum.total || 1)) * 100
-        : 0,
-      pendingOrders,
+      todayOrdersTrend: yesterdayOrders > 0 ? ((todayOrders - yesterdayOrders) / yesterdayOrders) * 100 : 0,
+      todayRevenue,
+      todayRevenueTrend: yesterdayRevenue > 0 ? ((todayRevenue - yesterdayRevenue) / yesterdayRevenue) * 100 : 0,
+      pendingOrders: pendingOrdersCount,
       lowStockAlerts: lowStockIngredientsFiltered.length + lowStockPackagingFiltered.length,
+      totalCustomers,
+      newCustomersToday,
+      activeProductionBatches,
+      completedBatchesToday,
+      wasteToday: wasteToday._sum.totalCost || 0,
+      wasteCountToday: wasteToday._count || 0,
+      thisMonthIncome: thisMonthIncome._sum.amount || 0,
+      thisMonthExpenses: thisMonthExpenses._sum.amount || 0,
+      thisMonthProfit: (thisMonthIncome._sum.amount || 0) - (thisMonthExpenses._sum.amount || 0),
+      pendingPurchases,
+      totalProducts,
+      totalIngredients,
+      totalPackaging,
+      totalOrders,
     },
     recentOrders,
-    lowStockIngredients: lowStockIngredientsFiltered,
-    lowStockPackaging: lowStockPackagingFiltered,
-    categoryDistribution: categoryCounts,
+    lowStockIngredients: lowStockIngredientsFiltered.slice(0, 5),
+    lowStockPackaging: lowStockPackagingFiltered.slice(0, 5),
   };
 }
 
@@ -138,6 +208,9 @@ export default async function AdminDashboard() {
     lowStockIngredients,
     lowStockPackaging,
   } = await getDashboardData();
+
+  const lowStockItems = [...lowStockIngredients, ...lowStockPackaging];
+  const totalLowStock = stats.lowStockAlerts;
 
   return (
     <div className="space-y-6">
@@ -151,35 +224,117 @@ export default async function AdminDashboard() {
         </p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          title="Today's Orders"
-          value={stats.todayOrders}
-          icon={ShoppingCart}
-          trend={stats.todayOrdersTrend}
-          trendLabel="vs yesterday"
-          onClick={() => {}}
-        />
-        <StatCard
-          title="Today's Revenue"
-          value={formatCurrency(stats.todayRevenue)}
-          icon={DollarSign}
-          trend={stats.todayRevenueTrend}
-          trendLabel="vs yesterday"
-        />
-        <StatCard
-          title="Pending Orders"
-          value={stats.pendingOrders}
-          icon={Clock}
-          onClick={() => {}}
-        />
-        <StatCard
-          title="Low Stock Alerts"
-          value={stats.lowStockAlerts}
-          icon={AlertTriangle}
-          onClick={() => {}}
-        />
+      {/* Main Stats Grid */}
+      <StatsGrid stats={[
+        {
+          label: "Today's Orders",
+          value: stats.todayOrders,
+          icon: ShoppingCart,
+          trend: stats.todayOrdersTrend,
+          trendLabel: 'vs yesterday',
+          color: 'primary',
+        },
+        {
+          label: "Today's Revenue",
+          value: formatCurrency(stats.todayRevenue),
+          icon: DollarSign,
+          trend: stats.todayRevenueTrend,
+          trendLabel: 'vs yesterday',
+          color: 'success',
+        },
+        {
+          label: 'Pending Orders',
+          value: stats.pendingOrders,
+          icon: Clock,
+          color: stats.pendingOrders > 0 ? 'warning' : 'info',
+        },
+        {
+          label: 'This Month Profit',
+          value: formatCurrency(stats.thisMonthProfit),
+          icon: TrendingUp,
+          color: stats.thisMonthProfit >= 0 ? 'success' : 'danger',
+        },
+        {
+          label: 'Total Customers',
+          value: stats.totalCustomers.toLocaleString(),
+          icon: Users,
+        },
+        {
+          label: 'Active Batches',
+          value: stats.activeProductionBatches,
+          icon: Factory,
+          color: stats.activeProductionBatches > 0 ? 'info' : 'primary',
+        },
+        {
+          label: 'Low Stock Alerts',
+          value: stats.lowStockAlerts,
+          icon: AlertTriangle,
+          color: totalLowStock > 0 ? 'danger' : 'success',
+        },
+        {
+          label: "Today's Waste",
+          value: formatCurrency(stats.wasteToday),
+          icon: Trash2,
+          color: stats.wasteToday > 0 ? 'warning' : 'success',
+        },
+      ]} />
+
+      {/* Secondary Stats */}
+      <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-6">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+            <Package className="h-4 w-4" />
+            Products
+          </div>
+          <p className="mt-1 text-2xl font-bold text-[var(--color-text-primary)]">
+            {stats.totalProducts}
+          </p>
+        </div>
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+            <Boxes className="h-4 w-4" />
+            Ingredients
+          </div>
+          <p className="mt-1 text-2xl font-bold text-[var(--color-text-primary)]">
+            {stats.totalIngredients}
+          </p>
+        </div>
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+            <FileText className="h-4 w-4" />
+            Pending Purchases
+          </div>
+          <p className="mt-1 text-2xl font-bold text-[var(--color-text-primary)]">
+            {stats.pendingPurchases}
+          </p>
+        </div>
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+            <TrendingUp className="h-4 w-4 text-green-600" />
+            This Month Income
+          </div>
+          <p className="mt-1 text-xl font-bold text-green-600">
+            {formatCurrency(stats.thisMonthIncome)}
+          </p>
+        </div>
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+            <TrendingDown className="h-4 w-4 text-red-600" />
+            This Month Expenses
+          </div>
+          <p className="mt-1 text-xl font-bold text-red-600">
+            {formatCurrency(stats.thisMonthExpenses)}
+          </p>
+        </div>
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+            <Users className="h-4 w-4 text-blue-600" />
+            New Customers Today
+          </div>
+          <p className="mt-1 text-2xl font-bold text-[var(--color-text-primary)]">
+            +{stats.newCustomersToday}
+          </p>
+        </div>
       </div>
 
       {/* Main Content Grid */}
@@ -221,15 +376,14 @@ export default async function AdminDashboard() {
                         </span>
                         <Badge
                           className={
-                            ORDER_STATUS_COLORS[order.status as keyof typeof ORDER_STATUS_COLORS]
+                            ORDER_STATUS_COLORS[(order.status?.code || 'PENDING') as OrderStatus]
                           }
                         >
-                          {ORDER_STATUS_LABELS[order.status as keyof typeof ORDER_STATUS_LABELS]}
+                          {ORDER_STATUS_LABELS[(order.status?.code || 'PENDING') as OrderStatus]}
                         </Badge>
                       </div>
                       <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-                        {order.customerName} • {order.items.length} item
-                        {order.items.length !== 1 ? 's' : ''}
+                        {order.customerName} • {order.items.length} item{order.items.length !== 1 ? 's' : ''}
                       </p>
                     </div>
                     <div className="text-right">
@@ -258,12 +412,14 @@ export default async function AdminDashboard() {
               <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
                 Low Stock Alerts
               </h2>
-              <AlertTriangle className="h-5 w-5 text-[var(--color-warning)]" />
+              <span className="rounded-full bg-[var(--color-danger)]/10 px-2 py-1 text-xs font-medium text-[var(--color-danger)]">
+                {totalLowStock}
+              </span>
             </div>
             <div className="divide-y divide-[var(--color-border)]">
-              {lowStockIngredients.length === 0 && lowStockPackaging.length === 0 ? (
+              {lowStockItems.length === 0 ? (
                 <div className="px-6 py-8 text-center">
-                  <Package className="mx-auto h-10 w-10 text-[var(--color-text-muted)]" />
+                  <Package className="mx-auto h-10 w-10 text-green-500" />
                   <p className="mt-3 text-sm text-[var(--color-text-muted)]">
                     All stock levels are healthy!
                   </p>
@@ -276,9 +432,12 @@ export default async function AdminDashboard() {
                       href={`/admin/ingredients/${ingredient.id}`}
                       className="flex items-center justify-between px-6 py-3 transition-colors hover:bg-[var(--color-bg-secondary)]"
                     >
-                      <span className="text-sm text-[var(--color-text-primary)]">
-                        {ingredient.name}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <Boxes className="h-4 w-4 text-[var(--color-text-muted)]" />
+                        <span className="text-sm text-[var(--color-text-primary)]">
+                          {ingredient.name}
+                        </span>
+                      </div>
                       <span className="text-sm font-medium text-[var(--color-danger)]">
                         {ingredient.currentStock.toFixed(1)} {ingredient.unit}
                       </span>
@@ -290,9 +449,12 @@ export default async function AdminDashboard() {
                       href={`/admin/packaging/${pkg.id}`}
                       className="flex items-center justify-between px-6 py-3 transition-colors hover:bg-[var(--color-bg-secondary)]"
                     >
-                      <span className="text-sm text-[var(--color-text-primary)]">
-                        {pkg.name}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <Package className="h-4 w-4 text-[var(--color-text-muted)]" />
+                        <span className="text-sm text-[var(--color-text-primary)]">
+                          {pkg.name}
+                        </span>
+                      </div>
                       <span className="text-sm font-medium text-[var(--color-danger)]">
                         {pkg.currentStock} left
                       </span>
@@ -301,6 +463,16 @@ export default async function AdminDashboard() {
                 </>
               )}
             </div>
+            {totalLowStock > 5 && (
+              <div className="border-t border-[var(--color-border)] px-6 py-3">
+                <Link
+                  href="/admin/ingredients?filter=low_stock"
+                  className="text-sm font-medium text-[var(--color-primary)] hover:underline"
+                >
+                  View all {totalLowStock} alerts →
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Quick Actions */}
@@ -331,21 +503,21 @@ export default async function AdminDashboard() {
                   </span>
                 </Link>
                 <Link
-                  href="/admin/ingredients"
+                  href="/admin/purchases/new"
                   className="flex flex-col items-center gap-2 rounded-lg border border-[var(--color-border)] p-4 transition-colors hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)]"
                 >
-                  <TrendingUp className="h-6 w-6 text-[var(--color-primary)]" />
+                  <FileText className="h-6 w-6 text-[var(--color-primary)]" />
                   <span className="text-xs font-medium text-[var(--color-text-primary)]">
-                    Stock In
+                    New Purchase
                   </span>
                 </Link>
                 <Link
-                  href="/admin/finance"
+                  href="/admin/production/new"
                   className="flex flex-col items-center gap-2 rounded-lg border border-[var(--color-border)] p-4 transition-colors hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)]"
                 >
-                  <DollarSign className="h-6 w-6 text-[var(--color-primary)]" />
+                  <Factory className="h-6 w-6 text-[var(--color-primary)]" />
                   <span className="text-xs font-medium text-[var(--color-text-primary)]">
-                    Record Expense
+                    New Batch
                   </span>
                 </Link>
               </div>

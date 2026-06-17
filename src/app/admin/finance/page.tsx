@@ -52,6 +52,9 @@ async function getFinanceData() {
   const recentTransactions = await prisma.transaction.findMany({
     orderBy: { date: 'desc' },
     take: 20,
+    include: {
+      category: true,
+    },
   });
 
   // All-time totals
@@ -104,7 +107,7 @@ export default async function FinancePage() {
   const transactionColumns: Column<{
     id: string;
     type: string;
-    category: string;
+    category: { code: string; name: string };
     amount: number;
     description: string | null;
     date: Date;
@@ -133,7 +136,7 @@ export default async function FinancePage() {
       header: 'Category',
       render: (item) => (
         <span className="text-sm text-[var(--color-text-primary)]">
-          {item.category.replace('_', ' ')}
+          {item.category.name || item.category.code}
         </span>
       ),
     },

@@ -12,6 +12,7 @@ export async function GET(
     const order = await prisma.order.findUnique({
       where: { id },
       include: {
+        status: true,
         items: {
           include: {
             product: true,
@@ -19,6 +20,9 @@ export async function GET(
           },
         },
         statusHistory: {
+          include: {
+            status: true,
+          },
           orderBy: { createdAt: 'desc' },
         },
       },
@@ -31,7 +35,15 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(order);
+    // Transform order to include status code for backward compatibility
+    return NextResponse.json({
+      ...order,
+      status: order.status?.code || 'PENDING',
+      statusHistory: order.statusHistory.map(h => ({
+        ...h,
+        status: h.status?.code || 'PENDING',
+      })),
+    });
   } catch (error) {
     console.error('Error fetching order:', error);
     return NextResponse.json(
@@ -76,6 +88,7 @@ export async function PATCH(
         notes,
       },
       include: {
+        status: true,
         items: {
           include: {
             product: true,
@@ -84,7 +97,10 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json(order);
+    return NextResponse.json({
+      ...order,
+      status: order.status?.code || 'PENDING',
+    });
   } catch (error) {
     console.error('Error updating order:', error);
     return NextResponse.json(

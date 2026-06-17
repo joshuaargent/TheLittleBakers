@@ -2,8 +2,6 @@ export const dynamic = 'force-dynamic';
 import prisma from '@/lib/prisma';
 import { Badge, Button } from '@/components/admin/ui';
 import {
-  INGREDIENT_CATEGORY_LABELS,
-  IngredientCategory,
   STOCK_LEVEL_COLORS,
   getStockLevel,
   formatCurrency,
@@ -15,6 +13,8 @@ async function getIngredients() {
   return prisma.ingredient.findMany({
     orderBy: { name: 'asc' },
     include: {
+      category: true,
+      supplier: true,
       _count: {
         select: { products: true },
       },
@@ -119,7 +119,7 @@ export default async function IngredientsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span className="text-sm text-[var(--color-text-secondary)]">
-                        {INGREDIENT_CATEGORY_LABELS[ingredient.category as IngredientCategory]}
+                        {ingredient.category?.name || ingredient.categoryId}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -147,7 +147,7 @@ export default async function IngredientsPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <span className="text-sm text-[var(--color-text-secondary)]">
-                        {ingredient.supplier || '-'}
+                        {ingredient.supplier?.name || '-'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-center">

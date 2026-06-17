@@ -14,6 +14,7 @@ async function getOrders() {
   return prisma.order.findMany({
     orderBy: { createdAt: 'desc' },
     include: {
+      status: true,
       items: {
         include: {
           product: true,
@@ -31,12 +32,12 @@ export default async function OrdersPage() {
 
   // Group orders by status
   const ordersByStatus = {
-    PENDING: orders.filter((o) => o.status === 'PENDING'),
-    CONFIRMED: orders.filter((o) => o.status === 'CONFIRMED'),
-    IN_PROGRESS: orders.filter((o) => o.status === 'IN_PROGRESS'),
-    READY: orders.filter((o) => o.status === 'READY'),
-    COMPLETED: orders.filter((o) => o.status === 'COMPLETED'),
-    CANCELLED: orders.filter((o) => o.status === 'CANCELLED'),
+    PENDING: orders.filter((o) => o.status?.code === 'PENDING'),
+    CONFIRMED: orders.filter((o) => o.status?.code === 'CONFIRMED'),
+    IN_PROGRESS: orders.filter((o) => o.status?.code === 'IN_PROGRESS'),
+    READY: orders.filter((o) => o.status?.code === 'READY'),
+    COMPLETED: orders.filter((o) => o.status?.code === 'COMPLETED'),
+    CANCELLED: orders.filter((o) => o.status?.code === 'CANCELLED'),
   };
 
   const statusCounts = {
@@ -169,10 +170,10 @@ export default async function OrdersPage() {
                   <td className="px-6 py-4">
                     <Badge
                       className={
-                        ORDER_STATUS_COLORS[order.status as OrderStatus]
+                        ORDER_STATUS_COLORS[(order.status?.code || 'PENDING') as OrderStatus]
                       }
                     >
-                      {ORDER_STATUS_LABELS[order.status as OrderStatus]}
+                      {ORDER_STATUS_LABELS[(order.status?.code || 'PENDING') as OrderStatus]}
                     </Badge>
                   </td>
                   <td className="px-6 py-4 text-right">

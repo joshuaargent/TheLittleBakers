@@ -2,10 +2,8 @@ import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import {
   formatCurrency,
-  CATEGORY_LABELS,
   ORDER_STATUS_LABELS,
   ORDER_STATUS_COLORS,
-  ProductCategory,
   OrderStatus,
 } from '@/types';
 import { Badge, Button } from '@/components/admin/ui';
@@ -24,6 +22,17 @@ async function getProduct(id: string) {
   const product = await prisma.product.findUnique({
     where: { id },
     include: {
+      category: true,
+      allergens: {
+        include: {
+          allergen: true,
+        },
+      },
+      dietary: {
+        include: {
+          label: true,
+        },
+      },
       priceHistory: {
         orderBy: { effectiveDate: 'desc' },
         take: 10,
@@ -35,7 +44,11 @@ async function getProduct(id: string) {
       },
       orderItems: {
         include: {
-          order: true,
+          order: {
+            include: {
+              status: true,
+            },
+          },
         },
         orderBy: { order: { createdAt: 'desc' } },
         take: 10,
@@ -61,7 +74,8 @@ export default async function ProductDetailPage({
     notFound();
   }
 
-  const allergens = JSON.parse(product.allergens || '[]');
+  const allergens = product.allergens?.map(a => a.allergen.name) || [];
+  const dietaryLabels = product.dietary?.map(d => d.label.name) || [];
   const totalRevenue = product.orderItems.reduce(
     (sum, item) => sum + item.totalPrice,
     0
@@ -95,7 +109,7 @@ export default async function ProductDetailPage({
             </Badge>
           </div>
           <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-            {CATEGORY_LABELS[product.category as ProductCategory]} • Created{' '}
+            {product.category?.name || 'Product'} • Created{' '}
             {new Date(product.createdAt).toLocaleDateString('en-GB')}
           </p>
         </div>
@@ -302,10 +316,10 @@ export default async function ProductDetailPage({
                   <div className="text-right">
                     <Badge
                       className={
-                        ORDER_STATUS_COLORS[item.order.status as OrderStatus]
+                        ORDER_STATUS_COLORS[(item.order.status?.code || 'PENDING') as OrderStatus]
                       }
                     >
-                      {ORDER_STATUS_LABELS[item.order.status as OrderStatus]}
+                      {ORDER_STATUS_LABELS[(item.order.status?.code || 'PENDING') as OrderStatus]}
                     </Badge>
                     <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
                       {item.quantity} × {formatCurrency(item.unitPrice)}

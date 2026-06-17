@@ -1,11 +1,7 @@
 export const dynamic = 'force-dynamic';
 import prisma from '@/lib/prisma';
 import { Badge, Button } from '@/components/admin/ui';
-import {
-  PACKAGING_TYPE_LABELS,
-  PackagingType,
-  formatCurrency,
-} from '@/types';
+import { formatCurrency } from '@/types';
 import Link from 'next/link';
 import { Plus, Search, Box, TrendingDown } from 'lucide-react';
 
@@ -13,6 +9,7 @@ async function getPackaging() {
   return prisma.packaging.findMany({
     orderBy: { name: 'asc' },
     include: {
+      category: true,
       _count: {
         select: { orderItems: true },
       },
@@ -90,7 +87,7 @@ export default async function PackagingPage() {
             </thead>
             <tbody className="divide-y divide-[var(--color-border)]">
               {packaging.map((pkg) => {
-                const isLowStock = pkg.currentStock < pkg.minStock;
+                const isLowStock = pkg.currentStock < pkg.reorderPoint;
                 return (
                   <tr
                     key={pkg.id}
@@ -118,7 +115,7 @@ export default async function PackagingPage() {
                     </td>
                     <td className="px-6 py-4">
                       <Badge variant="neutral">
-                        {PACKAGING_TYPE_LABELS[pkg.type as PackagingType]}
+                        {pkg.category?.name || 'Packaging'}
                       </Badge>
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -137,7 +134,7 @@ export default async function PackagingPage() {
                         )}
                       </div>
                       <p className="text-xs text-[var(--color-text-muted)]">
-                        Min: {pkg.minStock}
+                        Min: {pkg.reorderPoint}
                       </p>
                     </td>
                     <td className="px-6 py-4 text-right">

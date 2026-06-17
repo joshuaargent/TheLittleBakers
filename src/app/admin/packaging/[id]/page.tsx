@@ -24,13 +24,19 @@ async function getPackaging(id: string) {
   const packaging = await prisma.packaging.findUnique({
     where: { id },
     include: {
+      category: true,
+      supplier: true,
       priceHistory: {
         orderBy: { effectiveDate: 'desc' },
         take: 10,
       },
       orderItems: {
         include: {
-          order: true,
+          order: {
+            include: {
+              status: true,
+            },
+          },
         },
         orderBy: { order: { createdAt: 'desc' } },
         take: 10,
@@ -56,7 +62,7 @@ export default async function PackagingDetailPage({
     notFound();
   }
 
-  const isLowStock = packaging.currentStock < packaging.minStock;
+  const isLowStock = packaging.currentStock < packaging.reorderPoint;
 
   return (
     <div className="space-y-6">
@@ -75,7 +81,7 @@ export default async function PackagingDetailPage({
               {packaging.name}
             </h1>
             <Badge variant="neutral">
-              {PACKAGING_TYPE_LABELS[packaging.type as PackagingType]}
+              {packaging.category?.name || 'Packaging'}
             </Badge>
           </div>
           {packaging.dimensions && (
@@ -117,7 +123,7 @@ export default async function PackagingDetailPage({
             <div>
               <p className="text-sm text-[var(--color-text-secondary)]">Minimum Stock</p>
               <p className="text-xl font-semibold text-[var(--color-text-primary)]">
-                {packaging.minStock} units
+                {packaging.reorderPoint} units
               </p>
             </div>
           </div>
@@ -180,10 +186,10 @@ export default async function PackagingDetailPage({
                 <div className="text-right">
                   <Badge
                     className={
-                      ORDER_STATUS_COLORS[item.order.status as OrderStatus]
+                      ORDER_STATUS_COLORS[(item.order.status?.code || 'PENDING') as OrderStatus]
                     }
                   >
-                    {ORDER_STATUS_LABELS[item.order.status as OrderStatus]}
+                    {ORDER_STATUS_LABELS[(item.order.status?.code || 'PENDING') as OrderStatus]}
                   </Badge>
                 </div>
               </Link>
@@ -229,9 +235,21 @@ export default async function PackagingDetailPage({
           <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
             Supplier Information
           </h2>
-          <p className="mt-4 text-sm text-[var(--color-text-primary)]">
-            {packaging.supplier}
-          </p>
+          <div className="mt-4 space-y-2">
+            <p className="text-sm font-medium text-[var(--color-text-primary)]">
+              {packaging.supplier.name}
+            </p>
+            {packaging.supplier.email && (
+              <p className="text-sm text-[var(--color-text-secondary)]">
+                {packaging.supplier.email}
+              </p>
+            )}
+            {packaging.supplier.phone && (
+              <p className="text-sm text-[var(--color-text-secondary)]">
+                {packaging.supplier.phone}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </div>

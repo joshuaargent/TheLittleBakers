@@ -55,7 +55,7 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name, description, category, status, price, allergens, imageUrl } = body;
+    const { name, description, categoryId, status, currentPrice, imageUrl } = body;
 
     const existingProduct = await prisma.product.findUnique({
       where: { id },
@@ -69,26 +69,35 @@ export async function PATCH(
     }
 
     // If price is changing, create a price history entry
-    if (price !== undefined && price !== existingProduct.currentPrice) {
+    if (currentPrice !== undefined && currentPrice !== existingProduct.currentPrice) {
       await prisma.productPriceHistory.create({
         data: {
           productId: id,
-          price,
+          price: currentPrice,
           reason: body.priceReason || 'Price update',
         },
       });
     }
 
+    // Build update data with only provided fields
+    const updateData: Record<string, unknown> = {};
+    if (name !== undefined) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
+    if (categoryId !== undefined) updateData.categoryId = categoryId;
+    if (status !== undefined) updateData.status = status;
+    if (currentPrice !== undefined) updateData.currentPrice = currentPrice;
+    if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
+
     const product = await prisma.product.update({
       where: { id },
-      data: {
-        name,
-        description,
-        category,
-        status,
-        currentPrice: price,
-        allergens: allergens ? JSON.stringify(allergens) : undefined,
-        imageUrl,
+      data: updateData,
+      include: {
+        category: true,
+        allergens: {
+          include: {
+            allergen: true,
+          },
+        },
       },
     });
 

@@ -5,14 +5,14 @@ import prisma from '@/lib/prisma';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get('category');
+    const categoryId = searchParams.get('categoryId');
     const status = searchParams.get('status');
     const search = searchParams.get('search');
 
     const where: Record<string, unknown> = {};
 
-    if (category) {
-      where.category = category;
+    if (categoryId) {
+      where.categoryId = categoryId;
     }
 
     if (status) {
@@ -21,8 +21,8 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       where.OR = [
-        { name: { contains: search } },
-        { description: { contains: search } },
+        { name: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -30,6 +30,12 @@ export async function GET(request: NextRequest) {
       where,
       orderBy: { createdAt: 'desc' },
       include: {
+        category: true,
+        allergens: {
+          include: {
+            allergen: true,
+          },
+        },
         _count: {
           select: { orderItems: true },
         },
@@ -50,24 +56,35 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, description, category, status, price, allergens, imageUrl } = body;
+    const { name, description, categoryId, status, currentPrice, imageUrl } = body;
 
-    if (!name || !category || price === undefined) {
+    if (!name || !categoryId || currentPrice === undefined) {
       return NextResponse.json(
-        { error: 'Name, category, and price are required' },
+        { error: 'Name, categoryId, and currentPrice are required' },
         { status: 400 }
       );
     }
 
+    // Generate slug from name
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
     const product = await prisma.product.create({
       data: {
         name,
+        slug,
         description,
-        category,
+        categoryId,
         status: status || 'ACTIVE',
-        currentPrice: price,
-        allergens: JSON.stringify(allergens || []),
+        currentPrice,
         imageUrl,
+      },
+      include: {
+        category: true,
+        allergens: {
+          include: {
+            allergen: true,
+          },
+        },
       },
     });
 
@@ -75,7 +92,7 @@ export async function POST(request: NextRequest) {
     await prisma.productPriceHistory.create({
       data: {
         productId: product.id,
-        price: price,
+        price: currentPrice,
         reason: 'Initial price',
       },
     });

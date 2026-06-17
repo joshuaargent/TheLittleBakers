@@ -19,8 +19,12 @@ export async function PATCH(
       );
     }
 
+    // Get the order with its current status
     const existingOrder = await prisma.order.findUnique({
       where: { id },
+      include: {
+        status: true,
+      },
     });
 
     if (!existingOrder) {
@@ -31,22 +35,34 @@ export async function PATCH(
     }
 
     // Validate status transition
-    const currentStatus = existingOrder.status as OrderStatus;
-    const allowedTransitions = ORDER_STATUS_FLOW[currentStatus];
+    const currentStatusCode = existingOrder.status?.code as OrderStatus;
+    const allowedTransitions = ORDER_STATUS_FLOW[currentStatusCode];
 
-    if (!allowedTransitions.includes(status as OrderStatus)) {
+    if (!allowedTransitions || !allowedTransitions.includes(status as OrderStatus)) {
       return NextResponse.json(
-        { error: `Cannot transition from ${currentStatus} to ${status}` },
+        { error: `Cannot transition from ${currentStatusCode} to ${status}` },
+        { status: 400 }
+      );
+    }
+
+    // Get the new status ID from the status code
+    const newStatus = await prisma.orderStatus.findUnique({
+      where: { code: status },
+    });
+
+    if (!newStatus) {
+      return NextResponse.json(
+        { error: `Invalid status code: ${status}` },
         { status: 400 }
       );
     }
 
     // Prepare update data
     const updateData: {
-      status: string;
+      statusId: string;
       completedAt?: Date | null;
     } = {
-      status,
+      statusId: newStatus.id,
     };
 
     // Set completedAt if status is COMPLETED
@@ -59,6 +75,7 @@ export async function PATCH(
       where: { id },
       data: updateData,
       include: {
+        status: true,
         items: {
           include: {
             product: true,
@@ -71,7 +88,7 @@ export async function PATCH(
     await prisma.orderStatusHistory.create({
       data: {
         orderId: id,
-        status,
+        statusId: newStatus.id,
         note,
       },
     });

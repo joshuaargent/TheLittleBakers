@@ -1,18 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input, Select } from '@/components/admin/ui';
 import {
-  PRODUCT_CATEGORIES,
   PRODUCT_STATUSES,
   ALLERGENS,
-  CATEGORY_LABELS,
-  ProductCategory,
   parseCurrencyToCents,
 } from '@/types';
 import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface Allergen {
+  id: string;
+  name: string;
+}
 
 interface IngredientSelection {
   id: string;
@@ -24,20 +31,47 @@ interface IngredientSelection {
 export default function NewProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [allergens, setAllergens] = useState<Allergen[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    category: '' as ProductCategory | '',
+    categoryId: '',
     status: 'ACTIVE',
-    price: '',
-    allergens: [] as string[],
+    currentPrice: '',
   });
+  const [selectedAllergenIds, setSelectedAllergenIds] = useState<string[]>([]);
   const [ingredients, setIngredients] = useState<IngredientSelection[]>([]);
   const [error, setError] = useState('');
 
-  const categoryOptions = PRODUCT_CATEGORIES.map((cat) => ({
-    value: cat,
-    label: CATEGORY_LABELS[cat],
+  useEffect(() => {
+    // Fetch categories and allergens from the database
+    async function fetchData() {
+      try {
+        const [categoriesRes, allergensRes] = await Promise.all([
+          fetch('/api/categories?type=PRODUCT'),
+          fetch('/api/allergens'),
+        ]);
+        
+        if (categoriesRes.ok) {
+          const cats = await categoriesRes.json();
+          setCategories(cats);
+        }
+        
+        if (allergensRes.ok) {
+          const alls = await allergensRes.json();
+          setAllergens(alls);
+        }
+      } catch (err) {
+        console.error('Failed to fetch form data:', err);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const categoryOptions = categories.map((cat) => ({
+    value: cat.id,
+    label: cat.name,
   }));
 
   const statusOptions = PRODUCT_STATUSES.map((status) => ({
@@ -57,10 +91,9 @@ export default function NewProductPage() {
         body: JSON.stringify({
           name: formData.name,
           description: formData.description || null,
-          category: formData.category,
+          categoryId: formData.categoryId,
           status: formData.status,
-          price: parseCurrencyToCents(formData.price),
-          allergens: formData.allergens,
+          currentPrice: parseCurrencyToCents(formData.currentPrice),
         }),
       });
 
@@ -78,13 +111,12 @@ export default function NewProductPage() {
     }
   };
 
-  const toggleAllergen = (allergen: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      allergens: prev.allergens.includes(allergen)
-        ? prev.allergens.filter((a) => a !== allergen)
-        : [...prev.allergens, allergen],
-    }));
+  const toggleAllergen = (allergenId: string) => {
+    setSelectedAllergenIds((prev) =>
+      prev.includes(allergenId)
+        ? prev.filter((id) => id !== allergenId)
+        : [...prev, allergenId]
+    );
   };
 
   return (
@@ -142,8 +174,8 @@ export default function NewProductPage() {
                 label="Category"
                 options={categoryOptions}
                 placeholder="Select a category"
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value as ProductCategory })}
+                value={formData.categoryId}
+                onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
                 required
               />
 
@@ -159,8 +191,8 @@ export default function NewProductPage() {
               label="Price (£)"
               type="text"
               placeholder="e.g., 4.50"
-              value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              value={formData.currentPrice}
+              onChange={(e) => setFormData({ ...formData, currentPrice: e.target.value })}
               helpText="Enter price in pounds (e.g., 4.50 for £4.50)"
               required
             />
@@ -176,13 +208,27 @@ export default function NewProductPage() {
           </p>
           
           <div className="flex flex-wrap gap-2">
-            {ALLERGENS.map((allergen) => (
+            {allergens.map((allergen) => (
+              <button
+                key={allergen.id}
+                type="button"
+                onClick={() => toggleAllergen(allergen.id)}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  selectedAllergenIds.includes(allergen.id)
+                    ? 'bg-[var(--color-primary)] text-white'
+                    : 'bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:bg-[var(--color-border)]'
+                }`}
+              >
+                {allergen.name}
+              </button>
+            ))}
+            {allergens.length === 0 && ALLERGENS.map((allergen) => (
               <button
                 key={allergen}
                 type="button"
                 onClick={() => toggleAllergen(allergen)}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                  formData.allergens.includes(allergen)
+                  selectedAllergenIds.includes(allergen)
                     ? 'bg-[var(--color-primary)] text-white'
                     : 'bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:bg-[var(--color-border)]'
                 }`}

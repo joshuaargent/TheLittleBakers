@@ -1,9 +1,7 @@
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import {
-  INGREDIENT_CATEGORY_LABELS,
   MOVEMENT_TYPE_LABELS,
-  IngredientCategory,
   STOCK_LEVEL_COLORS,
   getStockLevel,
   formatCurrency,
@@ -26,6 +24,8 @@ async function getIngredient(id: string) {
   const ingredient = await prisma.ingredient.findUnique({
     where: { id },
     include: {
+      category: true,
+      supplier: true,
       priceHistory: {
         orderBy: { effectiveDate: 'desc' },
         take: 10,
@@ -81,7 +81,7 @@ export default async function IngredientDetailPage({
             </h1>
           </div>
           <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-            {INGREDIENT_CATEGORY_LABELS[ingredient.category as IngredientCategory]} •{' '}
+            {ingredient.category?.name || ingredient.categoryId} •{' '}
             Unit: {ingredient.unit}
           </p>
         </div>
@@ -305,14 +305,30 @@ export default async function IngredientDetailPage({
             <div>
               <p className="text-sm text-[var(--color-text-muted)]">Supplier</p>
               <p className="text-sm font-medium text-[var(--color-text-primary)]">
-                {ingredient.supplier}
+                {ingredient.supplier.name}
               </p>
             </div>
-            {ingredient.supplierContact && (
+            {ingredient.supplier.email && (
               <div>
-                <p className="text-sm text-[var(--color-text-muted)]">Contact</p>
+                <p className="text-sm text-[var(--color-text-muted)]">Email</p>
                 <p className="text-sm font-medium text-[var(--color-text-primary)]">
-                  {ingredient.supplierContact}
+                  {ingredient.supplier.email}
+                </p>
+              </div>
+            )}
+            {ingredient.supplier.phone && (
+              <div>
+                <p className="text-sm text-[var(--color-text-muted)]">Phone</p>
+                <p className="text-sm font-medium text-[var(--color-text-primary)]">
+                  {ingredient.supplier.phone}
+                </p>
+              </div>
+            )}
+            {ingredient.supplierSku && (
+              <div>
+                <p className="text-sm text-[var(--color-text-muted)]">Supplier SKU</p>
+                <p className="text-sm font-medium text-[var(--color-text-primary)]">
+                  {ingredient.supplierSku}
                 </p>
               </div>
             )}

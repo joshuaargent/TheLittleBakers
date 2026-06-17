@@ -5,19 +5,19 @@ import prisma from '@/lib/prisma';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type');
+    const categoryId = searchParams.get('categoryId');
     const search = searchParams.get('search');
 
     const where: Record<string, unknown> = {};
 
-    if (type) {
-      where.type = type;
+    if (categoryId) {
+      where.categoryId = categoryId;
     }
 
     if (search) {
       where.OR = [
-        { name: { contains: search } },
-        { supplier: { contains: search } },
+        { name: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -25,6 +25,8 @@ export async function GET(request: NextRequest) {
       where,
       orderBy: { name: 'asc' },
       include: {
+        category: true,
+        supplier: true,
         _count: {
           select: { orderItems: true },
         },
@@ -47,30 +49,44 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       name,
-      type,
+      categoryId,
+      description,
       dimensions,
       costPerUnit = 0,
       currentStock = 0,
-      minStock = 0,
-      supplier,
+      reorderPoint = 0,
+      supplierId,
+      supplierSku,
+      unitsPerPack = 1,
     } = body;
 
-    if (!name || !type) {
+    if (!name || !categoryId) {
       return NextResponse.json(
-        { error: 'Name and type are required' },
+        { error: 'Name and categoryId are required' },
         { status: 400 }
       );
     }
 
+    // Generate slug from name
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
     const packaging = await prisma.packaging.create({
       data: {
         name,
-        type,
+        slug,
+        categoryId,
+        description,
         dimensions,
         costPerUnit,
         currentStock,
-        minStock,
-        supplier,
+        reorderPoint,
+        supplierId,
+        supplierSku,
+        unitsPerPack,
+      },
+      include: {
+        category: true,
+        supplier: true,
       },
     });
 

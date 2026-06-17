@@ -5,38 +5,41 @@ import prisma from '@/lib/prisma';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get('category');
+    const categoryId = searchParams.get('categoryId');
     const search = searchParams.get('search');
     const lowStock = searchParams.get('lowStock') === 'true';
 
     const where: Record<string, unknown> = {};
 
-    if (category) {
-      where.category = category;
+    if (categoryId) {
+      where.categoryId = categoryId;
     }
 
     if (search) {
       where.OR = [
-        { name: { contains: search } },
-        { supplier: { contains: search } },
+        { name: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
       ];
-    }
-
-    if (lowStock) {
-      where.currentStock = { lt: prisma.ingredient.fields.reorderPoint };
     }
 
     const ingredients = await prisma.ingredient.findMany({
       where,
       orderBy: { name: 'asc' },
       include: {
+        category: true,
+        supplier: true,
         _count: {
           select: { products: true },
         },
       },
     });
 
-    return NextResponse.json(ingredients);
+    // Filter for low stock if requested
+    const result = lowStock 
+      ? ingredients.filter(i => i.currentStock < i.reorderPoint)
+      : ingredients;
+
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Error fetching ingredients:', error);
     return NextResponse.json(
@@ -52,32 +55,46 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       name,
-      category,
-      unit,
+      categoryId,
+      unit = 'g',
+      recipeUnit = 'g',
       currentStock = 0,
       reorderPoint = 0,
+      reorderQty = 0,
       costPerUnit = 0,
-      supplier,
-      supplierContact,
+      supplierId,
+      supplierSku,
+      description,
     } = body;
 
-    if (!name || !category || !unit) {
+    if (!name || !categoryId) {
       return NextResponse.json(
-        { error: 'Name, category, and unit are required' },
+        { error: 'Name and categoryId are required' },
         { status: 400 }
       );
     }
 
+    // Generate slug from name
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
     const ingredient = await prisma.ingredient.create({
       data: {
         name,
-        category,
+        slug,
+        categoryId,
         unit,
+        recipeUnit,
         currentStock,
         reorderPoint,
+        reorderQty,
         costPerUnit,
-        supplier,
-        supplierContact,
+        supplierId,
+        supplierSku,
+        description,
+      },
+      include: {
+        category: true,
+        supplier: true,
       },
     });
 
@@ -100,7 +117,6 @@ export async function POST(request: NextRequest) {
         data: {
           ingredientId: ingredient.id,
           costPerUnit,
-          supplier,
           reason: 'Initial price',
         },
       });

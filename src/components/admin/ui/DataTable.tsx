@@ -10,6 +10,7 @@ export interface Column<T> {
   sortable?: boolean;
   render?: (item: T) => ReactNode;
   className?: string;
+  width?: string;
 }
 
 interface DataTableProps<T> {

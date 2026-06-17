@@ -20,13 +20,19 @@ async function generateOrderNumber(): Promise<string> {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
+    const statusCode = searchParams.get('status');
     const search = searchParams.get('search');
 
     const where: Record<string, unknown> = {};
 
-    if (status) {
-      where.status = status;
+    // Get status ID if filtering by status
+    if (statusCode) {
+      const status = await prisma.orderStatus.findUnique({
+        where: { code: statusCode },
+      });
+      if (status) {
+        where.statusId = status.id;
+      }
     }
 
     if (search) {
@@ -41,6 +47,7 @@ export async function GET(request: NextRequest) {
       where,
       orderBy: { createdAt: 'desc' },
       include: {
+        status: true,
         items: {
           include: {
             product: true,
@@ -84,6 +91,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get the PENDING status
+    const pendingStatus = await prisma.orderStatus.findUnique({
+      where: { code: 'PENDING' },
+    });
+
+    if (!pendingStatus) {
+      return NextResponse.json(
+        { error: 'PENDING status not found in database' },
+        { status: 500 }
+      );
+    }
+
     const orderNumber = await generateOrderNumber();
 
     const order = await prisma.order.create({
@@ -96,7 +115,7 @@ export async function POST(request: NextRequest) {
         subtotal,
         packagingCost,
         total,
-        status: 'PENDING',
+        statusId: pendingStatus.id,
         items: {
           create: items.map((item: {
             productId: string;
@@ -114,6 +133,7 @@ export async function POST(request: NextRequest) {
         },
       },
       include: {
+        status: true,
         items: {
           include: {
             product: true,
@@ -126,21 +146,27 @@ export async function POST(request: NextRequest) {
     await prisma.orderStatusHistory.create({
       data: {
         orderId: order.id,
-        status: 'PENDING',
+        statusId: pendingStatus.id,
         note: 'Order created',
       },
     });
 
     // Create transaction record for income
-    await prisma.transaction.create({
-      data: {
-        type: 'INCOME',
-        category: 'ORDER_REVENUE',
-        amount: total,
-        description: `Order ${orderNumber}`,
-        reference: order.id,
-      },
+    const orderRevenueCategory = await prisma.transactionCategory.findUnique({ 
+      where: { code: 'ORDER_REVENUE' } 
     });
+    
+    if (orderRevenueCategory) {
+      await prisma.transaction.create({
+        data: {
+          type: 'INCOME',
+          categoryId: orderRevenueCategory.id,
+          amount: total,
+          description: `Order ${orderNumber}`,
+          reference: order.id,
+        },
+      });
+    }
 
     return NextResponse.json(order, { status: 201 });
   } catch (error) {
