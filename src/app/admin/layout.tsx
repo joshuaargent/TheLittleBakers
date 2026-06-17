@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
+import { cn } from '@/lib/utils'
 import {
   LayoutDashboard,
   Package,
@@ -12,7 +14,7 @@ import {
   X,
   MoreHorizontal,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 // Main nav - only essential items
 const mainNav = [
@@ -42,16 +44,31 @@ export default function AdminLayout({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showMoreMenu, setShowMoreMenu] = useState(false)
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [pathname])
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [mobileMenuOpen])
+
   return (
-    <div className="min-h-screen bg-[var(--color-bg-primary)]">
-      {/* Header - Horizontal Navbar */}
-      <header className="bg-[#C2703E] text-white sticky top-0 z-50 shadow-md">
-        <div className="container">
-          <div className="flex items-center justify-between h-14">
-            {/* Logo */}
-            <Link href="/admin" className="flex items-center gap-2">
-              <span className="text-xl">🥐</span>
-              <span className="font-serif font-bold">The Little Bakers</span>
+    <>
+      <header className="fixed top-0 right-0 left-0 z-50 bg-[#C2703E] text-white shadow-md">
+        <nav className="container">
+          <div className="flex h-14 items-center justify-between">
+            {/* Logo - "Admin" */}
+            <Link href="/admin" className="flex items-center gap-2 text-white font-semibold">
+              Admin
             </Link>
 
             {/* Desktop Navigation - Compact */}
@@ -65,11 +82,12 @@ export default function AdminLayout({
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                    className={cn(
+                      'flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm',
                       isActive
                         ? 'bg-white/20 text-white'
                         : 'text-white/80 hover:bg-white/10 hover:text-white'
-                    }`}
+                    )}
                   >
                     <Icon className="w-4 h-4" />
                     {item.name}
@@ -81,11 +99,12 @@ export default function AdminLayout({
               <div className="relative">
                 <button
                   onClick={() => setShowMoreMenu(!showMoreMenu)}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                  className={cn(
+                    'flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm',
                     showMoreMenu
                       ? 'bg-white/20 text-white'
                       : 'text-white/80 hover:bg-white/10 hover:text-white'
-                  }`}
+                  )}
                 >
                   <MoreHorizontal className="w-4 h-4" />
                   More
@@ -100,11 +119,12 @@ export default function AdminLayout({
                       <Link
                         key={item.name}
                         href={item.href}
-                        className={`block px-4 py-2 text-sm transition-colors ${
+                        className={cn(
+                          'block px-4 py-2 text-sm transition-colors',
                           pathname.startsWith(item.href)
                             ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)]'
                             : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)]'
-                        }`}
+                        )}
                       >
                         {item.name}
                       </Link>
@@ -128,11 +148,12 @@ export default function AdminLayout({
               {/* Settings */}
               <Link
                 href="/admin/settings"
-                className={`hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                className={cn(
+                  'hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-sm',
                   pathname === '/admin/settings'
                     ? 'bg-white/20 text-white'
                     : 'text-white/80 hover:bg-white/10 hover:text-white'
-                }`}
+                )}
               >
                 <Settings className="w-4 h-4" />
                 Settings
@@ -147,82 +168,116 @@ export default function AdminLayout({
               </button>
             </div>
           </div>
+        </nav>
+      </header>
 
-          {/* Mobile Navigation - Full list */}
-          {mobileMenuOpen && (
-            <nav className="lg:hidden border-t border-white/10 py-3 max-h-[70vh] overflow-y-auto">
-              <div className="space-y-1">
-                {mainNav.map((item) => {
+      {/* Mobile Menu - Smooth animation like normal Navbar */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[45] bg-[#C2703E] pt-14 lg:hidden"
+          >
+            <nav className="container py-6 overflow-y-auto h-[calc(100vh-3.5rem)]">
+              <div className="flex flex-col gap-1">
+                {mainNav.map((item, index) => {
                   const Icon = item.icon
                   const isActive = pathname === item.href ||
                     (item.href !== '/admin' && pathname.startsWith(item.href))
 
                   return (
-                    <Link
+                    <motion.div
                       key={item.name}
-                      href={item.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-lg mx-2 transition-colors text-sm ${
-                        isActive
-                          ? 'bg-white/20 text-white'
-                          : 'text-white/80 hover:bg-white/10'
-                      }`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
                     >
-                      <Icon className="w-4 h-4" />
-                      {item.name}
-                    </Link>
-                  )
-                })}
-                
-                <div className="border-t border-white/10 mx-3 my-2 pt-2">
-                  <p className="px-3 py-1 text-xs text-white/50 uppercase tracking-wide">More</p>
-                  {moreNav.map((item) => {
-                    const isActive = pathname.startsWith(item.href)
-                    return (
                       <Link
-                        key={item.name}
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center gap-3 px-3 py-2 rounded-lg mx-0 transition-colors text-sm ${
+                        className={cn(
+                          'flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors',
                           isActive
                             ? 'bg-white/20 text-white'
                             : 'text-white/80 hover:bg-white/10'
-                        }`}
+                        )}
                       >
+                        <Icon className="w-5 h-5" />
                         {item.name}
                       </Link>
+                    </motion.div>
+                  )
+                })}
+                
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: mainNav.length * 0.05 }}
+                  className="border-t border-white/20 mt-4 pt-4"
+                >
+                  <p className="px-4 py-2 text-xs text-white/50 uppercase tracking-wide font-medium">More</p>
+                  {moreNav.map((item, index) => {
+                    const isActive = pathname.startsWith(item.href)
+                    return (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: (mainNav.length + 1 + index) * 0.05 }}
+                      >
+                        <Link
+                          href={item.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={cn(
+                            'flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors',
+                            isActive
+                              ? 'bg-white/20 text-white'
+                              : 'text-white/80 hover:bg-white/10'
+                          )}
+                        >
+                          {item.name}
+                        </Link>
+                      </motion.div>
                     )
                   })}
-                </div>
+                </motion.div>
                 
-                <div className="border-t border-white/10 mx-3 my-2 pt-2 space-y-1">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (mainNav.length + moreNav.length + 1) * 0.05 }}
+                  className="border-t border-white/20 mt-4 pt-4 space-y-1"
+                >
                   <Link
                     href="/admin/settings"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg mx-0 text-white/80 hover:bg-white/10 text-sm"
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-white/80 hover:bg-white/10 transition-colors"
                   >
-                    <Settings className="w-4 h-4" />
+                    <Settings className="w-5 h-5" />
                     Settings
                   </Link>
                   <Link
                     href="/"
                     target="_blank"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg mx-0 text-white/80 hover:bg-white/10 text-sm"
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-white/80 hover:bg-white/10 transition-colors"
                   >
                     View Site
                   </Link>
-                </div>
+                </motion.div>
               </div>
             </nav>
-          )}
-        </div>
-      </header>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
-      <main className="container py-6">
+      <main className="container py-6 pt-20">
         {children}
       </main>
-    </div>
+    </>
   )
 }
