@@ -1,12 +1,42 @@
 'use client';
 
 import { BaseProps } from '@/types';
-import { LucideIcon, TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
+import {
+  ShoppingCart,
+  DollarSign,
+  Clock,
+  Users,
+  Factory,
+  AlertTriangle,
+  Trash2,
+  Package,
+  Boxes,
+  FileText,
+  LucideIcon,
+} from 'lucide-react';
+
+type IconName = 'ShoppingCart' | 'DollarSign' | 'Clock' | 'Users' | 'Factory' | 'AlertTriangle' | 'Trash2' | 'Package' | 'Boxes' | 'FileText' | 'TrendingUp' | 'TrendingDown';
+
+const iconMap: Record<IconName, LucideIcon> = {
+  ShoppingCart,
+  DollarSign,
+  Clock,
+  Users,
+  Factory,
+  AlertTriangle,
+  Trash2,
+  Package,
+  Boxes,
+  FileText,
+  TrendingUp,
+  TrendingDown,
+};
 
 interface Stat {
   label: string;
   value: string | number;
-  icon?: LucideIcon;
+  icon?: IconName;
   trend?: number;
   trendLabel?: string;
   color?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
@@ -25,19 +55,19 @@ const colorClasses = {
   info: 'bg-blue-100 text-blue-600',
 };
 
-export function StatsGrid({ 
-  stats, 
+export function StatsGrid({
+  stats,
   columns = 4,
-  className = '' 
+  className = ''
 }: StatsGridProps) {
   return (
     <div className={`grid gap-4 md:grid-cols-2 lg:grid-cols-${columns} ${className}`}>
       {stats.map((stat, index) => {
-        const Icon = stat.icon;
+        const Icon = stat.icon ? iconMap[stat.icon] : null;
         const colorClass = stat.color ? colorClasses[stat.color] : colorClasses.primary;
-        
+
         return (
-          <div 
+          <div
             key={index}
             className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-5"
           >

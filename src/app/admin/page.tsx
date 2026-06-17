@@ -229,7 +229,7 @@ export default async function AdminDashboard() {
         {
           label: "Today's Orders",
           value: stats.todayOrders,
-          icon: ShoppingCart,
+          icon: 'ShoppingCart',
           trend: stats.todayOrdersTrend,
           trendLabel: 'vs yesterday',
           color: 'primary',
@@ -237,7 +237,7 @@ export default async function AdminDashboard() {
         {
           label: "Today's Revenue",
           value: formatCurrency(stats.todayRevenue),
-          icon: DollarSign,
+          icon: 'DollarSign',
           trend: stats.todayRevenueTrend,
           trendLabel: 'vs yesterday',
           color: 'success',
@@ -245,36 +245,36 @@ export default async function AdminDashboard() {
         {
           label: 'Pending Orders',
           value: stats.pendingOrders,
-          icon: Clock,
+          icon: 'Clock',
           color: stats.pendingOrders > 0 ? 'warning' : 'info',
         },
         {
           label: 'This Month Profit',
           value: formatCurrency(stats.thisMonthProfit),
-          icon: TrendingUp,
+          icon: 'TrendingUp',
           color: stats.thisMonthProfit >= 0 ? 'success' : 'danger',
         },
         {
           label: 'Total Customers',
           value: stats.totalCustomers.toLocaleString(),
-          icon: Users,
+          icon: 'Users',
         },
         {
           label: 'Active Batches',
           value: stats.activeProductionBatches,
-          icon: Factory,
+          icon: 'Factory',
           color: stats.activeProductionBatches > 0 ? 'info' : 'primary',
         },
         {
           label: 'Low Stock Alerts',
           value: stats.lowStockAlerts,
-          icon: AlertTriangle,
+          icon: 'AlertTriangle',
           color: totalLowStock > 0 ? 'danger' : 'success',
         },
         {
           label: "Today's Waste",
           value: formatCurrency(stats.wasteToday),
-          icon: Trash2,
+          icon: 'Trash2',
           color: stats.wasteToday > 0 ? 'warning' : 'success',
         },
       ]} />
