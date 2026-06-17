@@ -198,10 +198,10 @@ export default function AdminLayout({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="bg-bg-primary fixed inset-0 z-[45] pt-16 md:hidden"
+            className="bg-bg-primary fixed inset-0 z-[45] pt-16 md:hidden overflow-y-auto"
             style={{ transform: 'translateZ(0)' }}
           >
-            <nav className="container py-6">
+            <nav className="container py-6 pb-12">
               <div className="flex flex-col gap-1">
                 {mainNav.map((item, index) => {
                   const Icon = item.icon

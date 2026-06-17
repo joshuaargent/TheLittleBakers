@@ -79,15 +79,19 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
   ];
 
   return (
-    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] overflow-hidden">
-      <div className="overflow-x-auto">
+    <div className="overflow-x-auto">
+      {transactions.length === 0 ? (
+        <div className="py-8 text-center text-sm text-[var(--color-text-muted)]">
+          No transactions found.
+        </div>
+      ) : (
         <table className="w-full">
           <thead>
             <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
-                  className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]"
+                  className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]"
                   style={column.width ? { width: column.width } : undefined}
                 >
                   {column.header}
@@ -96,32 +100,24 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--color-border)]">
-            {transactions.length === 0 ? (
-              <tr>
-                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-[var(--color-text-muted)]">
-                  No transactions found.
-                </td>
+            {transactions.map((item) => (
+              <tr
+                key={item.id}
+                className="transition-colors hover:bg-[var(--color-bg-secondary)]"
+              >
+                {columns.map((column) => (
+                  <td
+                    key={String(column.key)}
+                    className="px-4 py-3 text-sm text-[var(--color-text-primary)]"
+                  >
+                    {column.render(item)}
+                  </td>
+                ))}
               </tr>
-            ) : (
-              transactions.map((item) => (
-                <tr
-                  key={item.id}
-                  className="transition-colors hover:bg-[var(--color-bg-secondary)]"
-                >
-                  {columns.map((column) => (
-                    <td
-                      key={String(column.key)}
-                      className="px-6 py-4 text-sm text-[var(--color-text-primary)]"
-                    >
-                      {column.render(item)}
-                    </td>
-                  ))}
-                </tr>
-              ))
-            )}
+            ))}
           </tbody>
         </table>
-      </div>
+      )}
     </div>
   );
 }
