@@ -31,7 +31,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 // ============================================
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light');
+  const [theme, setThemeState] = useState<Theme>('dark');
   const [isMounted, setIsMounted] = useState(false);
 
   // Initialize theme from localStorage or system preference
@@ -42,7 +42,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     
     if (storedTheme) {
       setThemeState(storedTheme);
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setThemeState('dark');
     }
   }, []);
