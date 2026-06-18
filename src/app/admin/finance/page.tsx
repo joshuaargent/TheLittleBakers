@@ -109,10 +109,10 @@ export default async function FinancePage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
+          <h1 className="text-2xl font-bold text-var(--color-text-primary)]">
             Finance
           </h1>
-          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+          <p className="mt-1 text-sm text-var(--color-text-secondary)]">
             Track your bakery&apos;s income, expenses, and profit margins.
           </p>
         </div>
@@ -149,20 +149,20 @@ export default async function FinancePage() {
 
       {/* All-Time Stats */}
       <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-          <p className="text-sm text-[var(--color-text-secondary)]">Total Revenue (All Time)</p>
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+          <p className="text-sm text-var(--color-text-secondary)]">Total Revenue (All Time)</p>
           <p className="mt-2 text-2xl font-bold text-green-600">
             {formatCurrency(totalIncome)}
           </p>
         </div>
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-          <p className="text-sm text-[var(--color-text-secondary)]">Total Expenses (All Time)</p>
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+          <p className="text-sm text-var(--color-text-secondary)]">Total Expenses (All Time)</p>
           <p className="mt-2 text-2xl font-bold text-red-600">
             {formatCurrency(totalExpenses)}
           </p>
         </div>
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-          <p className="text-sm text-[var(--color-text-secondary)]">Net Profit (All Time)</p>
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+          <p className="text-sm text-var(--color-text-secondary)]">Net Profit (All Time)</p>
           <p className={`mt-2 text-2xl font-bold ${totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
             {formatCurrency(totalProfit)}
           </p>
@@ -170,14 +170,14 @@ export default async function FinancePage() {
       </div>
 
       {/* Recent Transactions */}
-      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)]">
-        <div className="flex items-center justify-between border-b border-[var(--color-border)] px-6 py-4">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+      <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)]">
+        <div className="flex items-center justify-between border-b border-var(--color-border)] px-6 py-4">
+          <h2 className="text-lg font-semibold text-var(--color-text-primary)]">
             Recent Transactions
           </h2>
           <Link
             href="/admin/finance/transactions"
-            className="text-sm font-medium text-[var(--color-primary)] hover:underline"
+            className="text-sm font-medium text-var(--color-primary)] hover:underline"
           >
             View all
           </Link>
@@ -185,8 +185,8 @@ export default async function FinancePage() {
         <div className="p-6">
           {recentTransactions.length === 0 ? (
             <div className="py-12 text-center">
-              <Banknote className="mx-auto h-12 w-12 text-[var(--color-text-muted)]" />
-              <p className="mt-4 text-sm text-[var(--color-text-muted)]">
+              <Banknote className="mx-auto h-12 w-12 text-var(--color-text-muted)]" />
+              <p className="mt-4 text-sm text-var(--color-text-muted)]">
                 No transactions recorded yet. Start tracking your finances by recording income and expenses.
               </p>
             </div>
@@ -197,20 +197,20 @@ export default async function FinancePage() {
       </div>
 
       {/* Expense Breakdown by Category */}
-      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-        <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+      <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+        <h2 className="text-lg font-semibold text-var(--color-text-primary)]">
           Expense Categories
         </h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {EXPENSE_CATEGORIES.map((category) => (
             <div
               key={category}
-              className="flex items-center justify-between rounded-lg border border-[var(--color-border)] p-3"
+              className="flex items-center justify-between rounded-lg border border-var(--color-border)] p-3"
             >
-              <span className="text-sm text-[var(--color-text-secondary)]">
+              <span className="text-sm text-var(--color-text-secondary)]">
                 {category.replace('_', ' ')}
               </span>
-              <span className="text-sm font-medium text-[var(--color-text-primary)]">
+              <span className="text-sm font-medium text-var(--color-text-primary)]">
                 £0.00
               </span>
             </div>

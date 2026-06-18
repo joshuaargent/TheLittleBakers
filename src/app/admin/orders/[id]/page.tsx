@@ -132,9 +132,9 @@ export default function OrderDetailPage({
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="h-8 w-48 animate-pulse rounded bg-[var(--color-bg-secondary)]" />
-        <div className="h-32 animate-pulse rounded-xl bg-[var(--color-bg-card)]" />
-        <div className="h-64 animate-pulse rounded-xl bg-[var(--color-bg-card)]" />
+        <div className="h-8 w-48 animate-pulse rounded bg-var(--color-bg-secondary)]" />
+        <div className="h-32 animate-pulse rounded-xl bg-var(--color-bg-card)]" />
+        <div className="h-64 animate-pulse rounded-xl bg-var(--color-bg-card)]" />
       </div>
     );
   }
@@ -142,7 +142,7 @@ export default function OrderDetailPage({
   if (!order) {
     return (
       <div className="text-center">
-        <h1 className="text-xl font-semibold text-[var(--color-text-primary)]">
+        <h1 className="text-xl font-semibold text-var(--color-text-primary)]">
           Order not found
         </h1>
         <Link href="/admin/orders" className="mt-4 inline-block">
@@ -162,20 +162,20 @@ export default function OrderDetailPage({
         <div>
           <Link
             href="/admin/orders"
-            className="mb-4 inline-flex items-center gap-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+            className="mb-4 inline-flex items-center gap-2 text-sm text-var(--color-text-secondary)] hover:text-var(--color-text-primary)]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Orders
           </Link>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
+            <h1 className="text-2xl font-bold text-var(--color-text-primary)]">
               {order.orderNumber}
             </h1>
             <Badge className={ORDER_STATUS_COLORS[currentStatus]}>
               {ORDER_STATUS_LABELS[currentStatus]}
             </Badge>
           </div>
-          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+          <p className="mt-1 text-sm text-var(--color-text-secondary)]">
             Created {new Date(order.createdAt).toLocaleDateString('en-GB', {
               weekday: 'long',
               year: 'numeric',
@@ -211,8 +211,8 @@ export default function OrderDetailPage({
         {/* Order Details */}
         <div className="lg:col-span-2 space-y-6">
           {/* Items */}
-          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-            <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+          <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+            <h2 className="text-lg font-semibold text-var(--color-text-primary)]">
               Order Items
             </h2>
             <div className="mt-4 divide-y divide-var(--color-border)]">
@@ -222,27 +222,27 @@ export default function OrderDetailPage({
                   className="flex items-center justify-between py-4"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--color-primary-light)]">
-                      <span className="text-lg font-bold text-[var(--color-primary)]">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-var(--color-primary-light)]">
+                      <span className="text-lg font-bold text-var(--color-primary)]">
                         {item.quantity}
                       </span>
                     </div>
                     <div>
-                      <p className="font-medium text-[var(--color-text-primary)]">
+                      <p className="font-medium text-var(--color-text-primary)]">
                         {item.product.name}
                       </p>
                       {item.packaging && (
-                        <p className="text-sm text-[var(--color-text-muted)]">
+                        <p className="text-sm text-var(--color-text-muted)]">
                           + {item.packaging.name}
                         </p>
                       )}
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium text-[var(--color-text-primary)]">
+                    <p className="font-medium text-var(--color-text-primary)]">
                       {formatCurrency(item.totalPrice)}
                     </p>
-                    <p className="text-sm text-[var(--color-text-muted)]">
+                    <p className="text-sm text-var(--color-text-muted)]">
                       {formatCurrency(item.unitPrice)} each
                     </p>
                   </div>
@@ -251,23 +251,23 @@ export default function OrderDetailPage({
             </div>
 
             {/* Totals */}
-            <div className="mt-6 border-t border-[var(--color-border)] pt-4">
+            <div className="mt-6 border-t border-var(--color-border)] pt-4">
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-[var(--color-text-secondary)]">Subtotal</span>
-                  <span className="text-[var(--color-text-primary)]">
+                  <span className="text-var(--color-text-secondary)]">Subtotal</span>
+                  <span className="text-var(--color-text-primary)]">
                     {formatCurrency(order.subtotal)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--color-text-secondary)]">Packaging</span>
-                  <span className="text-[var(--color-text-primary)]">
+                  <span className="text-var(--color-text-secondary)]">Packaging</span>
+                  <span className="text-var(--color-text-primary)]">
                     {formatCurrency(order.packagingCost)}
                   </span>
                 </div>
-                <div className="flex justify-between border-t border-[var(--color-border)] pt-2 text-base">
-                  <span className="font-semibold text-[var(--color-text-primary)]">Total</span>
-                  <span className="font-bold text-[var(--color-primary)]">
+                <div className="flex justify-between border-t border-var(--color-border)] pt-2 text-base">
+                  <span className="font-semibold text-var(--color-text-primary)]">Total</span>
+                  <span className="font-bold text-var(--color-primary)]">
                     {formatCurrency(order.total)}
                   </span>
                 </div>
@@ -277,19 +277,19 @@ export default function OrderDetailPage({
 
           {/* Notes */}
           {order.notes && (
-            <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-              <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+            <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+              <h2 className="text-lg font-semibold text-var(--color-text-primary)]">
                 Order Notes
               </h2>
-              <p className="mt-3 text-sm text-[var(--color-text-secondary)]">
+              <p className="mt-3 text-sm text-var(--color-text-secondary)]">
                 {order.notes}
               </p>
             </div>
           )}
 
           {/* Status History */}
-          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-            <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+          <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+            <h2 className="text-lg font-semibold text-var(--color-text-primary)]">
               Status History
             </h2>
             <div className="mt-4 space-y-4">
@@ -314,7 +314,7 @@ export default function OrderDetailPage({
                       )}
                     </div>
                     {index < order.statusHistory.length - 1 && (
-                      <div className="h-full w-0.5 bg-[var(--color-border)]" />
+                      <div className="h-full w-0.5 bg-var(--color-border)]" />
                     )}
                   </div>
                   <div className="flex-1 pb-4">
@@ -326,12 +326,12 @@ export default function OrderDetailPage({
                       >
                         {ORDER_STATUS_LABELS[history.status as OrderStatus]}
                       </Badge>
-                      <span className="text-sm text-[var(--color-text-muted)]">
+                      <span className="text-sm text-var(--color-text-muted)]">
                         {new Date(history.createdAt).toLocaleString('en-GB')}
                       </span>
                     </div>
                     {history.note && (
-                      <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                      <p className="mt-1 text-sm text-var(--color-text-secondary)]">
                         {history.note}
                       </p>
                     )}
@@ -344,29 +344,29 @@ export default function OrderDetailPage({
 
         {/* Customer Info */}
         <div className="space-y-6">
-          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-            <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+          <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+            <h2 className="text-lg font-semibold text-var(--color-text-primary)]">
               Customer Information
             </h2>
             <div className="mt-4 space-y-3">
               <div>
-                <p className="text-sm text-[var(--color-text-muted)]">Name</p>
-                <p className="text-sm font-medium text-[var(--color-text-primary)]">
+                <p className="text-sm text-var(--color-text-muted)]">Name</p>
+                <p className="text-sm font-medium text-var(--color-text-primary)]">
                   {order.customerName}
                 </p>
               </div>
               {order.customerEmail && (
                 <div>
-                  <p className="text-sm text-[var(--color-text-muted)]">Email</p>
-                  <p className="text-sm font-medium text-[var(--color-text-primary)]">
+                  <p className="text-sm text-var(--color-text-muted)]">Email</p>
+                  <p className="text-sm font-medium text-var(--color-text-primary)]">
                     {order.customerEmail}
                   </p>
                 </div>
               )}
               {order.customerContact && (
                 <div>
-                  <p className="text-sm text-[var(--color-text-muted)]">Phone</p>
-                  <p className="text-sm font-medium text-[var(--color-text-primary)]">
+                  <p className="text-sm text-var(--color-text-muted)]">Phone</p>
+                  <p className="text-sm font-medium text-var(--color-text-primary)]">
                     {order.customerContact}
                   </p>
                 </div>
@@ -376,8 +376,8 @@ export default function OrderDetailPage({
 
           {/* Quick Actions */}
           {availableTransitions.length > 0 && (
-            <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-              <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+            <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+              <h2 className="text-lg font-semibold text-var(--color-text-primary)]">
                 Update Status
               </h2>
               <div className="mt-4 space-y-2">
@@ -388,12 +388,12 @@ export default function OrderDetailPage({
                       setSelectedStatus(status);
                       setShowStatusModal(true);
                     }}
-                    className="flex w-full items-center justify-between rounded-lg border border-[var(--color-border)] p-3 text-left transition-colors hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)]"
+                    className="flex w-full items-center justify-between rounded-lg border border-var(--color-border)] p-3 text-left transition-colors hover:border-var(--color-primary)] hover:bg-var(--color-primary-light)]"
                   >
-                    <span className="text-sm font-medium text-[var(--color-text-primary)]">
+                    <span className="text-sm font-medium text-var(--color-text-primary)]">
                       {ORDER_STATUS_LABELS[status as OrderStatus]}
                     </span>
-                    <ChevronRight className="h-4 w-4 text-[var(--color-text-muted)]" />
+                    <ChevronRight className="h-4 w-4 text-var(--color-text-muted)]" />
                   </button>
                 ))}
               </div>
@@ -409,14 +409,14 @@ export default function OrderDetailPage({
         title={`Update to ${ORDER_STATUS_LABELS[selectedStatus as OrderStatus]}`}
       >
         <div className="space-y-4">
-          <p className="text-sm text-[var(--color-text-secondary)]">
+          <p className="text-sm text-var(--color-text-secondary)]">
             Add a note about this status change (optional):
           </p>
           <textarea
             placeholder="e.g., Payment received, started baking..."
             value={statusNote}
             onChange={(e) => setStatusNote(e.target.value)}
-            className="flex min-h-[100px] w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder-var(--color-text-muted)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-var(--color-primary)]/20"
+            className="flex min-h-[100px] w-full rounded-lg border border-var(--color-border)] bg-var(--color-bg-card)] px-3 py-2 text-sm text-var(--color-text-primary)] placeholder-var(--color-text-muted)] focus:border-var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-var(--color-primary)]/20"
           />
           <div className="flex justify-end gap-3 pt-4">
             <Button

@@ -74,20 +74,20 @@ export function Drawer({
             exit={slideVariants[position].exit}
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             className={cn(
-              'fixed top-0 z-50 flex h-full w-full max-w-md flex-col bg-[var(--color-bg-card)] shadow-xl',
+              'fixed top-0 z-50 flex h-full w-full max-w-md flex-col bg-var(--color-bg-card)] shadow-xl',
               positionClasses[position]
             )}
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-[var(--color-border)] px-6 py-4">
+            <div className="flex items-center justify-between border-b border-var(--color-border)] px-6 py-4">
               {title && (
-                <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+                <h2 className="text-lg font-semibold text-var(--color-text-primary)]">
                   {title}
                 </h2>
               )}
               <button
                 onClick={onClose}
-                className="rounded-lg p-1.5 text-[var(--color-text-muted)] hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)]"
+                className="rounded-lg p-1.5 text-var(--color-text-muted)] hover:bg-var(--color-bg-secondary)] hover:text-var(--color-text-primary)]"
               >
                 <X className="h-5 w-5" />
               </button>

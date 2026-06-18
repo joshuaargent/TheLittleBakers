@@ -38,7 +38,7 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       <div
         ref={ref}
         className={cn(
-          'relative flex items-center justify-center overflow-hidden rounded-full bg-[var(--color-bg-secondary)]',
+          'relative flex items-center justify-center overflow-hidden rounded-full bg-var(--color-bg-secondary)]',
           sizeClasses[size],
           className
         )}
@@ -53,7 +53,7 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
             sizes="(max-width: 768px) 100vw, 300px"
           />
         ) : (
-          fallback || <User className="text-[var(--color-text-muted)]" size={iconSizes[size]} />
+          fallback || <User className="text-var(--color-text-muted)]" size={iconSizes[size]} />
         )}
       </div>
     );

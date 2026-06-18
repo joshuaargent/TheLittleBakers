@@ -216,10 +216,10 @@ export default async function AdminDashboard() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
+        <h1 className="text-2xl font-bold text-var(--color-text-primary)]">
           Dashboard
         </h1>
-        <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+        <p className="mt-1 text-sm text-var(--color-text-secondary)]">
           Welcome back! Here&apos;s what&apos;s happening with The Little Bakers today.
         </p>
       </div>
@@ -281,35 +281,35 @@ export default async function AdminDashboard() {
 
       {/* Secondary Stats */}
       <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-6">
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
-          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-var(--color-text-secondary)]">
             <Package className="h-4 w-4" />
             Products
           </div>
-          <p className="mt-1 text-2xl font-bold text-[var(--color-text-primary)]">
+          <p className="mt-1 text-2xl font-bold text-var(--color-text-primary)]">
             {stats.totalProducts}
           </p>
         </div>
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
-          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-var(--color-text-secondary)]">
             <Boxes className="h-4 w-4" />
             Ingredients
           </div>
-          <p className="mt-1 text-2xl font-bold text-[var(--color-text-primary)]">
+          <p className="mt-1 text-2xl font-bold text-var(--color-text-primary)]">
             {stats.totalIngredients}
           </p>
         </div>
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
-          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-var(--color-text-secondary)]">
             <FileText className="h-4 w-4" />
             Pending Purchases
           </div>
-          <p className="mt-1 text-2xl font-bold text-[var(--color-text-primary)]">
+          <p className="mt-1 text-2xl font-bold text-var(--color-text-primary)]">
             {stats.pendingPurchases}
           </p>
         </div>
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
-          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-var(--color-text-secondary)]">
             <TrendingUp className="h-4 w-4 text-green-600" />
             This Month Income
           </div>
@@ -317,8 +317,8 @@ export default async function AdminDashboard() {
             {formatCurrency(stats.thisMonthIncome)}
           </p>
         </div>
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
-          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-var(--color-text-secondary)]">
             <TrendingDown className="h-4 w-4 text-red-600" />
             This Month Expenses
           </div>
@@ -326,12 +326,12 @@ export default async function AdminDashboard() {
             {formatCurrency(stats.thisMonthExpenses)}
           </p>
         </div>
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
-          <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-4">
+          <div className="flex items-center gap-2 text-sm text-var(--color-text-secondary)]">
             <Users className="h-4 w-4 text-blue-600" />
             New Customers Today
           </div>
-          <p className="mt-1 text-2xl font-bold text-[var(--color-text-primary)]">
+          <p className="mt-1 text-2xl font-bold text-var(--color-text-primary)]">
             +{stats.newCustomersToday}
           </p>
         </div>
@@ -341,14 +341,14 @@ export default async function AdminDashboard() {
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Recent Orders */}
         <div className="lg:col-span-2">
-          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)]">
-            <div className="flex items-center justify-between border-b border-[var(--color-border)] px-6 py-4">
-              <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+          <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)]">
+            <div className="flex items-center justify-between border-b border-var(--color-border)] px-6 py-4">
+              <h2 className="text-lg font-semibold text-var(--color-text-primary)]">
                 Recent Orders
               </h2>
               <Link
                 href="/admin/orders"
-                className="flex items-center gap-1 text-sm font-medium text-[var(--color-primary)] hover:underline"
+                className="flex items-center gap-1 text-sm font-medium text-var(--color-primary)] hover:underline"
               >
                 View all
                 <ArrowRight className="h-4 w-4" />
@@ -357,8 +357,8 @@ export default async function AdminDashboard() {
             <div className="divide-y divide-var(--color-border)]">
               {recentOrders.length === 0 ? (
                 <div className="px-6 py-12 text-center">
-                  <ShoppingCart className="mx-auto h-12 w-12 text-[var(--color-text-muted)]" />
-                  <p className="mt-4 text-sm text-[var(--color-text-muted)]">
+                  <ShoppingCart className="mx-auto h-12 w-12 text-var(--color-text-muted)]" />
+                  <p className="mt-4 text-sm text-var(--color-text-muted)]">
                     No orders yet. Orders will appear here once placed.
                   </p>
                 </div>
@@ -367,11 +367,11 @@ export default async function AdminDashboard() {
                   <Link
                     key={order.id}
                     href={`/admin/orders/${order.id}`}
-                    className="flex items-center justify-between px-6 py-4 transition-colors hover:bg-[var(--color-bg-secondary)]"
+                    className="flex items-center justify-between px-6 py-4 transition-colors hover:bg-var(--color-bg-secondary)]"
                   >
                     <div>
                       <div className="flex items-center gap-3">
-                        <span className="font-medium text-[var(--color-text-primary)]">
+                        <span className="font-medium text-var(--color-text-primary)]">
                           {order.orderNumber}
                         </span>
                         <Badge
@@ -382,15 +382,15 @@ export default async function AdminDashboard() {
                           {ORDER_STATUS_LABELS[(order.status?.code || 'PENDING') as OrderStatus]}
                         </Badge>
                       </div>
-                      <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                      <p className="mt-1 text-sm text-var(--color-text-secondary)]">
                         {order.customerName} • {order.items.length} item{order.items.length !== 1 ? 's' : ''}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-[var(--color-text-primary)]">
+                      <p className="font-semibold text-var(--color-text-primary)]">
                         {formatCurrency(order.total)}
                       </p>
-                      <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+                      <p className="mt-1 text-xs text-var(--color-text-muted)]">
                         {new Date(order.createdAt).toLocaleDateString('en-GB', {
                           hour: '2-digit',
                           minute: '2-digit',
@@ -407,12 +407,12 @@ export default async function AdminDashboard() {
         {/* Alerts & Quick Actions */}
         <div className="space-y-6">
           {/* Low Stock Alerts */}
-          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)]">
-            <div className="flex items-center justify-between border-b border-[var(--color-border)] px-6 py-4">
-              <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+          <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)]">
+            <div className="flex items-center justify-between border-b border-var(--color-border)] px-6 py-4">
+              <h2 className="text-lg font-semibold text-var(--color-text-primary)]">
                 Low Stock Alerts
               </h2>
-              <span className="rounded-full bg-[var(--color-danger)]/10 px-2 py-1 text-xs font-medium text-[var(--color-danger)]">
+              <span className="rounded-full bg-var(--color-danger)]/10 px-2 py-1 text-xs font-medium text-var(--color-danger)]">
                 {totalLowStock}
               </span>
             </div>
@@ -420,7 +420,7 @@ export default async function AdminDashboard() {
               {lowStockItems.length === 0 ? (
                 <div className="px-6 py-8 text-center">
                   <Package className="mx-auto h-10 w-10 text-green-500" />
-                  <p className="mt-3 text-sm text-[var(--color-text-muted)]">
+                  <p className="mt-3 text-sm text-var(--color-text-muted)]">
                     All stock levels are healthy!
                   </p>
                 </div>
@@ -430,15 +430,15 @@ export default async function AdminDashboard() {
                     <Link
                       key={ingredient.id}
                       href={`/admin/ingredients/${ingredient.id}`}
-                      className="flex items-center justify-between px-6 py-3 transition-colors hover:bg-[var(--color-bg-secondary)]"
+                      className="flex items-center justify-between px-6 py-3 transition-colors hover:bg-var(--color-bg-secondary)]"
                     >
                       <div className="flex items-center gap-2">
-                        <Boxes className="h-4 w-4 text-[var(--color-text-muted)]" />
-                        <span className="text-sm text-[var(--color-text-primary)]">
+                        <Boxes className="h-4 w-4 text-var(--color-text-muted)]" />
+                        <span className="text-sm text-var(--color-text-primary)]">
                           {ingredient.name}
                         </span>
                       </div>
-                      <span className="text-sm font-medium text-[var(--color-danger)]">
+                      <span className="text-sm font-medium text-var(--color-danger)]">
                         {ingredient.currentStock.toFixed(1)} {ingredient.unit}
                       </span>
                     </Link>
@@ -447,15 +447,15 @@ export default async function AdminDashboard() {
                     <Link
                       key={pkg.id}
                       href={`/admin/packaging/${pkg.id}`}
-                      className="flex items-center justify-between px-6 py-3 transition-colors hover:bg-[var(--color-bg-secondary)]"
+                      className="flex items-center justify-between px-6 py-3 transition-colors hover:bg-var(--color-bg-secondary)]"
                     >
                       <div className="flex items-center gap-2">
-                        <Package className="h-4 w-4 text-[var(--color-text-muted)]" />
-                        <span className="text-sm text-[var(--color-text-primary)]">
+                        <Package className="h-4 w-4 text-var(--color-text-muted)]" />
+                        <span className="text-sm text-var(--color-text-primary)]">
                           {pkg.name}
                         </span>
                       </div>
-                      <span className="text-sm font-medium text-[var(--color-danger)]">
+                      <span className="text-sm font-medium text-var(--color-danger)]">
                         {pkg.currentStock} left
                       </span>
                     </Link>
@@ -464,10 +464,10 @@ export default async function AdminDashboard() {
               )}
             </div>
             {totalLowStock > 5 && (
-              <div className="border-t border-[var(--color-border)] px-6 py-3">
+              <div className="border-t border-var(--color-border)] px-6 py-3">
                 <Link
                   href="/admin/ingredients?filter=low_stock"
-                  className="text-sm font-medium text-[var(--color-primary)] hover:underline"
+                  className="text-sm font-medium text-var(--color-primary)] hover:underline"
                 >
                   View all {totalLowStock} alerts →
                 </Link>
@@ -476,9 +476,9 @@ export default async function AdminDashboard() {
           </div>
 
           {/* Quick Actions */}
-          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)]">
-            <div className="border-b border-[var(--color-border)] px-6 py-4">
-              <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+          <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)]">
+            <div className="border-b border-var(--color-border)] px-6 py-4">
+              <h2 className="text-lg font-semibold text-var(--color-text-primary)]">
                 Quick Actions
               </h2>
             </div>
@@ -486,37 +486,37 @@ export default async function AdminDashboard() {
               <div className="grid grid-cols-2 gap-3">
                 <Link
                   href="/admin/orders/new"
-                  className="flex flex-col items-center gap-2 rounded-lg border border-[var(--color-border)] p-4 transition-colors hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)]"
+                  className="flex flex-col items-center gap-2 rounded-lg border border-var(--color-border)] p-4 transition-colors hover:border-var(--color-primary)] hover:bg-var(--color-primary-light)]"
                 >
-                  <ShoppingCart className="h-6 w-6 text-[var(--color-primary)]" />
-                  <span className="text-xs font-medium text-[var(--color-text-primary)]">
+                  <ShoppingCart className="h-6 w-6 text-var(--color-primary)]" />
+                  <span className="text-xs font-medium text-var(--color-text-primary)]">
                     New Order
                   </span>
                 </Link>
                 <Link
                   href="/admin/products/new"
-                  className="flex flex-col items-center gap-2 rounded-lg border border-[var(--color-border)] p-4 transition-colors hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)]"
+                  className="flex flex-col items-center gap-2 rounded-lg border border-var(--color-border)] p-4 transition-colors hover:border-var(--color-primary)] hover:bg-var(--color-primary-light)]"
                 >
-                  <Package className="h-6 w-6 text-[var(--color-primary)]" />
-                  <span className="text-xs font-medium text-[var(--color-text-primary)]">
+                  <Package className="h-6 w-6 text-var(--color-primary)]" />
+                  <span className="text-xs font-medium text-var(--color-text-primary)]">
                     Add Product
                   </span>
                 </Link>
                 <Link
                   href="/admin/purchases/new"
-                  className="flex flex-col items-center gap-2 rounded-lg border border-[var(--color-border)] p-4 transition-colors hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)]"
+                  className="flex flex-col items-center gap-2 rounded-lg border border-var(--color-border)] p-4 transition-colors hover:border-var(--color-primary)] hover:bg-var(--color-primary-light)]"
                 >
-                  <FileText className="h-6 w-6 text-[var(--color-primary)]" />
-                  <span className="text-xs font-medium text-[var(--color-text-primary)]">
+                  <FileText className="h-6 w-6 text-var(--color-primary)]" />
+                  <span className="text-xs font-medium text-var(--color-text-primary)]">
                     New Purchase
                   </span>
                 </Link>
                 <Link
                   href="/admin/production/new"
-                  className="flex flex-col items-center gap-2 rounded-lg border border-[var(--color-border)] p-4 transition-colors hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)]"
+                  className="flex flex-col items-center gap-2 rounded-lg border border-var(--color-border)] p-4 transition-colors hover:border-var(--color-primary)] hover:bg-var(--color-primary-light)]"
                 >
-                  <Factory className="h-6 w-6 text-[var(--color-primary)]" />
-                  <span className="text-xs font-medium text-[var(--color-text-primary)]">
+                  <Factory className="h-6 w-6 text-var(--color-primary)]" />
+                  <span className="text-xs font-medium text-var(--color-text-primary)]">
                     New Batch
                   </span>
                 </Link>

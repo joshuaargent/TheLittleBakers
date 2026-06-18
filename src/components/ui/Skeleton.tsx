@@ -51,7 +51,7 @@ export const SkeletonText = forwardRef<HTMLDivElement, { lines?: number }>(({ li
 SkeletonText.displayName = 'SkeletonText';
 
 export const SkeletonCard = forwardRef<HTMLDivElement>((_, ref) => (
-  <div ref={ref} className="space-y-4 rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
+  <div ref={ref} className="space-y-4 rounded-[var(--radius-card)] border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
     <Skeleton className="h-48 w-full" variant="rectangular" />
     <Skeleton className="h-6 w-3/4" />
     <SkeletonText lines={2} />
