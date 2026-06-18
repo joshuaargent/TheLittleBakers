@@ -15,9 +15,9 @@
      COLOR SYSTEM (Light Mode - Default)
      ============================================ */
 
-  /* Primary Background - Warm light background */
-  --color-bg: #F8F6F4;
-  --color-bg-secondary: #EFEBE8;
+  /* Primary Background - Warm pinky background */
+  --color-bg: #FFF5F5;
+  --color-bg-secondary: #FFECEC;
   --color-bg-card: #FFFFFF;
   --color-bg-elevated: #FFFCFA;
 
@@ -40,9 +40,9 @@
   --color-beige: #6D4C41;
 
   /* Text Colors */
-  --color-text: #2D2420;
-  --color-text-muted: #6B5E56;
-  --color-text-subtle: #9A8D84;
+  --color-text: #3D2D2D;
+  --color-text-muted: #6B5555;
+  --color-text-subtle: #9A8888;
 
   /* Semantic Colors */
   --color-success: #3ED6C4;
@@ -51,8 +51,8 @@
   --color-info: #3ED6C4;
 
   /* Borders */
-  --color-border: #DDD8D4;
-  --color-border-subtle: #E8E2DE;
+  --color-border: #E8D8D8;
+  --color-border-subtle: #F0E4E4;
 
   /* ============================================
      TYPOGRAPHY
