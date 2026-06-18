@@ -129,6 +129,24 @@ body {
 }
 
 /* ------------------------------------------
+   Light Mode
+   ------------------------------------------ */
+
+html:not(.dark) {
+  --color-bg: #F8F6F4;
+  --color-bg-secondary: #EFEBE8;
+  --color-bg-card: #FFFFFF;
+  --color-bg-elevated: #FFFCFA;
+  --color-text: #2D2420;
+  --color-text-muted: #6B5E56;
+  --color-text-subtle: #9A8D84;
+  --color-border: #DDD8D4;
+  --color-border-subtle: #E8E2DE;
+  --color-cream: #5D4037;
+  --color-beige: #6D4C41;
+}
+
+/* ------------------------------------------
    Typography
    ------------------------------------------ */
 
