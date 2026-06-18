@@ -39,8 +39,8 @@ export function WasteTable({ entries }: WasteTableProps) {
       sortable: true,
       render: (entry: WasteEntry) => (
         <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-var(--color-text-muted)]" />
-          <span className="text-sm text-var(--color-text-secondary)]">
+          <Calendar className="h-4 w-4 text-[var(--color-text-muted)]" />
+          <span className="text-sm text-[var(--color-text-secondary)]">
             {new Date(entry.date).toLocaleDateString('en-GB')}
           </span>
         </div>
@@ -62,7 +62,7 @@ export function WasteTable({ entries }: WasteTableProps) {
       key: 'wasteType',
       header: 'Type',
       render: (entry: WasteEntry) => (
-        <span className="text-sm text-var(--color-text-primary)]">
+        <span className="text-sm text-[var(--color-text-primary)]">
           {entry.wasteType.name}
         </span>
       ),
@@ -72,7 +72,7 @@ export function WasteTable({ entries }: WasteTableProps) {
       header: 'Quantity',
       sortable: true,
       render: (entry: WasteEntry) => (
-        <span className="font-medium text-var(--color-text-primary)]">
+        <span className="font-medium text-[var(--color-text-primary)]">
           {entry.quantity} {entry.unit || ''}
         </span>
       ),
@@ -91,7 +91,7 @@ export function WasteTable({ entries }: WasteTableProps) {
       key: 'reason',
       header: 'Reason',
       render: (entry: WasteEntry) => (
-        <span className="text-sm text-var(--color-text-secondary)]">
+        <span className="text-sm text-[var(--color-text-secondary)]">
           {entry.reason}
         </span>
       ),
@@ -105,7 +105,7 @@ export function WasteTable({ entries }: WasteTableProps) {
             {formatCurrency(entry.recoveryAmount || 0)}
           </span>
         ) : (
-          <span className="text-var(--color-text-muted)]">No</span>
+          <span className="text-[var(--color-text-muted)]">No</span>
         )
       ),
     },
@@ -116,7 +116,7 @@ export function WasteTable({ entries }: WasteTableProps) {
       render: (entry: WasteEntry) => (
         <Link
           href={`/admin/waste/${entry.id}`}
-          className="text-sm font-medium text-var(--color-primary)] hover:underline"
+          className="text-sm font-medium text-[var(--color-primary)] hover:underline"
         >
           View →
         </Link>
@@ -125,15 +125,15 @@ export function WasteTable({ entries }: WasteTableProps) {
   ];
 
   return (
-    <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] overflow-hidden">
+    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-var(--color-border)] bg-var(--color-bg-secondary)]">
+            <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
-                  className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-var(--color-text-secondary)]"
+                  className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]"
                   style={{ width: column.width }}
                 >
                   {column.header}
@@ -141,10 +141,10 @@ export function WasteTable({ entries }: WasteTableProps) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-var(--color-border)]">
+          <tbody className="divide-y divide-[var(--color-border)]">
             {entries.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-var(--color-text-muted)]">
+                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-[var(--color-text-muted)]">
                   No waste entries found. Start tracking waste to reduce losses.
                 </td>
               </tr>
@@ -152,12 +152,12 @@ export function WasteTable({ entries }: WasteTableProps) {
               entries.map((entry) => (
                 <tr
                   key={entry.id}
-                  className="transition-colors hover:bg-var(--color-bg-secondary)]"
+                  className="transition-colors hover:bg-[var(--color-bg-secondary)]"
                 >
                   {columns.map((column) => (
                     <td
                       key={String(column.key)}
-                      className="px-6 py-4 text-sm text-var(--color-text-primary)]"
+                      className="px-6 py-4 text-sm text-[var(--color-text-primary)]"
                     >
                       {column.render
                         ? column.render(entry)

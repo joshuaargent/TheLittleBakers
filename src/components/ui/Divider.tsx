@@ -23,9 +23,9 @@ const variantClassesMap: Record<string, string> = {
 };
 
 const colorClassesMap: Record<string, string> = {
-  default: 'border-var(--color-border)]',
-  cream: 'border-var(--color-cream)]/30',
-  pink: 'border-var(--color-pink)]/30',
+  default: 'border-[var(--color-border)]',
+  cream: 'border-[var(--color-cream)]/30',
+  pink: 'border-[var(--color-pink)]/30',
 };
 
 export const Divider = forwardRef<HTMLDivElement, DividerProps>(
@@ -49,7 +49,7 @@ export const Divider = forwardRef<HTMLDivElement, DividerProps>(
       return (
         <div ref={ref} className={cn('relative flex items-center', className)} {...props}>
           <div className={cn('flex-grow border-t', variantClassesMap[variant], colorClassesMap[color])} />
-          <span className="text-var(--color-text-muted)] mx-4 shrink-0 text-sm">{label}</span>
+          <span className="text-[var(--color-text-muted)] mx-4 shrink-0 text-sm">{label}</span>
           <div className={cn('flex-grow border-t', variantClassesMap[variant], colorClassesMap[color])} />
         </div>
       );

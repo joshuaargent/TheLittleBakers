@@ -22,17 +22,17 @@ export function EmptyState({
   className = ''
 }: EmptyStateProps) {
   return (
-    <div className={`rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-12 text-center ${className}`}>
+    <div className={`rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-12 text-center ${className}`}>
       {icon && (
-        <div className="mx-auto h-16 w-16 text-var(--color-text-muted)]">
+        <div className="mx-auto h-16 w-16 text-[var(--color-text-muted)]">
           {icon}
         </div>
       )}
-      <h3 className="mt-4 text-lg font-medium text-var(--color-text-primary)]">
+      <h3 className="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
         {title}
       </h3>
       {description && (
-        <p className="mt-2 text-sm text-var(--color-text-muted)]">
+        <p className="mt-2 text-sm text-[var(--color-text-muted)]">
           {description}
         </p>
       )}

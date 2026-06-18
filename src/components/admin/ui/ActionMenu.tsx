@@ -50,14 +50,14 @@ export function ActionMenu({
     <div className={`relative ${className}`} ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex h-8 w-8 items-center justify-center rounded-lg text-var(--color-text-muted)] hover:bg-var(--color-bg-secondary)] hover:text-var(--color-text-primary)] transition-colors"
+        className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--color-text-muted)] hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
       >
         <MoreHorizontal className="h-5 w-5" />
       </button>
       
       {isOpen && (
         <div 
-          className={`absolute z-50 mt-1 min-w-[160px] rounded-lg border border-var(--color-border)] bg-var(--color-bg-card)] py-1 shadow-lg ${
+          className={`absolute z-50 mt-1 min-w-[160px] rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] py-1 shadow-lg ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
         >
@@ -68,10 +68,10 @@ export function ActionMenu({
               disabled={action.disabled}
               className={`flex w-full items-center gap-2 px-3 py-2 text-sm transition-colors ${
                 action.disabled
-                  ? 'cursor-not-allowed text-var(--color-text-muted)]'
+                  ? 'cursor-not-allowed text-[var(--color-text-muted)]'
                   : action.variant === 'danger'
-                  ? 'text-var(--color-danger)] hover:bg-var(--color-danger)]/10'
-                  : 'text-var(--color-text-primary)] hover:bg-var(--color-bg-secondary)]'
+                  ? 'text-[var(--color-danger)] hover:bg-[var(--color-danger)]/10'
+                  : 'text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)]'
               }`}
             >
               {action.icon}

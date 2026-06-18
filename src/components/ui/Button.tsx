@@ -60,30 +60,30 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     switch (variant) {
       case 'primary':
         // Brand CTA - Pink pill button
-        variantStyles = 'bg-var(--color-pink)] text-black hover:bg-var(--color-pink-hover)] shadow-md hover:shadow-lg hover:-translate-y-0.5 focus-visible:ring-var(--color-pink)]';
+        variantStyles = 'bg-[var(--color-pink)] text-black hover:bg-[var(--color-pink-hover)] shadow-md hover:shadow-lg hover:-translate-y-0.5 focus-visible:ring-var(--color-pink)]';
         break;
       case 'secondary':
         // Yellow accent button
-        variantStyles = 'bg-var(--color-yellow)] text-black hover:bg-var(--color-yellow-hover)] shadow-md hover:shadow-lg hover:-translate-y-0.5 focus-visible:ring-var(--color-yellow)]';
+        variantStyles = 'bg-[var(--color-yellow)] text-black hover:bg-[var(--color-yellow-hover)] shadow-md hover:shadow-lg hover:-translate-y-0.5 focus-visible:ring-var(--color-yellow)]';
         break;
       case 'outline':
         // Cream outline pill
-        variantStyles = 'border-2 border-var(--color-cream)] bg-transparent text-var(--color-cream)] hover:bg-var(--color-cream)] hover:text-black focus-visible:ring-var(--color-cream)]';
+        variantStyles = 'border-2 border-[var(--color-cream)] bg-transparent text-[var(--color-cream)] hover:bg-[var(--color-cream)] hover:text-black focus-visible:ring-var(--color-cream)]';
         break;
       case 'ghost':
         // Ghost with cream text
-        variantStyles = 'text-var(--color-cream)] hover:bg-var(--color-bg-secondary)]';
+        variantStyles = 'text-[var(--color-cream)] hover:bg-[var(--color-bg-secondary)]';
         break;
       case 'link':
         // Turquoise link
-        variantStyles = 'text-var(--color-turquoise)] hover:text-var(--color-turquoise-hover)] underline-offset-4 hover:underline';
+        variantStyles = 'text-[var(--color-turquoise)] hover:text-[var(--color-turquoise-hover)] underline-offset-4 hover:underline';
         break;
       case 'danger':
         // Danger button
-        variantStyles = 'bg-var(--color-danger)] text-white hover:opacity-90 focus-visible:ring-var(--color-danger)]';
+        variantStyles = 'bg-[var(--color-danger)] text-white hover:opacity-90 focus-visible:ring-var(--color-danger)]';
         break;
       default:
-        variantStyles = 'bg-var(--color-pink)] text-black hover:bg-var(--color-pink-hover)]';
+        variantStyles = 'bg-[var(--color-pink)] text-black hover:bg-[var(--color-pink-hover)]';
     }
 
     const buttonStyles = cn(buttonBaseStyles, variantStyles, sizeStyles[size], className);

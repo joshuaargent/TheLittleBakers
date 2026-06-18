@@ -34,16 +34,16 @@ export function CustomersTable({ customers }: CustomersTableProps) {
       sortable: true,
       render: (customer: Customer) => (
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-var(--color-primary-light)]">
-            <span className="text-sm font-semibold text-var(--color-primary)]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary-light)]">
+            <span className="text-sm font-semibold text-[var(--color-primary)]">
               {customer.firstName[0]}{customer.lastName[0]}
             </span>
           </div>
           <div>
-            <p className="font-medium text-var(--color-text-primary)]">
+            <p className="font-medium text-[var(--color-text-primary)]">
               {customer.firstName} {customer.lastName}
             </p>
-            <p className="text-xs text-var(--color-text-muted)]">
+            <p className="text-xs text-[var(--color-text-muted)]">
               {customer.type} • {customer.tier}
             </p>
           </div>
@@ -56,13 +56,13 @@ export function CustomersTable({ customers }: CustomersTableProps) {
       render: (customer: Customer) => (
         <div className="space-y-1">
           {customer.email && (
-            <p className="flex items-center gap-2 text-sm text-var(--color-text-secondary)]">
+            <p className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
               <Mail className="h-3 w-3" />
               {customer.email}
             </p>
           )}
           {customer.phone && (
-            <p className="flex items-center gap-2 text-sm text-var(--color-text-secondary)]">
+            <p className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
               <Phone className="h-3 w-3" />
               {customer.phone}
             </p>
@@ -85,7 +85,7 @@ export function CustomersTable({ customers }: CustomersTableProps) {
       header: 'Total Spent',
       sortable: true,
       render: (customer: Customer) => (
-        <span className="font-medium text-var(--color-text-primary)]">
+        <span className="font-medium text-[var(--color-text-primary)]">
           {formatCurrency(customer.totalSpent)}
         </span>
       ),
@@ -95,7 +95,7 @@ export function CustomersTable({ customers }: CustomersTableProps) {
       header: 'Orders',
       sortable: true,
       render: (customer: Customer) => (
-        <span className="text-var(--color-text-secondary)]">
+        <span className="text-[var(--color-text-secondary)]">
           {customer._count.orders}
         </span>
       ),
@@ -134,7 +134,7 @@ export function CustomersTable({ customers }: CustomersTableProps) {
       render: (customer: Customer) => (
         <Link
           href={`/admin/customers/${customer.id}`}
-          className="text-sm font-medium text-var(--color-primary)] hover:underline"
+          className="text-sm font-medium text-[var(--color-primary)] hover:underline"
         >
           View →
         </Link>
@@ -143,15 +143,15 @@ export function CustomersTable({ customers }: CustomersTableProps) {
   ];
 
   return (
-    <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] overflow-hidden">
+    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-var(--color-border)] bg-var(--color-bg-secondary)]">
+            <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
-                  className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-var(--color-text-secondary)]"
+                  className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]"
                   style={{ width: column.width }}
                 >
                   {column.header}
@@ -159,10 +159,10 @@ export function CustomersTable({ customers }: CustomersTableProps) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-var(--color-border)]">
+          <tbody className="divide-y divide-[var(--color-border)]">
             {customers.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-var(--color-text-muted)]">
+                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-[var(--color-text-muted)]">
                   No customers found. Add your first customer to get started.
                 </td>
               </tr>
@@ -170,12 +170,12 @@ export function CustomersTable({ customers }: CustomersTableProps) {
               customers.map((customer) => (
                 <tr
                   key={customer.id}
-                  className="transition-colors hover:bg-var(--color-bg-secondary)]"
+                  className="transition-colors hover:bg-[var(--color-bg-secondary)]"
                 >
                   {columns.map((column) => (
                     <td
                       key={String(column.key)}
-                      className="px-6 py-4 text-sm text-var(--color-text-primary)]"
+                      className="px-6 py-4 text-sm text-[var(--color-text-primary)]"
                     >
                       {column.render
                         ? column.render(customer)

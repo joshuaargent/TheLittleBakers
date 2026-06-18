@@ -35,8 +35,8 @@ export function PageHeader({
         <h1
           className={cn(
             display
-              ? 'font-[family-name:var(--font-display)] text-var(--color-beige)]'
-              : 'text-var(--color-text)] font-bold',
+              ? 'font-[family-name:var(--font-display)] text-[var(--color-beige)]'
+              : 'text-[var(--color-text)] font-bold',
             'tracking-tight',
             size === 'default' ? 'text-3xl md:text-4xl' : 'text-4xl md:text-5xl'
           )}
@@ -46,7 +46,7 @@ export function PageHeader({
         {description && (
           <p
             className={cn(
-              'text-var(--color-text-muted)] mt-4 max-w-2xl text-lg',
+              'text-[var(--color-text-muted)] mt-4 max-w-2xl text-lg',
               align === 'center' && 'mx-auto'
             )}
           >

@@ -28,7 +28,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2">
               <Card padding="lg">
-                <h2 className="mb-6 text-xl font-semibold text-var(--color-text)]">Send a Message</h2>
+                <h2 className="mb-6 text-xl font-semibold text-[var(--color-text)]">Send a Message</h2>
                 {FORMSPREE_FORM_ID ? (
                   <form
                     action={`https://formspree.io/f/${FORMSPREE_FORM_ID}`}
@@ -74,12 +74,12 @@ export default function ContactPage() {
                     </Button>
                   </form>
                 ) : (
-                  <div className="rounded-[var(--radius-card)] border border-var(--color-yellow)]/30 bg-var(--color-yellow-light)] p-4">
-                    <p className="font-medium text-var(--color-yellow)]">Contact form not configured</p>
-                    <p className="mt-1 text-sm text-var(--color-text-muted)]">
+                  <div className="rounded-[var(--radius-card)] border border-[var(--color-yellow)]/30 bg-[var(--color-yellow-light)] p-4">
+                    <p className="font-medium text-[var(--color-yellow)]">Contact form not configured</p>
+                    <p className="mt-1 text-sm text-[var(--color-text-muted)]">
                       To enable the contact form, add your Formspree form ID to the environment
                       variable{' '}
-                      <code className="rounded-[var(--radius-sm)] bg-var(--color-bg-secondary)] px-1 py-0.5">
+                      <code className="rounded-[var(--radius-sm)] bg-[var(--color-bg-secondary)] px-1 py-0.5">
                         NEXT_PUBLIC_FORMSPREE_FORM_ID
                       </code>
                       .<br />
@@ -88,7 +88,7 @@ export default function ContactPage() {
                         href="https://formspree.io"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-var(--color-turquoise)] hover:underline"
+                        className="text-[var(--color-turquoise)] hover:underline"
                       >
                         formspree.io
                       </a>
@@ -96,7 +96,7 @@ export default function ContactPage() {
                     <div className="mt-4">
                       <a
                         href={siteConfig.links.email}
-                        className="text-var(--color-turquoise)] hover:text-var(--color-turquoise-hover)] inline-flex items-center gap-2"
+                        className="text-[var(--color-turquoise)] hover:text-[var(--color-turquoise-hover)] inline-flex items-center gap-2"
                       >
                         <Mail className="h-4 w-4" />
                         {siteConfig.links.email.replace('mailto:', '')}
@@ -109,10 +109,10 @@ export default function ContactPage() {
 
             <div className="space-y-6">
               <Card>
-                <h3 className="mb-4 font-semibold text-var(--color-text)]">Email</h3>
+                <h3 className="mb-4 font-semibold text-[var(--color-text)]">Email</h3>
                 <a
                   href={siteConfig.links.email}
-                  className="text-var(--color-text-muted)] hover:text-var(--color-pink)] flex items-center gap-3 transition-colors"
+                  className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] flex items-center gap-3 transition-colors"
                 >
                   <Mail className="h-5 w-5" />
                   {siteConfig.links.email.replace('mailto:', '')}
@@ -120,27 +120,27 @@ export default function ContactPage() {
               </Card>
 
               <Card>
-                <h3 className="mb-4 font-semibold text-var(--color-text)]">Location</h3>
-                <div className="text-var(--color-text-muted)] flex items-center gap-3">
+                <h3 className="mb-4 font-semibold text-[var(--color-text)]">Location</h3>
+                <div className="text-[var(--color-text-muted)] flex items-center gap-3">
                   <MapPin className="h-5 w-5" />
                   {siteConfig.location}
                 </div>
               </Card>
 
               <Card>
-                <h3 className="mb-4 font-semibold text-var(--color-text)]">Connect</h3>
+                <h3 className="mb-4 font-semibold text-[var(--color-text)]">Connect</h3>
                 <div className="space-y-3">
                   {siteConfig.links.youtube && (
                     <a
                       href={siteConfig.links.youtube}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:bg-var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
+                      className="hover:bg-[var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
                     >
-                      <Youtube className="h-5 w-5 text-var(--color-pink)]" />
+                      <Youtube className="h-5 w-5 text-[var(--color-pink)]" />
                       <div>
-                        <p className="text-sm font-medium text-var(--color-text)]">YouTube</p>
-                        <p className="text-xs text-var(--color-text-muted)]">@joshua_argent</p>
+                        <p className="text-sm font-medium text-[var(--color-text)]">YouTube</p>
+                        <p className="text-xs text-[var(--color-text-muted)]">@joshua_argent</p>
                       </div>
                     </a>
                   )}
@@ -150,12 +150,12 @@ export default function ContactPage() {
                       href={siteConfig.links.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:bg-var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
+                      className="hover:bg-[var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
                     >
-                      <Github className="h-5 w-5 text-var(--color-text)]" />
+                      <Github className="h-5 w-5 text-[var(--color-text)]" />
                       <div>
-                        <p className="text-sm font-medium text-var(--color-text)]">GitHub</p>
-                        <p className="text-xs text-var(--color-text-muted)]">@joshuaargent</p>
+                        <p className="text-sm font-medium text-[var(--color-text)]">GitHub</p>
+                        <p className="text-xs text-[var(--color-text-muted)]">@joshuaargent</p>
                       </div>
                     </a>
                   )}
@@ -165,12 +165,12 @@ export default function ContactPage() {
                       href={siteConfig.links.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:bg-var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
+                      className="hover:bg-[var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
                     >
-                      <Instagram className="h-5 w-5 text-var(--color-pink)]" />
+                      <Instagram className="h-5 w-5 text-[var(--color-pink)]" />
                       <div>
-                        <p className="text-sm font-medium text-var(--color-text)]">Instagram</p>
-                        <p className="text-xs text-var(--color-text-muted)]">@joshua_argent</p>
+                        <p className="text-sm font-medium text-[var(--color-text)]">Instagram</p>
+                        <p className="text-xs text-[var(--color-text-muted)]">@joshua_argent</p>
                       </div>
                     </a>
                   )}
@@ -180,21 +180,21 @@ export default function ContactPage() {
                       href={siteConfig.links.facebook}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:bg-var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
+                      className="hover:bg-[var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
                     >
-                      <Facebook className="h-5 w-5 text-var(--color-turquoise)]" />
+                      <Facebook className="h-5 w-5 text-[var(--color-turquoise)]" />
                       <div>
-                        <p className="text-sm font-medium text-var(--color-text)]">Facebook</p>
-                        <p className="text-xs text-var(--color-text-muted)]">@joshua_argent</p>
+                        <p className="text-sm font-medium text-[var(--color-text)]">Facebook</p>
+                        <p className="text-xs text-[var(--color-text-muted)]">@joshua_argent</p>
                       </div>
                     </a>
                   )}
                 </div>
               </Card>
 
-              <Card className="bg-var(--color-turquoise-light)]">
-                <h3 className="mb-2 font-semibold text-var(--color-text)]">Response Time</h3>
-                <p className="text-sm text-var(--color-text-muted)]">
+              <Card className="bg-[var(--color-turquoise-light)]">
+                <h3 className="mb-2 font-semibold text-[var(--color-text)]">Response Time</h3>
+                <p className="text-sm text-[var(--color-text-muted)]">
                   I typically respond within 24-48 hours. For urgent matters, reach out via
                   Instagram DM.
                 </p>

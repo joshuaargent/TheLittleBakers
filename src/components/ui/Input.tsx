@@ -24,7 +24,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-var(--color-text-muted)]"
+            className="block text-sm font-medium text-[var(--color-text-muted)]"
           >
             {label}
           </label>
@@ -33,18 +33,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            "flex h-11 w-full rounded-[var(--radius-md)] border border-var(--color-border)] bg-var(--color-bg-secondary)] px-4 py-2 text-base text-var(--color-text)]",
-            "placeholder:text-var(--color-text-subtle)]",
-            "focus:outline-none focus:ring-2 focus:ring-var(--color-pink)] focus:border-var(--color-pink)]",
+            "flex h-11 w-full rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-4 py-2 text-base text-[var(--color-text)]",
+            "placeholder:text-[var(--color-text-subtle)]",
+            "focus:outline-none focus:ring-2 focus:ring-[var(--color-pink)] focus:border-[var(--color-pink)]",
             "disabled:cursor-not-allowed disabled:opacity-50",
             "transition-all duration-200",
-            error && "border-var(--color-danger)] focus:ring-var(--color-danger)]",
+            error && "border-[var(--color-danger)] focus:ring-[var(--color-danger)]",
             className,
           )}
           {...props}
         />
-        {hint && !error && <p className="text-sm text-var(--color-text-subtle)]">{hint}</p>}
-        {error && <p className="text-sm text-var(--color-danger)]">{error}</p>}
+        {hint && !error && <p className="text-sm text-[var(--color-text-subtle)]">{hint}</p>}
+        {error && <p className="text-sm text-[var(--color-danger)]">{error}</p>}
       </div>
     );
   },
