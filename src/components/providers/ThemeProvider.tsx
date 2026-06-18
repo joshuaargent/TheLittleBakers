@@ -31,10 +31,11 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 // ============================================
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light');
+  // Default to dark mode for brand consistency
+  const [theme, setThemeState] = useState<Theme>('dark');
   const [isMounted, setIsMounted] = useState(false);
 
-  // Initialize theme from localStorage or system preference
+  // Initialize theme from localStorage or default to dark
   useEffect(() => {
     setIsMounted(true);
     
@@ -42,9 +43,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     
     if (storedTheme) {
       setThemeState(storedTheme);
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setThemeState('dark');
     }
+    // Otherwise keep default (dark)
   }, []);
 
   // Apply theme to document when it changes
@@ -62,7 +62,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('theme', theme);
   }, [theme, isMounted]);
 
-  // Listen for system theme changes
+  // Listen for system theme changes (only if no stored preference)
   useEffect(() => {
     if (!isMounted) return;
 
@@ -87,11 +87,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setThemeState(newTheme);
   };
 
-  // Prevent flash of wrong theme
-  if (!isMounted) {
-    return <>{children}</>;
-  }
-
+  // Prevent flash of wrong theme by rendering children immediately with dark class
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
       {children}
@@ -109,7 +105,7 @@ export function useTheme() {
   // Return default values if used outside ThemeProvider
   if (context === undefined) {
     return {
-      theme: 'light' as Theme,
+      theme: 'dark' as Theme,
       toggleTheme: () => {},
       setTheme: () => {},
     };

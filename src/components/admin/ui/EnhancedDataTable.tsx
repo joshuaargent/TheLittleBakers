@@ -92,17 +92,17 @@ export function EnhancedDataTable<T extends Record<string, any>>({
   };
 
   const getSortIcon = (key: string) => {
-    if (sortKey !== key) return <ArrowUpDown className="h-4 w-4 text-var(--color-text-muted)]" />;
-    if (sortDirection === 'asc') return <ArrowUp className="h-4 w-4 text-var(--color-primary)]" />;
-    return <ArrowDown className="h-4 w-4 text-var(--color-primary)]" />;
+    if (sortKey !== key) return <ArrowUpDown className="h-4 w-4 text-[var(--color-text-muted)]" />;
+    if (sortDirection === 'asc') return <ArrowUp className="h-4 w-4 text-[var(--color-primary)]" />;
+    return <ArrowDown className="h-4 w-4 text-[var(--color-primary)]" />;
   };
 
   if (loading) {
     return (
-      <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
         <div className="space-y-3">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-12 animate-pulse rounded bg-var(--color-bg-secondary)]" />
+            <div key={i} className="h-12 animate-pulse rounded bg-[var(--color-bg-secondary)]" />
           ))}
         </div>
       </div>
@@ -110,9 +110,9 @@ export function EnhancedDataTable<T extends Record<string, any>>({
   }
 
   return (
-    <div className={`rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] overflow-hidden ${className}`}>
+    <div className={`rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] overflow-hidden ${className}`}>
       {searchable && (
-        <div className="p-4 border-b border-var(--color-border)]">
+        <div className="p-4 border-b border-[var(--color-border)]">
           <input
             type="text"
             placeholder={searchPlaceholder}
@@ -121,7 +121,7 @@ export function EnhancedDataTable<T extends Record<string, any>>({
               setSearch(e.target.value);
               setCurrentPage(1);
             }}
-            className="h-10 w-full rounded-lg border border-var(--color-border)] bg-var(--color-bg-card)] px-4 text-sm text-var(--color-text-primary)] placeholder-var(--color-text-muted)] focus:border-var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-var(--color-primary)]/20"
+            className="h-10 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] px-4 text-sm text-[var(--color-text-primary)] placeholder-var(--color-text-muted)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-var(--color-primary)]/20"
           />
         </div>
       )}
@@ -129,12 +129,12 @@ export function EnhancedDataTable<T extends Record<string, any>>({
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-var(--color-border)] bg-var(--color-bg-secondary)]">
+            <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
-                  className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-var(--color-text-secondary)] ${
-                    column.sortable ? 'cursor-pointer hover:bg-var(--color-bg-card)]' : ''
+                  className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] ${
+                    column.sortable ? 'cursor-pointer hover:bg-[var(--color-bg-card)]' : ''
                   }`}
                   style={{ width: column.width }}
                   onClick={() => column.sortable && handleSort(String(column.key))}
@@ -150,7 +150,7 @@ export function EnhancedDataTable<T extends Record<string, any>>({
           <tbody className="divide-y divide-var(--color-border)]">
             {paginatedData.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-var(--color-text-muted)]">
+                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-[var(--color-text-muted)]">
                   {emptyMessage}
                 </td>
               </tr>
@@ -159,14 +159,14 @@ export function EnhancedDataTable<T extends Record<string, any>>({
                 <tr
                   key={String(item[keyField])}
                   className={`transition-colors ${
-                    onRowClick ? 'cursor-pointer hover:bg-var(--color-bg-secondary)]' : ''
+                    onRowClick ? 'cursor-pointer hover:bg-[var(--color-bg-secondary)]' : ''
                   }`}
                   onClick={() => onRowClick?.(item)}
                 >
                   {columns.map((column) => (
                     <td
                       key={String(column.key)}
-                      className="px-6 py-4 text-sm text-var(--color-text-primary)]"
+                      className="px-6 py-4 text-sm text-[var(--color-text-primary)]"
                     >
                       {column.render
                         ? column.render(item)
@@ -181,15 +181,15 @@ export function EnhancedDataTable<T extends Record<string, any>>({
       </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between border-t border-var(--color-border)] px-6 py-4">
-          <p className="text-sm text-var(--color-text-muted)]">
+        <div className="flex items-center justify-between border-t border-[var(--color-border)] px-6 py-4">
+          <p className="text-sm text-[var(--color-text-muted)]">
             Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, sortedData.length)} of {sortedData.length} results
           </p>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-var(--color-border)] text-var(--color-text-secondary)] hover:bg-var(--color-bg-secondary)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -210,8 +210,8 @@ export function EnhancedDataTable<T extends Record<string, any>>({
                   onClick={() => setCurrentPage(pageNum)}
                   className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm ${
                     currentPage === pageNum
-                      ? 'bg-var(--color-primary)] text-white'
-                      : 'border border-var(--color-border)] text-var(--color-text-secondary)] hover:bg-var(--color-bg-secondary)]'
+                      ? 'bg-[var(--color-primary)] text-white'
+                      : 'border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)]'
                   }`}
                 >
                   {pageNum}
@@ -221,7 +221,7 @@ export function EnhancedDataTable<T extends Record<string, any>>({
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-var(--color-border)] text-var(--color-text-secondary)] hover:bg-var(--color-bg-secondary)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               <ChevronRight className="h-4 w-4" />
             </button>

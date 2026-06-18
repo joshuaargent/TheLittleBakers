@@ -10,18 +10,18 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-var(--color-bg-secondary)] border-t border-var(--color-border)]">
+    <footer className="bg-[var(--color-bg-secondary)] border-t border-[var(--color-border)]">
       <div className="container py-12 md:py-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4 md:gap-12">
           {/* Brand */}
           <div className="md:col-span-1">
             <Link
               href="/"
-              className="font-[family-name:var(--font-display)] text-2xl text-var(--color-cream)] hover:text-var(--color-pink)] transition-colors"
+              className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-cream)] hover:text-[var(--color-pink)] transition-colors"
             >
               {siteConfig.name}
             </Link>
-            <p className="text-var(--color-text-muted)] mt-3 max-w-xs text-sm">
+            <p className="text-[var(--color-text-muted)] mt-3 max-w-xs text-sm">
               {siteConfig.description}
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -29,7 +29,7 @@ export function Footer() {
                 href={siteConfig.links.youtube}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-var(--color-text-muted)] hover:text-var(--color-pink)] rounded-lg p-2 transition-colors"
+                className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] rounded-lg p-2 transition-colors"
                 aria-label="YouTube"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@ export function Footer() {
                 href={siteConfig.links.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-var(--color-text-muted)] hover:text-var(--color-pink)] rounded-lg p-2 transition-colors"
+                className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] rounded-lg p-2 transition-colors"
                 aria-label="Instagram"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -51,7 +51,7 @@ export function Footer() {
                 href={siteConfig.links.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-var(--color-text-muted)] hover:text-var(--color-pink)] rounded-lg p-2 transition-colors"
+                className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] rounded-lg p-2 transition-colors"
                 aria-label="Facebook"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -63,7 +63,7 @@ export function Footer() {
 
           {/* Main Navigation */}
           <div>
-            <h3 className="text-var(--color-cream)] text-sm font-semibold tracking-wider uppercase">
+            <h3 className="text-[var(--color-cream)] text-sm font-semibold tracking-wider uppercase">
               Navigate
             </h3>
             <ul className="mt-4 space-y-2">
@@ -71,7 +71,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-var(--color-text-muted)] hover:text-var(--color-pink)] text-sm transition-colors"
+                    className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] text-sm transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -82,7 +82,7 @@ export function Footer() {
 
           {/* Content */}
           <div>
-            <h3 className="text-var(--color-cream)] text-sm font-semibold tracking-wider uppercase">
+            <h3 className="text-[var(--color-cream)] text-sm font-semibold tracking-wider uppercase">
               Content
             </h3>
             <ul className="mt-4 space-y-2">
@@ -90,7 +90,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-var(--color-text-muted)] hover:text-var(--color-pink)] text-sm transition-colors"
+                    className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] text-sm transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -101,14 +101,14 @@ export function Footer() {
 
           {/* Connect */}
           <div>
-            <h3 className="text-var(--color-cream)] text-sm font-semibold tracking-wider uppercase">
+            <h3 className="text-[var(--color-cream)] text-sm font-semibold tracking-wider uppercase">
               Connect
             </h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <a
                   href={`mailto:${siteConfig.links.email}`}
-                  className="text-var(--color-text-muted)] hover:text-var(--color-pink)] text-sm transition-colors"
+                  className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] text-sm transition-colors"
                 >
                   Email
                 </a>
@@ -119,7 +119,7 @@ export function Footer() {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-var(--color-text-muted)] hover:text-var(--color-pink)] text-sm transition-colors"
+                    className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] text-sm transition-colors"
                   >
                     {item.label}
                   </a>
@@ -130,13 +130,13 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-var(--color-border)] mt-12 border-t pt-8">
+        <div className="border-[var(--color-border)] mt-12 border-t pt-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <p className="text-var(--color-text-subtle)] text-sm">
+            <p className="text-[var(--color-text-subtle)] text-sm">
               © {currentYear} {siteConfig.name}. All rights reserved.
             </p>
-            <p className="text-var(--color-text-subtle)] flex items-center gap-1 text-sm">
-              Made with <Heart className="h-3.5 w-3.5 fill-var(--color-pink)] text-var(--color-pink)]" /> using Next.js
+            <p className="text-[var(--color-text-subtle)] flex items-center gap-1 text-sm">
+              Made with <Heart className="h-3.5 w-3.5 fill-var(--color-pink)] text-[var(--color-pink)]" /> using Next.js
             </p>
           </div>
         </div>

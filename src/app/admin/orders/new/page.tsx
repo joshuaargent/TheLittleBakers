@@ -155,12 +155,12 @@ export default function NewOrderPage() {
       <div className="mb-6">
         <Link
           href="/admin/orders"
-          className="mb-4 inline-flex items-center gap-2 text-sm text-var(--color-text-secondary)] hover:text-var(--color-text-primary)]"
+          className="mb-4 inline-flex items-center gap-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Orders
         </Link>
-        <h1 className="text-2xl font-bold text-var(--color-text-primary)]">
+        <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
           Create New Order
         </h1>
       </div>
@@ -168,13 +168,13 @@ export default function NewOrderPage() {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
-          <div className="rounded-lg bg-var(--color-danger)]/10 p-4 text-sm text-var(--color-danger)]">
+          <div className="rounded-lg bg-[var(--color-danger)]/10 p-4 text-sm text-[var(--color-danger)]">
             {error}
           </div>
         )}
 
-        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
-          <h2 className="text-lg font-semibold text-var(--color-text-primary)] mb-4">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
+          <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">
             Customer Information
           </h2>
 
@@ -211,7 +211,7 @@ export default function NewOrderPage() {
             />
 
             <div>
-              <label className="block text-sm font-medium text-var(--color-text-primary)] mb-1.5">
+              <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5">
                 Order Notes
               </label>
               <textarea
@@ -220,14 +220,14 @@ export default function NewOrderPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, notes: e.target.value })
                 }
-                className="flex min-h-[80px] w-full rounded-lg border border-var(--color-border)] bg-var(--color-bg-card)] px-3 py-2 text-sm text-var(--color-text-primary)] placeholder-var(--color-text-muted)] focus:border-var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-var(--color-primary)]/20"
+                className="flex min-h-[80px] w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder-var(--color-text-muted)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-var(--color-primary)]/20"
               />
             </div>
           </div>
         </div>
 
-        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
-          <h2 className="text-lg font-semibold text-var(--color-text-primary)] mb-4">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
+          <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">
             Order Items
           </h2>
 
@@ -269,9 +269,9 @@ export default function NewOrderPage() {
 
           {/* Items List */}
           {items.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-var(--color-border)] p-8 text-center">
-              <ShoppingCart className="mx-auto h-12 w-12 text-var(--color-text-muted)]" />
-              <p className="mt-3 text-sm text-var(--color-text-muted)]">
+            <div className="rounded-lg border border-dashed border-[var(--color-border)] p-8 text-center">
+              <ShoppingCart className="mx-auto h-12 w-12 text-[var(--color-text-muted)]" />
+              <p className="mt-3 text-sm text-[var(--color-text-muted)]">
                 No items added yet. Select a product above to add it to the order.
               </p>
             </div>
@@ -280,13 +280,13 @@ export default function NewOrderPage() {
               {items.map((item) => (
                 <div
                   key={item.productId}
-                  className="flex items-center justify-between rounded-lg border border-var(--color-border)] p-4"
+                  className="flex items-center justify-between rounded-lg border border-[var(--color-border)] p-4"
                 >
                   <div className="flex-1">
-                    <p className="font-medium text-var(--color-text-primary)]">
+                    <p className="font-medium text-[var(--color-text-primary)]">
                       {item.product.name}
                     </p>
-                    <p className="text-sm text-var(--color-text-muted)]">
+                    <p className="text-sm text-[var(--color-text-muted)]">
                       {formatCurrency(item.unitPrice)} each
                     </p>
                   </div>
@@ -297,7 +297,7 @@ export default function NewOrderPage() {
                         onClick={() =>
                           updateItemQuantity(item.productId, item.quantity - 1)
                         }
-                        className="h-8 w-8 rounded-lg border border-var(--color-border)] text-var(--color-text-secondary)] hover:bg-var(--color-bg-secondary)]"
+                        className="h-8 w-8 rounded-lg border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)]"
                       >
                         -
                       </button>
@@ -309,18 +309,18 @@ export default function NewOrderPage() {
                         onClick={() =>
                           updateItemQuantity(item.productId, item.quantity + 1)
                         }
-                        className="h-8 w-8 rounded-lg border border-var(--color-border)] text-var(--color-text-secondary)] hover:bg-var(--color-bg-secondary)]"
+                        className="h-8 w-8 rounded-lg border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)]"
                       >
                         +
                       </button>
                     </div>
-                    <p className="w-20 text-right font-medium text-var(--color-text-primary)]">
+                    <p className="w-20 text-right font-medium text-[var(--color-text-primary)]">
                       {formatCurrency(item.totalPrice)}
                     </p>
                     <button
                       type="button"
                       onClick={() => removeItem(item.productId)}
-                      className="p-2 text-var(--color-text-muted)] hover:text-var(--color-danger)]"
+                      className="p-2 text-[var(--color-text-muted)] hover:text-[var(--color-danger)]"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -329,23 +329,23 @@ export default function NewOrderPage() {
               ))}
 
               {/* Order Summary */}
-              <div className="mt-6 rounded-lg bg-var(--color-bg-secondary)] p-4">
+              <div className="mt-6 rounded-lg bg-[var(--color-bg-secondary)] p-4">
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-var(--color-text-secondary)]">Subtotal</span>
-                    <span className="font-medium text-var(--color-text-primary)]">
+                    <span className="text-[var(--color-text-secondary)]">Subtotal</span>
+                    <span className="font-medium text-[var(--color-text-primary)]">
                       {formatCurrency(subtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-var(--color-text-secondary)]">Packaging</span>
-                    <span className="font-medium text-var(--color-text-primary)]">
+                    <span className="text-[var(--color-text-secondary)]">Packaging</span>
+                    <span className="font-medium text-[var(--color-text-primary)]">
                       {formatCurrency(packagingCost)}
                     </span>
                   </div>
-                  <div className="flex justify-between border-t border-var(--color-border)] pt-2 text-base">
-                    <span className="font-semibold text-var(--color-text-primary)]">Total</span>
-                    <span className="font-bold text-var(--color-primary)]">
+                  <div className="flex justify-between border-t border-[var(--color-border)] pt-2 text-base">
+                    <span className="font-semibold text-[var(--color-text-primary)]">Total</span>
+                    <span className="font-bold text-[var(--color-primary)]">
                       {formatCurrency(total)}
                     </span>
                   </div>

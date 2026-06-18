@@ -19,11 +19,11 @@ export interface TagProps extends HTMLAttributes<HTMLSpanElement> {
 export const Tag = forwardRef<HTMLSpanElement, TagProps>(
   ({ className, variant = 'default', removable = false, onRemove, children, ...props }, ref) => {
     const variantClasses = {
-      default: 'bg-var(--color-bg-secondary)] text-var(--color-text-muted)] border-var(--color-border)]',
-      pink: 'bg-var(--color-pink-light)] text-var(--color-pink)] border-var(--color-pink)]/30',
-      yellow: 'bg-var(--color-yellow-light)] text-var(--color-yellow)] border-var(--color-yellow)]/30',
-      turquoise: 'bg-var(--color-turquoise-light)] text-var(--color-turquoise)] border-var(--color-turquoise)]/30',
-      cream: 'bg-var(--color-cream)] text-black border-var(--color-cream-dark)]',
+      default: 'bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)] border-[var(--color-border)]',
+      pink: 'bg-[var(--color-pink-light)] text-[var(--color-pink)] border-[var(--color-pink)]/30',
+      yellow: 'bg-[var(--color-yellow-light)] text-[var(--color-yellow)] border-[var(--color-yellow)]/30',
+      turquoise: 'bg-[var(--color-turquoise-light)] text-[var(--color-turquoise)] border-[var(--color-turquoise)]/30',
+      cream: 'bg-[var(--color-cream)] text-black border-[var(--color-cream-dark)]',
     };
 
     return (

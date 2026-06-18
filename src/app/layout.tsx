@@ -86,13 +86,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${pacifico.variable} ${jetbrainsMono.variable}`}
+      className={`dark ${poppins.variable} ${pacifico.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <head>
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className="flex min-h-screen flex-col antialiased bg-var(--color-bg)]">
+      <body className="flex min-h-screen flex-col antialiased bg-[var(--color-bg)]">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

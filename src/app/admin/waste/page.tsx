@@ -50,10 +50,10 @@ export default async function WastePage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-var(--color-text-primary)]">
+          <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
             Waste Tracking
           </h1>
-          <p className="mt-1 text-sm text-var(--color-text-secondary)]">
+          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
             Track waste, losses, and recovery across your bakery.
           </p>
         </div>
@@ -64,53 +64,53 @@ export default async function WastePage() {
 
       {/* Summary Stats */}
       <div className="grid gap-4 md:grid-cols-4">
-        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-5">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-5">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
               <Trash2 className="h-5 w-5 text-red-600" />
             </div>
             <div>
-              <p className="text-sm text-var(--color-text-secondary)]">Today's Waste</p>
+              <p className="text-sm text-[var(--color-text-secondary)]">Today's Waste</p>
               <p className="text-xl font-semibold text-red-600">
                 {formatCurrency(todayCost)}
               </p>
             </div>
           </div>
         </div>
-        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-5">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-5">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
               <DollarSign className="h-5 w-5 text-amber-600" />
             </div>
             <div>
-              <p className="text-sm text-var(--color-text-secondary)]">This Month</p>
+              <p className="text-sm text-[var(--color-text-secondary)]">This Month</p>
               <p className="text-xl font-semibold text-amber-600">
                 {formatCurrency(monthCost)}
               </p>
             </div>
           </div>
         </div>
-        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-5">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-5">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
               <span className="text-lg">♻️</span>
             </div>
             <div>
-              <p className="text-sm text-var(--color-text-secondary)]">Recovered This Month</p>
+              <p className="text-sm text-[var(--color-text-secondary)]">Recovered This Month</p>
               <p className="text-xl font-semibold text-green-600">
                 {formatCurrency(totalRecovered)}
               </p>
             </div>
           </div>
         </div>
-        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-5">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-5">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
               <AlertTriangle className="h-5 w-5 text-purple-600" />
             </div>
             <div>
-              <p className="text-sm text-var(--color-text-secondary)]">Waste Entries</p>
-              <p className="text-xl font-semibold text-var(--color-text-primary)]">
+              <p className="text-sm text-[var(--color-text-secondary)]">Waste Entries</p>
+              <p className="text-xl font-semibold text-[var(--color-text-primary)]">
                 {monthEntries.length}
               </p>
             </div>
@@ -123,7 +123,7 @@ export default async function WastePage() {
         {Object.entries(categoryBreakdown).map(([category, cost]) => {
           const config = categoryConfig[category] || categoryConfig.INGREDIENT;
           return (
-            <div key={category} className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-4">
+            <div key={category} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4">
               <Badge className={config.color}>
                 {config.label}
               </Badge>
@@ -134,12 +134,12 @@ export default async function WastePage() {
           );
         })}
         {Object.keys(categoryBreakdown).length === 0 && (
-          <div className="col-span-4 rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-8 text-center">
+          <div className="col-span-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-8 text-center">
             <Trash2 className="mx-auto h-12 w-12 text-green-500" />
-            <p className="mt-4 text-lg font-medium text-var(--color-text-primary)]">
+            <p className="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
               No waste recorded this month!
             </p>
-            <p className="mt-1 text-sm text-var(--color-text-muted)]">
+            <p className="mt-1 text-sm text-[var(--color-text-muted)]">
               Great job minimizing waste. Keep it up!
             </p>
           </div>

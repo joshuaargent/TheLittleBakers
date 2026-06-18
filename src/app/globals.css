@@ -129,6 +129,34 @@ body {
 }
 
 /* ------------------------------------------
+   Dark Mode (Default)
+   ------------------------------------------ */
+
+.dark {
+  --color-bg: #000000;
+  --color-bg-secondary: #111111;
+  --color-bg-card: #1A1A1A;
+  --color-bg-elevated: #222222;
+  --color-text: #FFFFFF;
+  --color-text-muted: #D0D0D0;
+  --color-border: #333333;
+}
+
+/* ------------------------------------------
+   Light Mode
+   ------------------------------------------ */
+
+:root:not(.dark) {
+  --color-bg: #FFEFD5;
+  --color-bg-secondary: #FFF5E6;
+  --color-bg-card: #FFFFFF;
+  --color-bg-elevated: #FFF9F0;
+  --color-text: #1A1A1A;
+  --color-text-muted: #666666;
+  --color-border: #E5DDD0;
+}
+
+/* ------------------------------------------
    Typography
    ------------------------------------------ */
 

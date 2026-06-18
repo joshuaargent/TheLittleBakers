@@ -49,15 +49,15 @@ export function SectionHeading({
           <h2 
             className={cn(
               display
-                ? 'font-[family-name:var(--font-display)] text-var(--color-beige)]'
-                : 'text-var(--color-text)] font-semibold',
+                ? 'font-[family-name:var(--font-display)] text-[var(--color-beige)]'
+                : 'text-[var(--color-text)] font-semibold',
               'text-2xl tracking-tight md:text-3xl'
             )}
           >
             {title}
           </h2>
           {subtitle && (
-            <p className="text-var(--color-text-muted)] mt-2 max-w-2xl">
+            <p className="text-[var(--color-text-muted)] mt-2 max-w-2xl">
               {subtitle}
             </p>
           )}
@@ -65,7 +65,7 @@ export function SectionHeading({
         {action && (
           <Link
             href={action.href}
-            className="text-var(--color-pink)] hover:text-var(--color-pink-hover)] shrink-0 inline-flex items-center gap-1.5 text-sm font-medium transition-colors"
+            className="text-[var(--color-pink)] hover:text-[var(--color-pink-hover)] shrink-0 inline-flex items-center gap-1.5 text-sm font-medium transition-colors"
           >
             {action.label}
             <ArrowRight className="h-4 w-4" />

@@ -16,15 +16,15 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-var(--color-pink)] text-black hover:bg-var(--color-pink-hover)] shadow-md hover:shadow-lg focus:ring-var(--color-pink)]',
+    'bg-[var(--color-pink)] text-black hover:bg-[var(--color-pink-hover)] shadow-md hover:shadow-lg focus:ring-var(--color-pink)]',
   secondary:
-    'bg-var(--color-yellow)] text-black hover:bg-var(--color-yellow-hover)] shadow-md hover:shadow-lg focus:ring-var(--color-yellow)]',
+    'bg-[var(--color-yellow)] text-black hover:bg-[var(--color-yellow-hover)] shadow-md hover:shadow-lg focus:ring-var(--color-yellow)]',
   outline:
-    'border-2 border-var(--color-cream)] bg-transparent text-var(--color-cream)] hover:bg-var(--color-cream)] hover:text-black focus:ring-var(--color-cream)]',
+    'border-2 border-[var(--color-cream)] bg-transparent text-[var(--color-cream)] hover:bg-[var(--color-cream)] hover:text-black focus:ring-var(--color-cream)]',
   ghost:
-    'bg-transparent text-var(--color-text-muted)] hover:bg-var(--color-bg-secondary)] hover:text-var(--color-text)]',
+    'bg-transparent text-[var(--color-text-muted)] hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text)]',
   danger:
-    'bg-var(--color-danger)] text-white hover:opacity-90 focus:ring-var(--color-danger)]',
+    'bg-[var(--color-danger)] text-white hover:opacity-90 focus:ring-var(--color-danger)]',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

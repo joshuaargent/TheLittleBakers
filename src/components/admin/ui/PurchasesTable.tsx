@@ -42,10 +42,10 @@ export function PurchasesTable({ purchases }: PurchasesTableProps) {
       sortable: true,
       render: (purchase: Purchase) => (
         <div>
-          <p className="font-medium text-var(--color-text-primary)]">
+          <p className="font-medium text-[var(--color-text-primary)]">
             {purchase.orderNumber || purchase.invoiceNumber || purchase.id.slice(0, 8)}
           </p>
-          <p className="text-xs text-var(--color-text-muted)]">
+          <p className="text-xs text-[var(--color-text-muted)]">
             {purchase.supplier.name}
           </p>
         </div>
@@ -83,7 +83,7 @@ export function PurchasesTable({ purchases }: PurchasesTableProps) {
       key: 'items',
       header: 'Items',
       render: (purchase: Purchase) => (
-        <span className="text-var(--color-text-secondary)]">
+        <span className="text-[var(--color-text-secondary)]">
           {purchase._count.ingredients + purchase._count.packaging} items
         </span>
       ),
@@ -93,7 +93,7 @@ export function PurchasesTable({ purchases }: PurchasesTableProps) {
       header: 'Total',
       sortable: true,
       render: (purchase: Purchase) => (
-        <span className="font-medium text-var(--color-text-primary)]">
+        <span className="font-medium text-[var(--color-text-primary)]">
           {formatCurrency(purchase.total)}
         </span>
       ),
@@ -103,7 +103,7 @@ export function PurchasesTable({ purchases }: PurchasesTableProps) {
       header: 'Order Date',
       sortable: true,
       render: (purchase: Purchase) => (
-        <span className="text-sm text-var(--color-text-secondary)]">
+        <span className="text-sm text-[var(--color-text-secondary)]">
           {new Date(purchase.orderDate).toLocaleDateString('en-GB')}
         </span>
       ),
@@ -112,7 +112,7 @@ export function PurchasesTable({ purchases }: PurchasesTableProps) {
       key: 'expectedDate',
       header: 'Expected',
       render: (purchase: Purchase) => (
-        <span className="text-sm text-var(--color-text-secondary)]">
+        <span className="text-sm text-[var(--color-text-secondary)]">
           {purchase.expectedDate
             ? new Date(purchase.expectedDate).toLocaleDateString('en-GB')
             : '-'}
@@ -126,7 +126,7 @@ export function PurchasesTable({ purchases }: PurchasesTableProps) {
       render: (purchase: Purchase) => (
         <Link
           href={`/admin/purchases/${purchase.id}`}
-          className="text-sm font-medium text-var(--color-primary)] hover:underline"
+          className="text-sm font-medium text-[var(--color-primary)] hover:underline"
         >
           View →
         </Link>
@@ -135,15 +135,15 @@ export function PurchasesTable({ purchases }: PurchasesTableProps) {
   ];
 
   return (
-    <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] overflow-hidden">
+    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-var(--color-border)] bg-var(--color-bg-secondary)]">
+            <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
-                  className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-var(--color-text-secondary)]"
+                  className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]"
                   style={{ width: column.width }}
                 >
                   {column.header}
@@ -154,7 +154,7 @@ export function PurchasesTable({ purchases }: PurchasesTableProps) {
           <tbody className="divide-y divide-var(--color-border)]">
             {purchases.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-var(--color-text-muted)]">
+                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-[var(--color-text-muted)]">
                   No purchase orders found. Create your first purchase order to get started.
                 </td>
               </tr>
@@ -162,12 +162,12 @@ export function PurchasesTable({ purchases }: PurchasesTableProps) {
               purchases.map((purchase) => (
                 <tr
                   key={purchase.id}
-                  className="transition-colors hover:bg-var(--color-bg-secondary)]"
+                  className="transition-colors hover:bg-[var(--color-bg-secondary)]"
                 >
                   {columns.map((column) => (
                     <td
                       key={String(column.key)}
-                      className="px-6 py-4 text-sm text-var(--color-text-primary)]"
+                      className="px-6 py-4 text-sm text-[var(--color-text-primary)]"
                     >
                       {column.render
                         ? column.render(purchase)

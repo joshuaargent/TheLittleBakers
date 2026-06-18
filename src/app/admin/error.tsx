@@ -14,7 +14,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-var(--color-bg-primary)] flex items-center justify-center p-6">
+    <div className="min-h-screen bg-[var(--color-bg-primary)] flex items-center justify-center p-6">
       <div className="max-w-md w-full text-center">
         <div className="mb-6">
           <div className="mx-auto w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
@@ -33,24 +33,24 @@ export default function Error({
             </svg>
           </div>
         </div>
-        <h1 className="text-2xl font-bold text-var(--color-text-primary)] mb-2">
+        <h1 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2">
           Database Connection Error
         </h1>
-        <p className="text-var(--color-text-secondary)] mb-6">
+        <p className="text-[var(--color-text-secondary)] mb-6">
           Unable to connect to the database. The admin dashboard requires a properly configured database.
         </p>
-        <div className="bg-var(--color-bg-secondary)] rounded-lg p-4 text-left mb-6">
-          <h2 className="font-semibold text-var(--color-text-primary)] mb-2">Setup Required:</h2>
-          <ol className="text-sm text-var(--color-text-secondary)] space-y-1 list-decimal list-inside">
+        <div className="bg-[var(--color-bg-secondary)] rounded-lg p-4 text-left mb-6">
+          <h2 className="font-semibold text-[var(--color-text-primary)] mb-2">Setup Required:</h2>
+          <ol className="text-sm text-[var(--color-text-secondary)] space-y-1 list-decimal list-inside">
             <li>Set up a PostgreSQL database (Supabase, Neon, Railway, etc.)</li>
-            <li>Add <code className="bg-var(--color-bg-card)] px-1 rounded">DATABASE_URL</code> environment variable</li>
-            <li>Run <code className="bg-var(--color-bg-card)] px-1 rounded">npx prisma db push</code></li>
+            <li>Add <code className="bg-[var(--color-bg-card)] px-1 rounded">DATABASE_URL</code> environment variable</li>
+            <li>Run <code className="bg-[var(--color-bg-card)] px-1 rounded">npx prisma db push</code></li>
             <li>Redeploy the application</li>
           </ol>
         </div>
         <button
           onClick={reset}
-          className="px-4 py-2 bg-var(--color-primary)] text-white rounded-lg hover:opacity-90 transition-opacity"
+          className="px-4 py-2 bg-[var(--color-primary)] text-white rounded-lg hover:opacity-90 transition-opacity"
         >
           Try Again
         </button>
