@@ -39,7 +39,7 @@ export function EmptyState({
       {action && (
         <div className="mt-6">
           {action.href ? (
-            <a href={action.href}>
+            <a href={action.href} className="inline-block text-inherit no-underline">
               <Button onClick={action.onClick}>{action.label}</Button>
             </a>
           ) : (
