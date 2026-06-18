@@ -77,17 +77,17 @@ export default function AdminLayout({
         className={cn(
           'fixed top-0 right-0 left-0 z-50 transition-all duration-200',
           isScrolled
-            ? 'bg-bg-primary/95 border-border border-b backdrop-blur-md'
-            : 'bg-bg-primary'
+            ? 'bg-var(--color-bg)]/95 border-var(--color-border)] border-b backdrop-blur-md'
+            : 'bg-var(--color-bg)]'
         )}
         style={{ transform: 'translateZ(0)' }}
       >
         <nav className="container">
           <div className="flex h-16 items-center justify-between">
-            {/* Logo - "Admin" */}
+            {/* Logo - "Admin" with brand styling */}
             <Link
               href="/admin"
-              className="text-text-primary hover:text-accent text-xl font-semibold transition-colors"
+              className="font-[family-name:var(--font-display)] text-xl text-var(--color-cream)] hover:text-var(--color-pink)] transition-colors"
             >
               Admin
             </Link>
@@ -104,10 +104,10 @@ export default function AdminLayout({
                     key={item.name}
                     href={item.href}
                     className={cn(
-                      'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                      'flex items-center gap-2 rounded-[var(--radius-pill)] px-4 py-2 text-sm font-medium transition-colors',
                       isActive
-                        ? 'text-accent bg-accent-light'
-                        : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
+                        ? 'text-var(--color-pink)] bg-var(--color-pink-light)]'
+                        : 'text-var(--color-text-muted)] hover:text-var(--color-text)] hover:bg-var(--color-bg-secondary)]'
                     )}
                   >
                     <Icon className="w-4 h-4" />
@@ -121,10 +121,10 @@ export default function AdminLayout({
                 <button
                   onClick={() => setShowMoreMenu(!showMoreMenu)}
                   className={cn(
-                    'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                    'flex items-center gap-2 rounded-[var(--radius-pill)] px-4 py-2 text-sm font-medium transition-colors',
                     showMoreMenu
-                      ? 'text-accent bg-accent-light'
-                      : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
+                      ? 'text-var(--color-pink)] bg-var(--color-pink-light)]'
+                      : 'text-var(--color-text-muted)] hover:text-var(--color-text)] hover:bg-var(--color-bg-secondary)]'
                   )}
                 >
                   <MoreHorizontal className="w-4 h-4" />
@@ -133,7 +133,7 @@ export default function AdminLayout({
                 
                 {showMoreMenu && (
                   <div 
-                    className="absolute right-0 top-full mt-1 w-48 bg-bg-card rounded-lg shadow-lg border border-border py-1 z-50"
+                    className="absolute right-0 top-full mt-1 w-48 rounded-[var(--radius-card)] shadow-[var(--shadow-card)] border border-var(--color-border)] bg-var(--color-bg-card)] py-1 z-50"
                     onMouseLeave={() => setShowMoreMenu(false)}
                   >
                     {moreNav.map((item) => (
@@ -143,8 +143,8 @@ export default function AdminLayout({
                         className={cn(
                           'block px-4 py-2 text-sm transition-colors',
                           pathname.startsWith(item.href)
-                            ? 'text-accent bg-accent-light'
-                            : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
+                            ? 'text-var(--color-pink)] bg-var(--color-pink-light)]'
+                            : 'text-var(--color-text-muted)] hover:text-var(--color-text)] hover:bg-var(--color-bg-secondary)]'
                         )}
                       >
                         {item.name}
@@ -158,7 +158,7 @@ export default function AdminLayout({
               <Link
                 href="/"
                 target="_blank"
-                className="ml-2 text-text-secondary hover:text-text-primary text-sm transition-colors"
+                className="ml-2 text-var(--color-text-muted)] hover:text-var(--color-pink)] text-sm transition-colors"
               >
                 View Site
               </Link>
@@ -167,10 +167,10 @@ export default function AdminLayout({
               <Link
                 href="/admin/settings"
                 className={cn(
-                  'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ml-1',
+                  'flex items-center gap-2 rounded-[var(--radius-pill)] px-4 py-2 text-sm font-medium transition-colors ml-1',
                   pathname === '/admin/settings'
-                    ? 'text-accent bg-accent-light'
-                    : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
+                    ? 'text-var(--color-pink)] bg-var(--color-pink-light)]'
+                    : 'text-var(--color-text-muted)] hover:text-var(--color-text)] hover:bg-var(--color-bg-secondary)]'
                 )}
               >
                 <Settings className="w-4 h-4" />
@@ -181,7 +181,7 @@ export default function AdminLayout({
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-text-primary"
+              className="md:hidden p-2 text-var(--color-cream)]"
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -198,11 +198,11 @@ export default function AdminLayout({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="bg-bg-primary fixed inset-0 z-[45] pt-16 md:hidden overflow-y-auto"
+            className="fixed inset-0 z-[45] bg-var(--color-bg)] pt-16 md:hidden overflow-y-auto"
             style={{ transform: 'translateZ(0)' }}
           >
             <nav className="container py-6 pb-12">
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-2">
                 {mainNav.map((item, index) => {
                   const Icon = item.icon
                   const isActive = pathname === item.href ||
@@ -219,10 +219,10 @@ export default function AdminLayout({
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
                         className={cn(
-                          'flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-colors',
+                          'flex items-center gap-3 rounded-[var(--radius-md)] px-4 py-3 text-base font-medium transition-colors',
                           isActive
-                            ? 'text-accent bg-accent-light'
-                            : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
+                            ? 'text-var(--color-pink)] bg-var(--color-pink-light)]'
+                            : 'text-var(--color-text-muted)] hover:text-var(--color-text)] hover:bg-var(--color-bg-secondary)]'
                         )}
                       >
                         <Icon className="w-5 h-5" />
@@ -237,9 +237,9 @@ export default function AdminLayout({
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: mainNav.length * 0.05 }}
-                  className="border-border mt-4 border-t pt-4"
+                  className="border-var(--color-border)] mt-4 border-t pt-4"
                 >
-                  <p className="px-4 py-2 text-xs text-text-muted uppercase tracking-wide font-medium">More</p>
+                  <p className="px-4 py-2 text-xs text-var(--color-text-muted)] uppercase tracking-wide font-medium">More</p>
                   {moreNav.map((item, index) => {
                     const isActive = pathname.startsWith(item.href)
                     return (
@@ -253,10 +253,10 @@ export default function AdminLayout({
                           href={item.href}
                           onClick={() => setMobileMenuOpen(false)}
                           className={cn(
-                            'flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors',
+                            'flex items-center rounded-[var(--radius-md)] px-4 py-3 text-base font-medium transition-colors',
                             isActive
-                              ? 'text-accent bg-accent-light'
-                              : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
+                              ? 'text-var(--color-pink)] bg-var(--color-pink-light)]'
+                              : 'text-var(--color-text-muted)] hover:text-var(--color-text)] hover:bg-var(--color-bg-secondary)]'
                           )}
                         >
                           {item.name}
@@ -271,16 +271,16 @@ export default function AdminLayout({
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: (mainNav.length + moreNav.length + 1) * 0.05 }}
-                  className="border-border mt-4 border-t pt-4"
+                  className="border-var(--color-border)] mt-4 border-t pt-4"
                 >
                   <Link
                     href="/admin/settings"
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
-                      'flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-colors',
+                      'flex items-center gap-3 rounded-[var(--radius-md)] px-4 py-3 text-base font-medium transition-colors',
                       pathname === '/admin/settings'
-                        ? 'text-accent bg-accent-light'
-                        : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
+                        ? 'text-var(--color-pink)] bg-var(--color-pink-light)]'
+                        : 'text-var(--color-text-muted)] hover:text-var(--color-text)] hover:bg-var(--color-bg-secondary)]'
                     )}
                   >
                     <Settings className="w-5 h-5" />
@@ -290,7 +290,7 @@ export default function AdminLayout({
                     href="/"
                     target="_blank"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium text-text-secondary hover:text-text-primary hover:bg-bg-secondary transition-colors"
+                    className="flex items-center gap-3 rounded-[var(--radius-md)] px-4 py-3 text-base font-medium text-var(--color-text-muted)] hover:text-var(--color-pink)] hover:bg-var(--color-bg-secondary)] transition-colors"
                   >
                     View Site
                   </Link>

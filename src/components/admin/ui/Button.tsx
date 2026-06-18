@@ -16,21 +16,21 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] focus:ring-[var(--color-primary)]/50',
+    'bg-var(--color-pink)] text-black hover:bg-var(--color-pink-hover)] shadow-md hover:shadow-lg focus:ring-var(--color-pink)]',
   secondary:
-    'bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent)]/90 focus:ring-[var(--color-accent)]/50',
+    'bg-var(--color-yellow)] text-black hover:bg-var(--color-yellow-hover)] shadow-md hover:shadow-lg focus:ring-var(--color-yellow)]',
   outline:
-    'border border-[var(--color-border)] bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] focus:ring-[var(--color-primary)]/50',
+    'border-2 border-var(--color-cream)] bg-transparent text-var(--color-cream)] hover:bg-var(--color-cream)] hover:text-black focus:ring-var(--color-cream)]',
   ghost:
-    'bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)]',
+    'bg-transparent text-var(--color-text-muted)] hover:bg-var(--color-bg-secondary)] hover:text-var(--color-text)]',
   danger:
-    'bg-[var(--color-danger)] text-white hover:bg-[var(--color-danger)]/90 focus:ring-[var(--color-danger)]/50',
+    'bg-var(--color-danger)] text-white hover:opacity-90 focus:ring-var(--color-danger)]',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'h-8 px-3 text-xs gap-1.5',
-  md: 'h-10 px-4 text-sm gap-2',
-  lg: 'h-12 px-6 text-base gap-2.5',
+  sm: 'h-8 px-3 text-xs gap-1.5 rounded-[var(--radius-pill)]',
+  md: 'h-10 px-4 text-sm gap-2 rounded-[var(--radius-pill)]',
+  lg: 'h-12 px-6 text-base gap-2.5 rounded-[var(--radius-pill)]',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -51,8 +51,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center rounded-lg font-medium transition-all',
-          'focus:outline-none focus:ring-2 focus:ring-offset-2',
+          'inline-flex items-center justify-center font-semibold transition-all',
+          'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black',
           'disabled:pointer-events-none disabled:opacity-50',
           variantStyles[variant],
           sizeStyles[size],

@@ -24,9 +24,9 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     };
 
     const variantClasses = {
-      dark: "bg-[var(--color-bg-card)] border-[var(--color-border)]",
-      cream: "bg-[var(--color-cream)] border-[var(--color-cream-dark)]",
-      elevated: "bg-[var(--color-bg-elevated)] border-[var(--color-border)]",
+      dark: "bg-var(--color-bg-card)] border-var(--color-border)]",
+      cream: "bg-var(--color-cream)] border-var(--color-cream-dark)]",
+      elevated: "bg-var(--color-bg-elevated)] border-var(--color-border)]",
     };
 
     return (
@@ -78,7 +78,7 @@ export const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
     <h3
       ref={ref}
       className={cn(
-        "text-xl font-semibold leading-none tracking-tight text-[var(--color-text)]",
+        "text-xl font-semibold leading-none tracking-tight text-var(--color-text)]",
         className,
       )}
       {...props}
@@ -100,7 +100,7 @@ export const CardDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-[var(--color-text-muted)]", className)}
+    className={cn("text-sm text-var(--color-text-muted)]", className)}
     {...props}
   />
 ));
@@ -131,7 +131,7 @@ export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("flex items-center pt-4 mt-4 border-t border-[var(--color-border)]", className)}
+      className={cn("flex items-center pt-4 mt-4 border-t border-var(--color-border)]", className)}
       {...props}
     />
   ),

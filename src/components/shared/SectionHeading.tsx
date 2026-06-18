@@ -14,6 +14,8 @@ export interface SectionHeadingProps {
     href: string;
   };
   align?: 'left' | 'center';
+  /** Use display font (Pacifico) for script headings */
+  display?: boolean;
   className?: string;
 }
 
@@ -26,6 +28,7 @@ export function SectionHeading({
   subtitle,
   action,
   align = 'left',
+  display = false,
   className,
 }: SectionHeadingProps) {
   return (
@@ -43,15 +46,26 @@ export function SectionHeading({
         )}
       >
         <div>
-          <h2 className="text-text-primary text-2xl font-bold tracking-tight md:text-3xl">
+          <h2 
+            className={cn(
+              display
+                ? 'font-[family-name:var(--font-display)] text-var(--color-beige)]'
+                : 'text-var(--color-text)] font-semibold',
+              'text-2xl tracking-tight md:text-3xl'
+            )}
+          >
             {title}
           </h2>
-          {subtitle && <p className="text-text-secondary mt-2 max-w-2xl">{subtitle}</p>}
+          {subtitle && (
+            <p className="text-var(--color-text-muted)] mt-2 max-w-2xl">
+              {subtitle}
+            </p>
+          )}
         </div>
         {action && (
           <Link
             href={action.href}
-            className="text-accent hover:text-accent-hover inline-flex shrink-0 items-center gap-1.5 text-sm font-medium transition-colors"
+            className="text-var(--color-pink)] hover:text-var(--color-pink-hover)] shrink-0 inline-flex items-center gap-1.5 text-sm font-medium transition-colors"
           >
             {action.label}
             <ArrowRight className="h-4 w-4" />

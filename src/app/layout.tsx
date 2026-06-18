@@ -92,7 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className="flex min-h-screen flex-col antialiased bg-[var(--color-bg)]">
+      <body className="flex min-h-screen flex-col antialiased bg-var(--color-bg)]">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

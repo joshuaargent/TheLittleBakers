@@ -39,10 +39,10 @@ export function ProductionTable({ batches }: ProductionTableProps) {
       sortable: true,
       render: (batch: ProductionBatch) => (
         <div>
-          <p className="font-medium text-[var(--color-text-primary)]">
+          <p className="font-medium text-var(--color-text-primary)]">
             {batch.batchNumber}
           </p>
-          <p className="text-xs text-[var(--color-text-muted)]">
+          <p className="text-xs text-var(--color-text-muted)]">
             {batch.product.name}
           </p>
         </div>
@@ -65,7 +65,7 @@ export function ProductionTable({ batches }: ProductionTableProps) {
       header: 'Quantity',
       sortable: true,
       render: (batch: ProductionBatch) => (
-        <span className="font-medium text-[var(--color-text-primary)]">
+        <span className="font-medium text-var(--color-text-primary)]">
           {batch.quantity} units
         </span>
       ),
@@ -75,7 +75,7 @@ export function ProductionTable({ batches }: ProductionTableProps) {
       header: 'Planned',
       sortable: true,
       render: (batch: ProductionBatch) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
+        <span className="text-sm text-var(--color-text-secondary)]">
           {batch.plannedDate
             ? new Date(batch.plannedDate).toLocaleDateString('en-GB')
             : '-'}
@@ -86,7 +86,7 @@ export function ProductionTable({ batches }: ProductionTableProps) {
       key: 'actualStart',
       header: 'Started',
       render: (batch: ProductionBatch) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
+        <span className="text-sm text-var(--color-text-secondary)]">
           {batch.actualStart
             ? new Date(batch.actualStart).toLocaleDateString('en-GB')
             : '-'}
@@ -98,7 +98,7 @@ export function ProductionTable({ batches }: ProductionTableProps) {
       header: 'Completed',
       sortable: true,
       render: (batch: ProductionBatch) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
+        <span className="text-sm text-var(--color-text-secondary)]">
           {batch.completedAt
             ? new Date(batch.completedAt).toLocaleDateString('en-GB')
             : '-'}
@@ -110,7 +110,7 @@ export function ProductionTable({ batches }: ProductionTableProps) {
       header: 'Cost',
       sortable: true,
       render: (batch: ProductionBatch) => (
-        <span className="font-medium text-[var(--color-text-primary)]">
+        <span className="font-medium text-var(--color-text-primary)]">
           {formatCurrency(batch.totalCost)}
         </span>
       ),
@@ -124,7 +124,7 @@ export function ProductionTable({ batches }: ProductionTableProps) {
             {batch.wasteQty} units
           </span>
         ) : (
-          <span className="text-[var(--color-text-muted)]">None</span>
+          <span className="text-var(--color-text-muted)]">None</span>
         )
       ),
     },
@@ -135,7 +135,7 @@ export function ProductionTable({ batches }: ProductionTableProps) {
       render: (batch: ProductionBatch) => (
         <Link
           href={`/admin/production/${batch.id}`}
-          className="text-sm font-medium text-[var(--color-primary)] hover:underline"
+          className="text-sm font-medium text-var(--color-primary)] hover:underline"
         >
           View →
         </Link>
@@ -144,15 +144,15 @@ export function ProductionTable({ batches }: ProductionTableProps) {
   ];
 
   return (
-    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] overflow-hidden">
+    <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+            <tr className="border-b border-var(--color-border)] bg-var(--color-bg-secondary)]">
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
-                  className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]"
+                  className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-var(--color-text-secondary)]"
                   style={{ width: column.width }}
                 >
                   {column.header}
@@ -160,10 +160,10 @@ export function ProductionTable({ batches }: ProductionTableProps) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--color-border)]">
+          <tbody className="divide-y divide-var(--color-border)]">
             {batches.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-[var(--color-text-muted)]">
+                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-var(--color-text-muted)]">
                   No production batches found. Create your first batch to get started.
                 </td>
               </tr>
@@ -171,12 +171,12 @@ export function ProductionTable({ batches }: ProductionTableProps) {
               batches.map((batch) => (
                 <tr
                   key={batch.id}
-                  className="transition-colors hover:bg-[var(--color-bg-secondary)]"
+                  className="transition-colors hover:bg-var(--color-bg-secondary)]"
                 >
                   {columns.map((column) => (
                     <td
                       key={String(column.key)}
-                      className="px-6 py-4 text-sm text-[var(--color-text-primary)]"
+                      className="px-6 py-4 text-sm text-var(--color-text-primary)]"
                     >
                       {column.render
                         ? column.render(batch)

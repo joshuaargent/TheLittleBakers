@@ -74,21 +74,21 @@ export function DataTable<T extends Record<string, unknown>>({
   };
 
   const getSortIcon = (key: string) => {
-    if (sortKey !== key) return <ArrowUpDown className="h-4 w-4 text-[var(--color-text-muted)]" />;
-    if (sortDirection === 'asc') return <ArrowUp className="h-4 w-4 text-[var(--color-primary)]" />;
-    return <ArrowDown className="h-4 w-4 text-[var(--color-primary)]" />;
+    if (sortKey !== key) return <ArrowUpDown className="h-4 w-4 text-var(--color-text-muted)]" />;
+    if (sortDirection === 'asc') return <ArrowUp className="h-4 w-4 text-var(--color-primary)]" />;
+    return <ArrowDown className="h-4 w-4 text-var(--color-primary)]" />;
   };
 
   if (loading) {
     return (
-      <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)]">
-        <div className="divide-y divide-[var(--color-border)]">
+      <div className="overflow-hidden rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)]">
+        <div className="divide-y divide-var(--color-border)]">
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="flex items-center gap-4 p-4">
               {columns.map((col) => (
                 <div
                   key={col.key}
-                  className="h-5 w-24 animate-pulse rounded bg-[var(--color-bg-secondary)]"
+                  className="h-5 w-24 animate-pulse rounded bg-var(--color-bg-secondary)]"
                 />
               ))}
             </div>
@@ -99,17 +99,17 @@ export function DataTable<T extends Record<string, unknown>>({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)]">
+    <div className="overflow-hidden rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)]">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+            <tr className="border-b border-var(--color-border)] bg-var(--color-bg-secondary)]">
               {columns.map((column) => (
                 <th
                   key={column.key}
                   className={cn(
-                    'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]',
-                    column.sortable && 'cursor-pointer select-none hover:bg-[var(--color-border)]/50',
+                    'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-var(--color-text-secondary)]',
+                    column.sortable && 'cursor-pointer select-none hover:bg-var(--color-border)]/50',
                     column.className
                   )}
                   onClick={() => column.sortable && handleSort(column.key)}
@@ -122,12 +122,12 @@ export function DataTable<T extends Record<string, unknown>>({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--color-border)]">
+          <tbody className="divide-y divide-var(--color-border)]">
             {paginatedData.length === 0 ? (
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="px-4 py-12 text-center text-[var(--color-text-muted)]"
+                  className="px-4 py-12 text-center text-var(--color-text-muted)]"
                 >
                   {emptyMessage}
                 </td>
@@ -138,7 +138,7 @@ export function DataTable<T extends Record<string, unknown>>({
                   key={String(item[keyField])}
                   className={cn(
                     'transition-colors',
-                    onRowClick && 'cursor-pointer hover:bg-[var(--color-bg-secondary)]'
+                    onRowClick && 'cursor-pointer hover:bg-var(--color-bg-secondary)]'
                   )}
                   onClick={() => onRowClick?.(item)}
                 >
@@ -146,7 +146,7 @@ export function DataTable<T extends Record<string, unknown>>({
                     <td
                       key={column.key}
                       className={cn(
-                        'px-4 py-3 text-sm text-[var(--color-text-primary)]',
+                        'px-4 py-3 text-sm text-var(--color-text-primary)]',
                         column.className
                       )}
                     >
@@ -164,8 +164,8 @@ export function DataTable<T extends Record<string, unknown>>({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between border-t border-[var(--color-border)] px-4 py-3">
-          <p className="text-sm text-[var(--color-text-muted)]">
+        <div className="flex items-center justify-between border-t border-var(--color-border)] px-4 py-3">
+          <p className="text-sm text-var(--color-text-muted)]">
             Showing {startIndex + 1} to {Math.min(startIndex + pageSize, sortedData.length)} of{' '}
             {sortedData.length} results
           </p>
@@ -173,31 +173,31 @@ export function DataTable<T extends Record<string, unknown>>({
             <button
               onClick={() => setCurrentPage(1)}
               disabled={currentPage === 1}
-              className="rounded-lg p-1.5 text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)] disabled:opacity-50"
+              className="rounded-lg p-1.5 text-var(--color-text-secondary)] hover:bg-var(--color-bg-secondary)] disabled:opacity-50"
             >
               <ChevronsLeft className="h-5 w-5" />
             </button>
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="rounded-lg p-1.5 text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)] disabled:opacity-50"
+              className="rounded-lg p-1.5 text-var(--color-text-secondary)] hover:bg-var(--color-bg-secondary)] disabled:opacity-50"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
-            <span className="px-3 text-sm text-[var(--color-text-secondary)]">
+            <span className="px-3 text-sm text-var(--color-text-secondary)]">
               Page {currentPage} of {totalPages}
             </span>
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="rounded-lg p-1.5 text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)] disabled:opacity-50"
+              className="rounded-lg p-1.5 text-var(--color-text-secondary)] hover:bg-var(--color-bg-secondary)] disabled:opacity-50"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
             <button
               onClick={() => setCurrentPage(totalPages)}
               disabled={currentPage === totalPages}
-              className="rounded-lg p-1.5 text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)] disabled:opacity-50"
+              className="rounded-lg p-1.5 text-var(--color-text-secondary)] hover:bg-var(--color-bg-secondary)] disabled:opacity-50"
             >
               <ChevronsRight className="h-5 w-5" />
             </button>

@@ -125,12 +125,12 @@ export default function NewProductPage() {
       <div className="mb-6">
         <Link
           href="/admin/products"
-          className="mb-4 inline-flex items-center gap-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+          className="mb-4 inline-flex items-center gap-2 text-sm text-var(--color-text-secondary)] hover:text-var(--color-text-primary)]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Products
         </Link>
-        <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
+        <h1 className="text-2xl font-bold text-var(--color-text-primary)]">
           Add New Product
         </h1>
       </div>
@@ -138,13 +138,13 @@ export default function NewProductPage() {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
-          <div className="rounded-lg bg-[var(--color-danger)]/10 p-4 text-sm text-[var(--color-danger)]">
+          <div className="rounded-lg bg-var(--color-danger)]/10 p-4 text-sm text-var(--color-danger)]">
             {error}
           </div>
         )}
 
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+          <h2 className="text-lg font-semibold text-var(--color-text-primary)] mb-4">
             Basic Information
           </h2>
           
@@ -158,14 +158,14 @@ export default function NewProductPage() {
             />
 
             <div>
-              <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5">
+              <label className="block text-sm font-medium text-var(--color-text-primary)] mb-1.5">
                 Description
               </label>
               <textarea
                 placeholder="Describe the product..."
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="flex min-h-[100px] w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20"
+                className="flex min-h-[100px] w-full rounded-lg border border-var(--color-border)] bg-var(--color-bg-card)] px-3 py-2 text-sm text-var(--color-text-primary)] placeholder-var(--color-text-muted)] focus:border-var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-var(--color-primary)]/20"
               />
             </div>
 
@@ -199,11 +199,11 @@ export default function NewProductPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+          <h2 className="text-lg font-semibold text-var(--color-text-primary)] mb-4">
             Allergens
           </h2>
-          <p className="text-sm text-[var(--color-text-secondary)] mb-4">
+          <p className="text-sm text-var(--color-text-secondary)] mb-4">
             Select all allergens that this product contains.
           </p>
           
@@ -215,8 +215,8 @@ export default function NewProductPage() {
                 onClick={() => toggleAllergen(allergen.id)}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   selectedAllergenIds.includes(allergen.id)
-                    ? 'bg-[var(--color-primary)] text-white'
-                    : 'bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:bg-[var(--color-border)]'
+                    ? 'bg-var(--color-primary)] text-white'
+                    : 'bg-var(--color-bg-secondary)] text-var(--color-text-secondary)] hover:bg-var(--color-border)]'
                 }`}
               >
                 {allergen.name}
@@ -229,8 +229,8 @@ export default function NewProductPage() {
                 onClick={() => toggleAllergen(allergen)}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   selectedAllergenIds.includes(allergen)
-                    ? 'bg-[var(--color-primary)] text-white'
-                    : 'bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:bg-[var(--color-border)]'
+                    ? 'bg-var(--color-primary)] text-white'
+                    : 'bg-var(--color-bg-secondary)] text-var(--color-text-secondary)] hover:bg-var(--color-border)]'
                 }`}
               >
                 {allergen}
@@ -239,32 +239,32 @@ export default function NewProductPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+          <h2 className="text-lg font-semibold text-var(--color-text-primary)] mb-4">
             Ingredients
           </h2>
-          <p className="text-sm text-[var(--color-text-secondary)] mb-4">
+          <p className="text-sm text-var(--color-text-secondary)] mb-4">
             Add ingredients and their quantities after creating the product.
           </p>
           
           {ingredients.length === 0 ? (
-            <p className="text-sm text-[var(--color-text-muted)]">
+            <p className="text-sm text-var(--color-text-muted)]">
               No ingredients added yet. You can add ingredients after creating the product.
             </p>
           ) : (
             <div className="space-y-3">
               {ingredients.map((ing, index) => (
                 <div key={ing.id} className="flex items-center gap-3">
-                  <span className="flex-1 text-sm text-[var(--color-text-primary)]">
+                  <span className="flex-1 text-sm text-var(--color-text-primary)]">
                     {ing.name}
                   </span>
-                  <span className="text-sm text-[var(--color-text-secondary)]">
+                  <span className="text-sm text-var(--color-text-secondary)]">
                     {ing.quantity} {ing.unit}
                   </span>
                   <button
                     type="button"
                     onClick={() => setIngredients(ingredients.filter((_, i) => i !== index))}
-                    className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-danger)]"
+                    className="p-1 text-var(--color-text-muted)] hover:text-var(--color-danger)]"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>

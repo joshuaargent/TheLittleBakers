@@ -19,16 +19,16 @@ export default function ContactPage() {
   return (
     <>
       <PageHeader
-        title="Contact"
+        title="Get in Touch"
         description="I'd love to hear from you. Whether it's a question, collaboration idea, or just to say hi."
       />
 
       <section className="pb-12 md:pb-16">
-        <div className="container max-w-4xl">
+        <div className="container max-w-5xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2">
-              <Card>
-                <h2 className="text-text-primary mb-6 text-xl font-semibold">Send a Message</h2>
+              <Card padding="lg">
+                <h2 className="mb-6 text-xl font-semibold text-var(--color-text)]">Send a Message</h2>
                 {FORMSPREE_FORM_ID ? (
                   <form
                     action={`https://formspree.io/f/${FORMSPREE_FORM_ID}`}
@@ -68,18 +68,18 @@ export default function ContactPage() {
                       required
                     />
 
-                    <Button type="submit" size="lg" className="w-full" style={{ color: '#ffffff' }}>
+                    <Button type="submit" size="lg" className="w-full">
                       <Send className="mr-2 h-4 w-4" />
                       Send Message
                     </Button>
                   </form>
                 ) : (
-                  <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-yellow-800">
-                    <p className="font-medium">Contact form not configured</p>
-                    <p className="mt-1 text-sm">
+                  <div className="rounded-[var(--radius-card)] border border-var(--color-yellow)]/30 bg-var(--color-yellow-light)] p-4">
+                    <p className="font-medium text-var(--color-yellow)]">Contact form not configured</p>
+                    <p className="mt-1 text-sm text-var(--color-text-muted)]">
                       To enable the contact form, add your Formspree form ID to the environment
                       variable{' '}
-                      <code className="rounded bg-yellow-100 px-1 py-0.5">
+                      <code className="rounded-[var(--radius-sm)] bg-var(--color-bg-secondary)] px-1 py-0.5">
                         NEXT_PUBLIC_FORMSPREE_FORM_ID
                       </code>
                       .<br />
@@ -88,7 +88,7 @@ export default function ContactPage() {
                         href="https://formspree.io"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="underline"
+                        className="text-var(--color-turquoise)] hover:underline"
                       >
                         formspree.io
                       </a>
@@ -96,7 +96,7 @@ export default function ContactPage() {
                     <div className="mt-4">
                       <a
                         href={siteConfig.links.email}
-                        className="text-accent hover:text-accent-hover inline-flex items-center gap-2"
+                        className="text-var(--color-turquoise)] hover:text-var(--color-turquoise-hover)] inline-flex items-center gap-2"
                       >
                         <Mail className="h-4 w-4" />
                         {siteConfig.links.email.replace('mailto:', '')}
@@ -109,10 +109,10 @@ export default function ContactPage() {
 
             <div className="space-y-6">
               <Card>
-                <h3 className="text-text-primary mb-4 font-semibold">Email</h3>
+                <h3 className="mb-4 font-semibold text-var(--color-text)]">Email</h3>
                 <a
                   href={siteConfig.links.email}
-                  className="text-text-secondary hover:text-accent flex items-center gap-3 transition-colors"
+                  className="text-var(--color-text-muted)] hover:text-var(--color-pink)] flex items-center gap-3 transition-colors"
                 >
                   <Mail className="h-5 w-5" />
                   {siteConfig.links.email.replace('mailto:', '')}
@@ -120,27 +120,27 @@ export default function ContactPage() {
               </Card>
 
               <Card>
-                <h3 className="text-text-primary mb-4 font-semibold">Location</h3>
-                <div className="text-text-secondary flex items-center gap-3">
+                <h3 className="mb-4 font-semibold text-var(--color-text)]">Location</h3>
+                <div className="text-var(--color-text-muted)] flex items-center gap-3">
                   <MapPin className="h-5 w-5" />
                   {siteConfig.location}
                 </div>
               </Card>
 
               <Card>
-                <h3 className="text-text-primary mb-4 font-semibold">Connect</h3>
+                <h3 className="mb-4 font-semibold text-var(--color-text)]">Connect</h3>
                 <div className="space-y-3">
                   {siteConfig.links.youtube && (
                     <a
                       href={siteConfig.links.youtube}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:bg-bg-secondary flex items-center gap-3 rounded-lg p-2 transition-colors"
+                      className="hover:bg-var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
                     >
-                      <Youtube className="h-5 w-5 text-red-500" />
+                      <Youtube className="h-5 w-5 text-var(--color-pink)]" />
                       <div>
-                        <p className="text-text-primary text-sm font-medium">YouTube</p>
-                        <p className="text-text-muted text-xs">@joshua_argent</p>
+                        <p className="text-sm font-medium text-var(--color-text)]">YouTube</p>
+                        <p className="text-xs text-var(--color-text-muted)]">@joshua_argent</p>
                       </div>
                     </a>
                   )}
@@ -150,12 +150,12 @@ export default function ContactPage() {
                       href={siteConfig.links.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:bg-bg-secondary flex items-center gap-3 rounded-lg p-2 transition-colors"
+                      className="hover:bg-var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
                     >
-                      <Github className="text-text-primary h-5 w-5" />
+                      <Github className="h-5 w-5 text-var(--color-text)]" />
                       <div>
-                        <p className="text-text-primary text-sm font-medium">GitHub</p>
-                        <p className="text-text-muted text-xs">@joshuaargent</p>
+                        <p className="text-sm font-medium text-var(--color-text)]">GitHub</p>
+                        <p className="text-xs text-var(--color-text-muted)]">@joshuaargent</p>
                       </div>
                     </a>
                   )}
@@ -165,12 +165,12 @@ export default function ContactPage() {
                       href={siteConfig.links.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:bg-bg-secondary flex items-center gap-3 rounded-lg p-2 transition-colors"
+                      className="hover:bg-var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
                     >
-                      <Instagram className="h-5 w-5 text-pink-500" />
+                      <Instagram className="h-5 w-5 text-var(--color-pink)]" />
                       <div>
-                        <p className="text-text-primary text-sm font-medium">Instagram</p>
-                        <p className="text-text-muted text-xs">@joshua_argent</p>
+                        <p className="text-sm font-medium text-var(--color-text)]">Instagram</p>
+                        <p className="text-xs text-var(--color-text-muted)]">@joshua_argent</p>
                       </div>
                     </a>
                   )}
@@ -180,41 +180,21 @@ export default function ContactPage() {
                       href={siteConfig.links.facebook}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:bg-bg-secondary flex items-center gap-3 rounded-lg p-2 transition-colors"
+                      className="hover:bg-var(--color-bg-secondary)] flex items-center gap-3 rounded-[var(--radius-md)] p-2 transition-colors"
                     >
-                      <Facebook className="h-5 w-5 text-blue-600" />
+                      <Facebook className="h-5 w-5 text-var(--color-turquoise)]" />
                       <div>
-                        <p className="text-text-primary text-sm font-medium">Facebook</p>
-                        <p className="text-text-muted text-xs">@joshua_argent</p>
-                      </div>
-                    </a>
-                  )}
-
-                  {siteConfig.links.strava && (
-                    <a
-                      href={siteConfig.links.strava}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:bg-bg-secondary flex items-center gap-3 rounded-lg p-2 transition-colors"
-                    >
-                      <svg className="h-5 w-5 text-orange-500" viewBox="0 0 16 16">
-                        <path
-                          fill="currentColor"
-                          d="M6.731 0 2 9.125h2.788L6.73 5.497l1.93 3.628h2.766zm4.694 9.125-1.372 2.756L8.66 9.125H6.547L10.053 16l3.484-6.875z"
-                        />
-                      </svg>
-                      <div>
-                        <p className="text-text-primary text-sm font-medium">Strava</p>
-                        <p className="text-text-muted text-xs">@500534339</p>
+                        <p className="text-sm font-medium text-var(--color-text)]">Facebook</p>
+                        <p className="text-xs text-var(--color-text-muted)]">@joshua_argent</p>
                       </div>
                     </a>
                   )}
                 </div>
               </Card>
 
-              <Card className="bg-accent-light">
-                <h3 className="text-text-primary mb-2 font-semibold">Response Time</h3>
-                <p className="text-text-secondary text-sm">
+              <Card className="bg-var(--color-turquoise-light)]">
+                <h3 className="mb-2 font-semibold text-var(--color-text)]">Response Time</h3>
+                <p className="text-sm text-var(--color-text-muted)]">
                   I typically respond within 24-48 hours. For urgent matters, reach out via
                   Instagram DM.
                 </p>

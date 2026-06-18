@@ -13,22 +13,23 @@ export function Toaster() {
       toastOptions={{
         duration: 4000,
         style: {
-          background: '#1C1917',
-          color: '#FAFAF9',
+          background: 'var(--color-bg-card)',
+          color: 'var(--color-text)',
           fontSize: '14px',
-          borderRadius: '8px',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--color-border)',
           padding: '12px 16px',
         },
         success: {
           iconTheme: {
-            primary: '#0D9488',
-            secondary: '#FAFAF9',
+            primary: 'var(--color-turquoise)',
+            secondary: 'var(--color-text)',
           },
         },
         error: {
           iconTheme: {
-            primary: '#EF4444',
-            secondary: '#FAFAF9',
+            primary: 'var(--color-danger)',
+            secondary: 'var(--color-text)',
           },
         },
       }}

@@ -25,10 +25,10 @@ export default async function ProductsPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
+          <h1 className="text-2xl font-bold text-var(--color-text-primary)]">
             Products
           </h1>
-          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+          <p className="mt-1 text-sm text-var(--color-text-secondary)]">
             Manage your bakery products and their recipes.
           </p>
         </div>
@@ -40,11 +40,11 @@ export default async function ProductsPage() {
       {/* Filters */}
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-var(--color-text-muted)]" />
           <input
             type="text"
             placeholder="Search products..."
-            className="h-10 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] pl-10 pr-4 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20"
+            className="h-10 w-full rounded-lg border border-var(--color-border)] bg-var(--color-bg-card)] pl-10 pr-4 text-sm text-var(--color-text-primary)] placeholder-var(--color-text-muted)] focus:border-var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-var(--color-primary)]/20"
           />
         </div>
         <Button variant="outline" icon={<Filter className="h-4 w-4" />}>
@@ -54,12 +54,12 @@ export default async function ProductsPage() {
 
       {/* Products Grid */}
       {products.length === 0 ? (
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-12 text-center">
-          <ChefHat className="mx-auto h-16 w-16 text-[var(--color-text-muted)]" />
-          <h3 className="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-12 text-center">
+          <ChefHat className="mx-auto h-16 w-16 text-var(--color-text-muted)]" />
+          <h3 className="mt-4 text-lg font-medium text-var(--color-text-primary)]">
             No products yet
           </h3>
-          <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+          <p className="mt-2 text-sm text-var(--color-text-muted)]">
             Get started by adding your first product.
           </p>
           <Link href="/admin/products/new" className="mt-6 inline-block">
@@ -72,11 +72,11 @@ export default async function ProductsPage() {
             <Link
               key={product.id}
               href={`/admin/products/${product.id}`}
-              className="group rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-5 transition-all hover:border-[var(--color-primary)] hover:shadow-md"
+              className="group rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-5 transition-all hover:border-var(--color-primary)] hover:shadow-md"
             >
               <div className="flex items-start justify-between">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--color-primary-light)]">
-                  <ChefHat className="h-6 w-6 text-[var(--color-primary)]" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-var(--color-primary-light)]">
+                  <ChefHat className="h-6 w-6 text-var(--color-primary)]" />
                 </div>
                 <Badge
                   className={
@@ -89,20 +89,20 @@ export default async function ProductsPage() {
                 </Badge>
               </div>
               
-              <h3 className="mt-4 font-semibold text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)]">
+              <h3 className="mt-4 font-semibold text-var(--color-text-primary)] group-hover:text-var(--color-primary)]">
                 {product.name}
               </h3>
-              <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+              <p className="mt-1 text-sm text-var(--color-text-secondary)]">
                 {product.category?.name || 'Product'}
               </p>
               
-              <div className="mt-4 flex items-center justify-between border-t border-[var(--color-border)] pt-4">
+              <div className="mt-4 flex items-center justify-between border-t border-var(--color-border)] pt-4">
                 <div>
-                  <p className="text-2xl font-bold text-[var(--color-text-primary)]">
+                  <p className="text-2xl font-bold text-var(--color-text-primary)]">
                     {formatCurrency(product.currentPrice)}
                   </p>
                 </div>
-                <p className="text-xs text-[var(--color-text-muted)]">
+                <p className="text-xs text-var(--color-text-muted)]">
                   {product._count.orderItems} orders
                 </p>
               </div>

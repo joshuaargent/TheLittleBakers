@@ -48,11 +48,11 @@ interface StatsGridProps extends BaseProps {
 }
 
 const colorClasses = {
-  primary: 'bg-[var(--color-primary-light)] text-[var(--color-primary)]',
-  success: 'bg-green-100 text-green-600',
-  warning: 'bg-amber-100 text-amber-600',
-  danger: 'bg-red-100 text-red-600',
-  info: 'bg-blue-100 text-blue-600',
+  primary: 'bg-var(--color-pink-light)] text-var(--color-pink)]',
+  success: 'bg-var(--color-turquoise-light)] text-var(--color-turquoise)]',
+  warning: 'bg-var(--color-yellow-light)] text-var(--color-yellow)]',
+  danger: 'bg-red-500/10 text-var(--color-danger)]',
+  info: 'bg-var(--color-turquoise-light)] text-var(--color-turquoise)]',
 };
 
 export function StatsGrid({
@@ -69,7 +69,7 @@ export function StatsGrid({
         return (
           <div
             key={index}
-            className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-5"
+            className="rounded-[var(--radius-card)] border border-var(--color-border)] bg-var(--color-bg-card)] p-5"
           >
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
@@ -79,17 +79,17 @@ export function StatsGrid({
                   </div>
                 )}
                 <div>
-                  <p className="text-sm text-[var(--color-text-secondary)]">
+                  <p className="text-sm text-var(--color-text-muted)]">
                     {stat.label}
                   </p>
-                  <p className="text-xl font-semibold text-[var(--color-text-primary)]">
+                  <p className="text-xl font-semibold text-var(--color-text)]">
                     {stat.value}
                   </p>
                 </div>
               </div>
               {stat.trend !== undefined && (
                 <div className={`flex items-center gap-1 text-xs font-medium ${
-                  stat.trend >= 0 ? 'text-green-600' : 'text-red-600'
+                  stat.trend >= 0 ? 'text-var(--color-turquoise)]' : 'text-var(--color-danger)]'
                 }`}>
                   {stat.trend >= 0 ? (
                     <TrendingUp className="h-3 w-3" />
@@ -101,7 +101,7 @@ export function StatsGrid({
               )}
             </div>
             {stat.trendLabel && (
-              <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+              <p className="mt-1 text-xs text-var(--color-text-subtle)]">
                 {stat.trendLabel}
               </p>
             )}

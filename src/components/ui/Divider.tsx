@@ -9,6 +9,7 @@ export interface DividerProps extends HTMLAttributes<HTMLDivElement> {
   orientation?: 'horizontal' | 'vertical';
   label?: string;
   variant?: 'solid' | 'dashed' | 'dotted';
+  color?: 'default' | 'cream' | 'pink';
 }
 
 // ============================================
@@ -21,15 +22,22 @@ const variantClassesMap: Record<string, string> = {
   dotted: 'border-dotted',
 };
 
+const colorClassesMap: Record<string, string> = {
+  default: 'border-var(--color-border)]',
+  cream: 'border-var(--color-cream)]/30',
+  pink: 'border-var(--color-pink)]/30',
+};
+
 export const Divider = forwardRef<HTMLDivElement, DividerProps>(
-  ({ className, orientation = 'horizontal', label, variant = 'solid', ...props }, ref) => {
+  ({ className, orientation = 'horizontal', label, variant = 'solid', color = 'default', ...props }, ref) => {
     if (orientation === 'vertical') {
       return (
         <div
           ref={ref}
           className={cn(
-            'border-border h-full w-px border-l',
+            'h-full w-px border-l',
             variantClassesMap[variant],
+            colorClassesMap[color],
             className
           )}
           {...props}
@@ -40,9 +48,9 @@ export const Divider = forwardRef<HTMLDivElement, DividerProps>(
     if (label) {
       return (
         <div ref={ref} className={cn('relative flex items-center', className)} {...props}>
-          <div className="border-border flex-grow border-t" />
-          <span className="text-text-muted mx-4 flex-shrink text-sm">{label}</span>
-          <div className="border-border flex-grow border-t" />
+          <div className={cn('flex-grow border-t', variantClassesMap[variant], colorClassesMap[color])} />
+          <span className="text-var(--color-text-muted)] mx-4 shrink-0 text-sm">{label}</span>
+          <div className={cn('flex-grow border-t', variantClassesMap[variant], colorClassesMap[color])} />
         </div>
       );
     }
@@ -50,7 +58,7 @@ export const Divider = forwardRef<HTMLDivElement, DividerProps>(
     return (
       <div
         ref={ref}
-        className={cn('border-border my-6 border-t', variantClassesMap[variant], className)}
+        className={cn('my-6 border-t', variantClassesMap[variant], colorClassesMap[color], className)}
         {...props}
       />
     );

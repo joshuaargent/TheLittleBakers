@@ -52,7 +52,7 @@ export function Navbar() {
         className={cn(
           'fixed top-0 right-0 left-0 z-[50] transition-all duration-200',
           isScrolled 
-            ? 'bg-[var(--color-bg)]/95 border-[var(--color-border)] border-b backdrop-blur-md' 
+            ? 'bg-var(--color-bg)]/95 border-var(--color-border)] border-b backdrop-blur-md' 
             : 'bg-transparent'
         )}
         style={{ transform: 'translateZ(0)' }}
@@ -62,7 +62,7 @@ export function Navbar() {
             {/* Logo */}
             <Link
               href="/"
-              className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-cream)] hover:text-[var(--color-pink)] transition-colors"
+              className="font-[family-name:var(--font-display)] text-2xl text-var(--color-cream)] hover:text-var(--color-pink)] transition-colors"
             >
               {siteConfig.name}
             </Link>
@@ -76,8 +76,8 @@ export function Navbar() {
                   className={cn(
                     'rounded-[var(--radius-pill)] px-4 py-2 text-sm font-medium transition-colors',
                     pathname === item.href
-                      ? 'text-[var(--color-pink)] bg-[var(--color-pink-light)]'
-                      : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]'
+                      ? 'text-var(--color-pink)] bg-var(--color-pink-light)]'
+                      : 'text-var(--color-text-muted)] hover:text-var(--color-text)] hover:bg-var(--color-bg-secondary)]'
                   )}
                 >
                   {item.label}
@@ -89,7 +89,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden text-[var(--color-cream)]"
+              className="md:hidden text-var(--color-cream)]"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
@@ -107,7 +107,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[45] bg-[var(--color-bg)] pt-16 md:hidden"
+            className="fixed inset-0 z-[45] bg-var(--color-bg)] pt-16 md:hidden"
             style={{ transform: 'translateZ(0)' }}
           >
             <nav className="container py-6">
@@ -124,8 +124,8 @@ export function Navbar() {
                       className={cn(
                         'flex items-center rounded-[var(--radius-md)] px-4 py-3 text-base font-medium transition-colors',
                         pathname === item.href
-                          ? 'text-[var(--color-pink)] bg-[var(--color-pink-light)]'
-                          : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]'
+                          ? 'text-var(--color-pink)] bg-var(--color-pink-light)]'
+                          : 'text-var(--color-text-muted)] hover:text-var(--color-text)] hover:bg-var(--color-bg-secondary)]'
                       )}
                     >
                       {item.label}
@@ -135,13 +135,13 @@ export function Navbar() {
               </div>
 
               {/* Mobile Menu Footer */}
-              <div className="mt-8 border-t border-[var(--color-border)] pt-8">
+              <div className="mt-8 border-t border-var(--color-border)] pt-8">
                 <div className="flex items-center justify-center gap-4">
                   <a
                     href={siteConfig.links.youtube}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] p-2 transition-colors"
+                    className="text-var(--color-text-muted)] hover:text-var(--color-pink)] p-2 transition-colors"
                     aria-label="YouTube"
                   >
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -152,7 +152,7 @@ export function Navbar() {
                     href={siteConfig.links.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] p-2 transition-colors"
+                    className="text-var(--color-text-muted)] hover:text-var(--color-pink)] p-2 transition-colors"
                     aria-label="Instagram"
                   >
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -163,7 +163,7 @@ export function Navbar() {
                     href={siteConfig.links.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] p-2 transition-colors"
+                    className="text-var(--color-text-muted)] hover:text-var(--color-pink)] p-2 transition-colors"
                     aria-label="Facebook"
                   >
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">

@@ -79,12 +79,12 @@ export default function NewIngredientPage() {
       <div className="mb-6">
         <Link
           href="/admin/ingredients"
-          className="mb-4 inline-flex items-center gap-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+          className="mb-4 inline-flex items-center gap-2 text-sm text-var(--color-text-secondary)] hover:text-var(--color-text-primary)]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Ingredients
         </Link>
-        <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
+        <h1 className="text-2xl font-bold text-var(--color-text-primary)]">
           Add New Ingredient
         </h1>
       </div>
@@ -92,13 +92,13 @@ export default function NewIngredientPage() {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
-          <div className="rounded-lg bg-[var(--color-danger)]/10 p-4 text-sm text-[var(--color-danger)]">
+          <div className="rounded-lg bg-var(--color-danger)]/10 p-4 text-sm text-var(--color-danger)]">
             {error}
           </div>
         )}
 
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+          <h2 className="text-lg font-semibold text-var(--color-text-primary)] mb-4">
             Basic Information
           </h2>
           
@@ -133,8 +133,8 @@ export default function NewIngredientPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+          <h2 className="text-lg font-semibold text-var(--color-text-primary)] mb-4">
             Stock Information
           </h2>
           
@@ -162,8 +162,8 @@ export default function NewIngredientPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">
+        <div className="rounded-xl border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
+          <h2 className="text-lg font-semibold text-var(--color-text-primary)] mb-4">
             Cost & Supplier
           </h2>
           

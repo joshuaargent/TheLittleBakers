@@ -18,9 +18,9 @@ export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
 export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
   ({ className, variant = 'text', width, height, ...props }, ref) => {
     const variantClasses = {
-      text: 'rounded-md h-4',
+      text: 'h-4 rounded-[var(--radius-sm)]',
       circular: 'rounded-full',
-      rectangular: 'rounded-lg',
+      rectangular: 'rounded-[var(--radius-md)]',
     };
 
     return (
@@ -51,7 +51,7 @@ export const SkeletonText = forwardRef<HTMLDivElement, { lines?: number }>(({ li
 SkeletonText.displayName = 'SkeletonText';
 
 export const SkeletonCard = forwardRef<HTMLDivElement>((_, ref) => (
-  <div ref={ref} className="bg-bg-card border-border space-y-4 rounded-xl border p-6">
+  <div ref={ref} className="space-y-4 rounded-[var(--radius-card)] border border-var(--color-border)] bg-var(--color-bg-card)] p-6">
     <Skeleton className="h-48 w-full" variant="rectangular" />
     <Skeleton className="h-6 w-3/4" />
     <SkeletonText lines={2} />
@@ -60,37 +60,25 @@ export const SkeletonCard = forwardRef<HTMLDivElement>((_, ref) => (
 
 SkeletonCard.displayName = 'SkeletonCard';
 
-export const SkeletonVideoCard = forwardRef<HTMLDivElement>((_, ref) => (
+export const SkeletonProductCard = forwardRef<HTMLDivElement>((_, ref) => (
   <div ref={ref} className="space-y-3">
-    <Skeleton className="aspect-video w-full" variant="rectangular" />
-    <Skeleton className="h-5 w-full" />
-    <Skeleton className="h-4 w-1/2" />
-  </div>
-));
-
-SkeletonVideoCard.displayName = 'SkeletonVideoCard';
-
-export const SkeletonBookCard = forwardRef<HTMLDivElement>((_, ref) => (
-  <div ref={ref} className="space-y-3">
-    <Skeleton className="aspect-[2/3] w-full" variant="rectangular" />
+    <Skeleton className="aspect-square w-full" variant="rectangular" />
     <Skeleton className="h-5 w-3/4" />
     <Skeleton className="h-4 w-1/2" />
+    <Skeleton className="h-8 w-24" variant="rectangular" />
   </div>
 ));
 
-SkeletonBookCard.displayName = 'SkeletonBookCard';
+SkeletonProductCard.displayName = 'SkeletonProductCard';
 
-export const SkeletonProjectCard = forwardRef<HTMLDivElement>((_, ref) => (
-  <div ref={ref} className="bg-bg-card border-border space-y-4 rounded-xl border p-6">
-    <Skeleton className="h-40 w-full" variant="rectangular" />
-    <Skeleton className="h-6 w-2/3" />
-    <SkeletonText lines={2} />
-    <div className="flex gap-2">
-      <Skeleton className="h-6 w-16" variant="rectangular" />
-      <Skeleton className="h-6 w-16" variant="rectangular" />
-      <Skeleton className="h-6 w-16" variant="rectangular" />
+export const SkeletonListItem = forwardRef<HTMLDivElement>((_, ref) => (
+  <div ref={ref} className="flex items-center gap-4 p-4">
+    <Skeleton className="h-12 w-12" variant="rectangular" />
+    <div className="flex-1 space-y-2">
+      <Skeleton className="h-4 w-3/4" />
+      <Skeleton className="h-3 w-1/2" />
     </div>
   </div>
 ));
 
-SkeletonProjectCard.displayName = 'SkeletonProjectCard';
+SkeletonListItem.displayName = 'SkeletonListItem';

@@ -137,8 +137,8 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="h-8 w-48 animate-pulse rounded bg-[var(--color-bg-secondary)]" />
-        <div className="h-64 animate-pulse rounded-xl bg-[var(--color-bg-card)]" />
+        <div className="h-8 w-48 animate-pulse rounded bg-var(--color-bg-secondary)]" />
+        <div className="h-64 animate-pulse rounded-xl bg-var(--color-bg-card)]" />
       </div>
     );
   }
@@ -146,7 +146,7 @@ export default function SettingsPage() {
   if (!settings) {
     return (
       <div className="text-center">
-        <p className="text-[var(--color-text-muted)]">Failed to load settings</p>
+        <p className="text-var(--color-text-muted)]">Failed to load settings</p>
       </div>
     );
   }
@@ -156,10 +156,10 @@ export default function SettingsPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
+          <h1 className="text-2xl font-bold text-var(--color-text-primary)]">
             Settings
           </h1>
-          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+          <p className="mt-1 text-sm text-var(--color-text-secondary)]">
             Configure your bakery business settings.
           </p>
         </div>
@@ -248,9 +248,9 @@ export default function SettingsPage() {
               id="vatRegistered"
               checked={settings.vatRegistered}
               onChange={(e) => updateSetting('vatRegistered', e.target.checked)}
-              className="h-4 w-4 rounded border-[var(--color-border)] text-[var(--color-primary)]"
+              className="h-4 w-4 rounded border-var(--color-border)] text-var(--color-primary)]"
             />
-            <label htmlFor="vatRegistered" className="text-sm text-[var(--color-text-primary)]">
+            <label htmlFor="vatRegistered" className="text-sm text-var(--color-text-primary)]">
               VAT Registered
             </label>
           </div>
@@ -378,9 +378,9 @@ export default function SettingsPage() {
               id="shopEnabled"
               checked={settings.shopEnabled}
               onChange={(e) => updateSetting('shopEnabled', e.target.checked)}
-              className="h-4 w-4 rounded border-[var(--color-border)] text-[var(--color-primary)]"
+              className="h-4 w-4 rounded border-var(--color-border)] text-var(--color-primary)]"
             />
-            <label htmlFor="shopEnabled" className="text-sm text-[var(--color-text-primary)]">
+            <label htmlFor="shopEnabled" className="text-sm text-var(--color-text-primary)]">
               Enable online shop
             </label>
           </div>
@@ -390,9 +390,9 @@ export default function SettingsPage() {
               id="preorderEnabled"
               checked={settings.preorderEnabled}
               onChange={(e) => updateSetting('preorderEnabled', e.target.checked)}
-              className="h-4 w-4 rounded border-[var(--color-border)] text-[var(--color-primary)]"
+              className="h-4 w-4 rounded border-var(--color-border)] text-var(--color-primary)]"
             />
-            <label htmlFor="preorderEnabled" className="text-sm text-[var(--color-text-primary)]">
+            <label htmlFor="preorderEnabled" className="text-sm text-var(--color-text-primary)]">
               Enable pre-orders
             </label>
           </div>
@@ -412,9 +412,9 @@ export default function SettingsPage() {
               id="deliveryEnabled"
               checked={settings.deliveryEnabled}
               onChange={(e) => updateSetting('deliveryEnabled', e.target.checked)}
-              className="h-4 w-4 rounded border-[var(--color-border)] text-[var(--color-primary)]"
+              className="h-4 w-4 rounded border-var(--color-border)] text-var(--color-primary)]"
             />
-            <label htmlFor="deliveryEnabled" className="text-sm text-[var(--color-text-primary)]">
+            <label htmlFor="deliveryEnabled" className="text-sm text-var(--color-text-primary)]">
               Enable delivery
             </label>
           </div>
@@ -448,9 +448,9 @@ export default function SettingsPage() {
               id="emailNotifications"
               checked={settings.emailNotifications}
               onChange={(e) => updateSetting('emailNotifications', e.target.checked)}
-              className="h-4 w-4 rounded border-[var(--color-border)] text-[var(--color-primary)]"
+              className="h-4 w-4 rounded border-var(--color-border)] text-var(--color-primary)]"
             />
-            <label htmlFor="emailNotifications" className="text-sm text-[var(--color-text-primary)]">
+            <label htmlFor="emailNotifications" className="text-sm text-var(--color-text-primary)]">
               Send email notifications
             </label>
           </div>
@@ -460,9 +460,9 @@ export default function SettingsPage() {
               id="orderAlerts"
               checked={settings.orderAlerts}
               onChange={(e) => updateSetting('orderAlerts', e.target.checked)}
-              className="h-4 w-4 rounded border-[var(--color-border)] text-[var(--color-primary)]"
+              className="h-4 w-4 rounded border-var(--color-border)] text-var(--color-primary)]"
             />
-            <label htmlFor="orderAlerts" className="text-sm text-[var(--color-text-primary)]">
+            <label htmlFor="orderAlerts" className="text-sm text-var(--color-text-primary)]">
               Order alerts
             </label>
           </div>

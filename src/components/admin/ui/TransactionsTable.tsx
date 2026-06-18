@@ -34,7 +34,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
       header: 'Date',
       sortable: true,
       render: (item: Transaction) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
+        <span className="text-sm text-var(--color-text-secondary)]">
           {new Date(item.date).toLocaleDateString('en-GB')}
         </span>
       ),
@@ -52,7 +52,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
       key: 'category',
       header: 'Category',
       render: (item: Transaction) => (
-        <span className="text-sm text-[var(--color-text-primary)]">
+        <span className="text-sm text-var(--color-text-primary)]">
           {item.category.name || item.category.code}
         </span>
       ),
@@ -61,7 +61,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
       key: 'description',
       header: 'Description',
       render: (item: Transaction) => (
-        <span className="text-sm text-[var(--color-text-secondary)]">
+        <span className="text-sm text-var(--color-text-secondary)]">
           {item.description || '-'}
         </span>
       ),
@@ -81,17 +81,17 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
   return (
     <div className="overflow-x-auto">
       {transactions.length === 0 ? (
-        <div className="py-8 text-center text-sm text-[var(--color-text-muted)]">
+        <div className="py-8 text-center text-sm text-var(--color-text-muted)]">
           No transactions found.
         </div>
       ) : (
         <table className="w-full">
           <thead>
-            <tr className="border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+            <tr className="border-b border-var(--color-border)] bg-var(--color-bg-secondary)]">
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
-                  className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]"
+                  className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-var(--color-text-secondary)]"
                   style={column.width ? { width: column.width } : undefined}
                 >
                   {column.header}
@@ -99,16 +99,16 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--color-border)]">
+          <tbody className="divide-y divide-var(--color-border)]">
             {transactions.map((item) => (
               <tr
                 key={item.id}
-                className="transition-colors hover:bg-[var(--color-bg-secondary)]"
+                className="transition-colors hover:bg-var(--color-bg-secondary)]"
               >
                 {columns.map((column) => (
                   <td
                     key={String(column.key)}
-                    className="px-4 py-3 text-sm text-[var(--color-text-primary)]"
+                    className="px-4 py-3 text-sm text-var(--color-text-primary)]"
                   >
                     {column.render(item)}
                   </td>
