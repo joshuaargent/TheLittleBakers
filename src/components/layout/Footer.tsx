@@ -136,7 +136,7 @@ export function Footer() {
               © {currentYear} {siteConfig.name}. All rights reserved.
             </p>
             <p className="text-[var(--color-text-subtle)] flex items-center gap-1 text-sm">
-              Made with <Heart className="h-3.5 w-3.5 fill-var(--color-pink)] text-[var(--color-pink)]" /> using Next.js
+              Made with <Heart className="h-3.5 w-3.5 fill-[var(--color-pink)] text-[var(--color-pink)]" /> using Next.js
             </p>
           </div>
         </div>
