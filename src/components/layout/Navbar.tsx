@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { mainNav } from '@/lib/constants';
 import { siteConfig } from '@/lib/constants';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, ShoppingBag, User } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useTheme } from '@/components/providers/ThemeProvider';
 
@@ -86,6 +86,28 @@ export function Navbar() {
                 </Link>
               ))}
 
+              {/* Cart & Account Icons */}
+              <div className="flex items-center gap-1 ml-2 border-l border-[var(--color-border)] pl-3">
+                <Link
+                  href="/cart"
+                  className="relative rounded-full p-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] transition-colors"
+                  aria-label="Shopping cart"
+                >
+                  <ShoppingBag className="h-5 w-5" />
+                  {/* Cart badge (demo) */}
+                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--color-pink)] text-[10px] font-bold text-black flex items-center justify-center">
+                    3
+                  </span>
+                </Link>
+                <Link
+                  href="/account"
+                  className="rounded-full p-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] transition-colors"
+                  aria-label="My account"
+                >
+                  <User className="h-5 w-5" />
+                </Link>
+              </div>
+
               {/* Theme Toggle */}
               <Button
                 variant="ghost"
@@ -153,6 +175,29 @@ export function Navbar() {
 
               {/* Mobile Menu Footer */}
               <div className="mt-8 border-t border-[var(--color-border)] pt-8">
+                {/* Quick Links */}
+                <div className="flex justify-center gap-6 mb-6">
+                  <Link
+                    href="/cart"
+                    className="flex flex-col items-center gap-1 text-[var(--color-text-muted)] hover:text-[var(--color-pink)]"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <div className="relative">
+                      <ShoppingBag className="h-6 w-6" />
+                      <span className="absolute -top-2 -right-2 h-4 w-4 rounded-full bg-[var(--color-pink)] text-[10px] font-bold text-black flex items-center justify-center">3</span>
+                    </div>
+                    <span className="text-xs">Cart</span>
+                  </Link>
+                  <Link
+                    href="/account"
+                    className="flex flex-col items-center gap-1 text-[var(--color-text-muted)] hover:text-[var(--color-pink)]"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <User className="h-6 w-6" />
+                    <span className="text-xs">Account</span>
+                  </Link>
+                </div>
+
                 <div className="flex flex-col items-center gap-4">
                     {/* Theme Toggle */}
                     <button

@@ -1,11 +1,11 @@
 // ============================================
-// Site Configuration
+// Site Configuration - The Little Bakers
 // ============================================
 
 export const siteConfig = {
-  name: 'My Template',
-  description: 'A reusable Next.js template for any website project.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com',
+  name: 'The Little Bakers',
+  description: 'Handmade bakes crafted with love. Order online for collection or find us at local markets.',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://thelittlebakers.com',
   ogImage: '/og-image.png',
   location: 'Surrey, United Kingdom',
   links: {
@@ -13,12 +13,11 @@ export const siteConfig = {
     github: 'https://github.com/joshuaargent',
     instagram: 'https://instagram.com/joshua_argent',
     facebook: 'https://facebook.com/joshua_argent',
-    strava: 'https://www.strava.com/athletes/500534339',
-    email: 'mailto:argentjackjoshua@outlook.com',
+    email: 'mailto:hello@thelittlebakers.com',
   },
   author: {
-    name: 'Your Name',
-    bio: 'Your bio here',
+    name: 'The Little Bakers',
+    bio: 'Handmade bakes crafted with love',
   },
 };
 
@@ -27,12 +26,12 @@ export const siteConfig = {
 // ============================================
 
 export const meta = {
-  title: 'My Template',
-  description: 'A reusable Next.js template for any website project.',
-  keywords: ['template', 'nextjs', 'website', 'portfolio'] as string[],
-  siteName: 'My Template',
-  twitter: '@yourhandle',
-  instagramHandle: '@yourhandle',
+  title: 'The Little Bakers',
+  description: 'Handmade bakes crafted with love. Order online for collection or find us at local markets.',
+  keywords: ['bakery', 'bakes', 'cakes', 'pastries', 'Surrey'] as string[],
+  siteName: 'The Little Bakers',
+  twitter: '@thelittlebakers',
+  instagramHandle: '@thelittlebakers',
 };
 
 // ============================================
@@ -41,6 +40,7 @@ export const meta = {
 
 export const mainNav = [
   { label: 'Home', href: '/' },
+  { label: 'Products', href: '/products' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ];
@@ -48,20 +48,18 @@ export const mainNav = [
 export const footerNav = {
   main: [
     { label: 'Home', href: '/' },
+    { label: 'Products', href: '/products' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
   ],
   content: [
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
-    { label: 'Contact', href: '/contact' },
+    { label: 'Account', href: '/account' },
+    { label: 'Cart', href: '/cart' },
   ],
   social: [
     { label: 'YouTube', href: siteConfig.links.youtube },
-    { label: 'GitHub', href: siteConfig.links.github },
     { label: 'Instagram', href: siteConfig.links.instagram },
     { label: 'Facebook', href: siteConfig.links.facebook },
-    { label: 'Strava', href: siteConfig.links.strava },
   ],
 };
 
@@ -70,8 +68,8 @@ export const footerNav = {
 // ============================================
 
 export const colors = {
-  primary: '#0D9488',
-  primaryHover: '#0F766E',
+  primary: '#FF5C8A',
+  primaryHover: '#E64F7A',
 } as const;
 
 // ============================================
