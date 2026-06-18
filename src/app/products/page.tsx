@@ -84,7 +84,7 @@ export default function ProductsPage() {
                         </p>
                         <div className="flex items-center justify-between">
                           <span className="text-[var(--color-yellow)] font-semibold text-lg">
-                            £{product.price.toFixed(2)}
+                            £{product.currentPrice.toFixed(2)}
                           </span>
                           <Button size="sm" variant="primary">
                             <ShoppingBag className="h-4 w-4" />

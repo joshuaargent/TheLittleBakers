@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -13,7 +14,8 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     password: '',
@@ -32,10 +34,50 @@ export default function RegisterPage() {
       return;
     }
 
-    // Demo - just redirect for now
-    setTimeout(() => {
-      router.push('/account');
-    }, 1000);
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone || undefined,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Failed to create account');
+        setIsLoading(false);
+        return;
+      }
+
+      // Auto sign in after registration
+      const signInResult = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        router.push('/login');
+      } else {
+        router.push('/account');
+      }
+      router.refresh();
+    } catch {
+      setError('Something went wrong. Please try again.');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -60,14 +102,24 @@ export default function RegisterPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Full Name"
-              type="text"
-              placeholder="Your name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              required
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="First Name"
+                type="text"
+                placeholder="First"
+                value={formData.firstName}
+                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                required
+              />
+              <Input
+                label="Last Name"
+                type="text"
+                placeholder="Last"
+                value={formData.lastName}
+                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                required
+              />
+            </div>
 
             <Input
               label="Email Address"
@@ -90,7 +142,7 @@ export default function RegisterPage() {
               <Input
                 label="Password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Create a password"
+                placeholder="Create a password (min 8 chars)"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required

@@ -1,179 +1,122 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
 import prisma from '@/lib/prisma';
+import { authOptions } from '@/lib/auth';
 
-// Generate a unique order number
-async function generateOrderNumber(): Promise<string> {
-  const date = new Date();
-  const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '');
-  const count = await prisma.order.count({
-    where: {
-      createdAt: {
-        gte: new Date(date.setHours(0, 0, 0, 0)),
-        lt: new Date(date.setHours(23, 59, 59, 999)),
-      },
-    },
-  });
-  return `ORD-${dateStr}-${String(count + 1).padStart(3, '0')}`;
-}
-
-// GET /api/orders - List all orders
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const statusCode = searchParams.get('status');
-    const search = searchParams.get('search');
-
-    const where: Record<string, unknown> = {};
-
-    // Get status ID if filtering by status
-    if (statusCode) {
-      const status = await prisma.orderStatus.findUnique({
-        where: { code: statusCode },
-      });
-      if (status) {
-        where.statusId = status.id;
-      }
-    }
-
-    if (search) {
-      where.OR = [
-        { orderNumber: { contains: search } },
-        { customerName: { contains: search } },
-        { customerEmail: { contains: search } },
-      ];
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const orders = await prisma.order.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
+      where: { userId: session.user.id },
       include: {
-        status: true,
         items: {
           include: {
             product: true,
           },
         },
-        _count: {
-          select: { items: true },
-        },
+        status: true,
       },
+      orderBy: { createdAt: 'desc' },
     });
 
-    return NextResponse.json(orders);
+    return NextResponse.json({ orders });
   } catch (error) {
-    console.error('Error fetching orders:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch orders' },
-      { status: 500 }
-    );
+    console.error('Orders fetch error:', error);
+    return NextResponse.json({ error: 'Failed to fetch orders' }, { status: 500 });
   }
 }
 
-// POST /api/orders - Create a new order
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const {
-      customerName,
-      customerEmail,
-      customerContact,
-      notes,
-      items,
-      subtotal,
-      packagingCost,
-      total,
-    } = body;
-
-    if (!customerName || !items || items.length === 0) {
-      return NextResponse.json(
-        { error: 'Customer name and at least one item are required' },
-        { status: 400 }
-      );
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get the PENDING status
-    const pendingStatus = await prisma.orderStatus.findUnique({
+    const body = await request.json();
+    const { items, pickupDate, pickupTime } = body;
+
+    if (!items || items.length === 0) {
+      return NextResponse.json({ error: 'Cart is empty' }, { status: 400 });
+    }
+
+    // Get user
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Calculate totals
+    let subtotal = 0;
+    for (const item of items) {
+      const product = await prisma.product.findUnique({
+        where: { id: item.productId },
+      });
+      if (!product) {
+        return NextResponse.json({ error: `Product not found: ${item.productId}` }, { status: 400 });
+      }
+      subtotal += product.currentPrice * item.quantity;
+    }
+
+    // Get pending status
+    const pendingStatus = await prisma.orderStatus.findFirst({
       where: { code: 'PENDING' },
     });
 
     if (!pendingStatus) {
-      return NextResponse.json(
-        { error: 'PENDING status not found in database' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Order status not configured' }, { status: 500 });
     }
 
-    const orderNumber = await generateOrderNumber();
+    // Generate order number
+    const orderCount = await prisma.order.count();
+    const orderNumber = `TLB-${String(orderCount + 1).padStart(5, '0')}`;
 
+    // Create order
     const order = await prisma.order.create({
       data: {
         orderNumber,
-        customerName,
-        customerEmail,
-        customerContact,
-        notes,
-        subtotal,
-        packagingCost,
-        total,
+        userId: session.user.id,
+        customerName: `${user.firstName} ${user.lastName}`.trim(),
+        customerEmail: user.email,
+        customerPhone: user.phone,
+        source: 'WEBSITE',
+        fulfillmentMethod: 'COLLECTION',
+        collectionDate: new Date(pickupDate),
+        collectionTime: pickupTime,
+        subtotal: Math.round(subtotal * 100),
+        total: Math.round(subtotal * 100),
         statusId: pendingStatus.id,
+        paymentStatus: 'PENDING',
         items: {
-          create: items.map((item: {
-            productId: string;
-            quantity: number;
-            unitPrice: number;
-            totalPrice: number;
-            packagingId?: string;
-          }) => ({
+          create: items.map((item: any) => ({
             productId: item.productId,
             quantity: item.quantity,
             unitPrice: item.unitPrice,
-            totalPrice: item.totalPrice,
-            packagingId: item.packagingId,
+            totalPrice: item.unitPrice * item.quantity,
+            statusId: pendingStatus.id,
           })),
         },
       },
       include: {
-        status: true,
         items: {
-          include: {
-            product: true,
-          },
+          include: { product: true },
         },
+        status: true,
       },
     });
 
-    // Create initial status history entry
-    await prisma.orderStatusHistory.create({
-      data: {
-        orderId: order.id,
-        statusId: pendingStatus.id,
-        note: 'Order created',
-      },
-    });
-
-    // Create transaction record for income
-    const orderRevenueCategory = await prisma.transactionCategory.findUnique({ 
-      where: { code: 'ORDER_REVENUE' } 
-    });
-    
-    if (orderRevenueCategory) {
-      await prisma.transaction.create({
-        data: {
-          type: 'INCOME',
-          categoryId: orderRevenueCategory.id,
-          amount: total,
-          description: `Order ${orderNumber}`,
-          reference: order.id,
-        },
-      });
-    }
-
-    return NextResponse.json(order, { status: 201 });
+    return NextResponse.json({ order }, { status: 201 });
   } catch (error) {
-    console.error('Error creating order:', error);
-    return NextResponse.json(
-      { error: 'Failed to create order' },
-      { status: 500 }
-    );
+    console.error('Order creation error:', error);
+    return NextResponse.json({ error: 'Failed to create order' }, { status: 500 });
   }
 }

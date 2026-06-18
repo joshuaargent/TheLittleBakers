@@ -1,26 +1,109 @@
-import { Metadata } from 'next';
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { User, Package, MapPin, CreditCard, Settings, LogOut, ChevronRight } from 'lucide-react';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { User, Package, MapPin, Settings, LogOut, ChevronRight, ShoppingBag } from 'lucide-react';
 
-export const metadata: Metadata = {
-  title: 'My Account | The Little Bakers',
-  description: 'Manage your account, view orders, and update your profile.',
-};
+interface Order {
+  id: string;
+  orderNumber: string;
+  createdAt: string;
+  total: number;
+  status: { name: string; color: string | null };
+  items: Array<{
+    id: string;
+    quantity: number;
+    product: { name: string };
+  }>;
+}
 
 export default function AccountPage() {
-  // Demo user data
-  const user = {
-    name: 'Demo User',
-    email: 'demo@example.com',
+  const { data: session, status } = useSession();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (session?.user) {
+      fetch('/api/orders')
+        .then(res => res.json())
+        .then(data => {
+          if (data.orders) {
+            setOrders(data.orders);
+          }
+        })
+        .catch(console.error)
+        .finally(() => setLoading(false));
+    } else if (status === 'unauthenticated') {
+      setLoading(false);
+    }
+  }, [session, status]);
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
   };
 
-  const orders = [
-    { id: 'ORD-001', date: '15 Jun 2026', items: 3, total: 24.50, status: 'Ready for Collection' },
-    { id: 'ORD-002', date: '10 Jun 2026', items: 5, total: 45.00, status: 'Completed' },
-    { id: 'ORD-003', date: '05 Jun 2026', items: 2, total: 12.00, status: 'Completed' },
-  ];
+  const formatPrice = (cents: number) => {
+    return (cents / 100).toFixed(2);
+  };
+
+  if (status === 'loading' || loading) {
+    return (
+      <>
+        <section className="py-8">
+          <div className="container">
+            <Skeleton className="h-10 w-64" />
+          </div>
+        </section>
+        <section className="pb-16">
+          <div className="container">
+            <div className="grid lg:grid-cols-3 gap-8">
+              <Skeleton className="h-64" />
+              <div className="lg:col-span-2 space-y-4">
+                <Skeleton className="h-8 w-32" />
+                <Skeleton className="h-32" />
+                <Skeleton className="h-32" />
+              </div>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
+
+  if (status === 'unauthenticated') {
+    return (
+      <>
+        <section className="py-12">
+          <div className="container">
+            <Card className="p-12 text-center max-w-md mx-auto">
+              <User className="h-16 w-16 mx-auto mb-6 text-[var(--color-text-muted)]" />
+              <h2 className="text-2xl font-semibold text-[var(--color-text)] mb-3">Sign in to your account</h2>
+              <p className="text-[var(--color-text-muted)] mb-6">View your orders and manage your account</p>
+              <div className="flex justify-center gap-4">
+                <Link href="/login">
+                  <Button variant="primary">Sign In</Button>
+                </Link>
+                <Link href="/register">
+                  <Button variant="outline">Create Account</Button>
+                </Link>
+              </div>
+            </Card>
+          </div>
+        </section>
+      </>
+    );
+  }
+
+  const userName = session?.user?.name || 'User';
+  const userEmail = session?.user?.email || '';
 
   return (
     <>
@@ -46,8 +129,8 @@ export default function AccountPage() {
                     <User className="h-8 w-8 text-[var(--color-pink)]" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[var(--color-text)]">{user.name}</h3>
-                    <p className="text-sm text-[var(--color-text-muted)]">{user.email}</p>
+                    <h3 className="font-semibold text-[var(--color-text)]">{userName}</h3>
+                    <p className="text-sm text-[var(--color-text-muted)]">{userEmail}</p>
                   </div>
                 </div>
 
@@ -72,7 +155,11 @@ export default function AccountPage() {
                 </nav>
 
                 <div className="pt-6 border-t border-[var(--color-border)] mt-6">
-                  <Button variant="ghost" className="w-full justify-start text-red-400 hover:text-red-300">
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start text-red-400 hover:text-red-300"
+                    onClick={() => signOut({ callbackUrl: '/' })}
+                  >
                     <LogOut className="h-5 w-5 mr-2" />
                     Sign Out
                   </Button>
@@ -98,21 +185,19 @@ export default function AccountPage() {
                       <div className="p-6">
                         <div className="flex flex-wrap items-start justify-between gap-4">
                           <div>
-                            <p className="text-[var(--color-text-muted)] text-sm">Order {order.id}</p>
-                            <p className="text-lg font-semibold text-[var(--color-text)]">{order.date}</p>
+                            <p className="text-[var(--color-text-muted)] text-sm">Order {order.orderNumber}</p>
+                            <p className="text-lg font-semibold text-[var(--color-text)]">{formatDate(order.createdAt)}</p>
                           </div>
                           <div className="text-right">
-                            <p className="text-[var(--color-text-muted)] text-sm">{order.items} items</p>
-                            <p className="text-lg font-semibold text-[var(--color-yellow)]">£{order.total.toFixed(2)}</p>
+                            <p className="text-[var(--color-text-muted)] text-sm">{order.items.length} items</p>
+                            <p className="text-lg font-semibold text-[var(--color-yellow)]">£{formatPrice(order.total)}</p>
                           </div>
                         </div>
                         <div className="mt-4 pt-4 border-t border-[var(--color-border)] flex items-center justify-between">
-                          <span className={`inline-flex items-center px-3 py-1 rounded-[var(--radius-pill)] text-xs font-medium ${
-                            order.status === 'Ready for Collection' 
-                              ? 'bg-[var(--color-turquoise)]/20 text-[var(--color-turquoise)]'
-                              : 'bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)]'
-                          }`}>
-                            {order.status}
+                          <span 
+                            className="inline-flex items-center px-3 py-1 rounded-[var(--radius-pill)] text-xs font-medium bg-[var(--color-turquoise)]/20 text-[var(--color-turquoise)]"
+                          >
+                            {order.status.name}
                           </span>
                           <Button variant="ghost" size="sm" rightIcon={<ChevronRight className="h-4 w-4" />}>
                             View Details
@@ -124,7 +209,7 @@ export default function AccountPage() {
                 </div>
               ) : (
                 <Card className="p-12 text-center">
-                  <Package className="h-12 w-12 mx-auto mb-4 text-[var(--color-text-muted)]" />
+                  <ShoppingBag className="h-12 w-12 mx-auto mb-4 text-[var(--color-text-muted)]" />
                   <h3 className="text-lg font-semibold text-[var(--color-text)] mb-2">No Orders Yet</h3>
                   <p className="text-[var(--color-text-muted)] mb-6">When you place an order, it will appear here.</p>
                   <Link href="/products">

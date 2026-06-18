@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -23,10 +24,25 @@ export default function LoginPage() {
     setIsLoading(true);
     setError('');
 
-    // Demo - just redirect for now
-    setTimeout(() => {
+    try {
+      const result = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError('Invalid email or password');
+        setIsLoading(false);
+        return;
+      }
+
       router.push('/account');
-    }, 1000);
+      router.refresh();
+    } catch {
+      setError('Something went wrong. Please try again.');
+      setIsLoading(false);
+    }
   };
 
   return (
