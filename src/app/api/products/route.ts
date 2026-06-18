@@ -4,35 +4,42 @@ import prisma from '@/lib/prisma';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get('category');
-    const featured = searchParams.get('featured');
+    const categoryId = searchParams.get('categoryId');
+    const status = searchParams.get('status') || 'ACTIVE';
 
-    const where: any = {
-      available: true,
-    };
+    const where: Record<string, unknown> = {};
 
-    if (category) {
-      where.category = { slug: category };
+    if (categoryId) {
+      where.categoryId = categoryId;
     }
 
-    if (featured === 'true') {
-      where.featured = true;
+    // Only show active/available products to customers
+    if (status) {
+      where.status = status;
     }
 
     const products = await prisma.product.findMany({
       where,
-      include: {
-        category: true,
-      },
       orderBy: [
         { featured: 'desc' },
         { name: 'asc' },
       ],
+      include: {
+        category: true,
+        allergens: {
+          include: {
+            allergen: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json({ products });
+    return NextResponse.json(products);
   } catch (error) {
-    console.error('Products fetch error:', error);
-    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+    console.error('Error fetching products:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch products' },
+      { status: 500 }
+    );
   }
 }
