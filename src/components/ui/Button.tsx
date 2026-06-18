@@ -35,14 +35,6 @@ const sizeStyles: Record<string, string> = {
   icon: 'h-10 w-10',
 };
 
-// Icon sizes per button size
-const iconSizes: Record<string, string> = {
-  sm: 'h-4 w-4',
-  md: 'h-5 w-5',
-  lg: 'h-5 w-5',
-  icon: 'h-5 w-5',
-};
-
 const buttonBaseStyles =
   'inline-flex items-center justify-center gap-2 rounded-[var(--radius-pill)] font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:pointer-events-none disabled:opacity-50';
 
@@ -95,18 +87,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     const buttonStyles = cn(buttonBaseStyles, variantStyles, sizeStyles[size], className);
-    const iconClassName = iconSizes[size];
-
-    // Helper to apply icon className to a React element
-    const applyIconClassName = (icon: ReactNode) => {
-      if (isValidElement(icon)) {
-        const element = icon as ReactElement<{ className?: string }>;
-        return cloneElement(element, {
-          className: cn(element.props.className, iconClassName),
-        });
-      }
-      return icon;
-    };
 
     if (asChild && isValidElement(children)) {
       const child = children as ReactElement<{ className?: string; [key: string]: unknown }>;
@@ -122,15 +102,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <button ref={ref} className={buttonStyles} disabled={disabled || isLoading} {...props}>
-        {isLoading ? (
-          <Loader2 className={cn(iconClassName, 'animate-spin')} />
-        ) : (
-          <>
-            {leftIcon && applyIconClassName(leftIcon)}
-            {children}
-            {rightIcon && applyIconClassName(rightIcon)}
-          </>
-        )}
+        {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : leftIcon}
+        {children}
+        {!isLoading && rightIcon}
       </button>
     );
   }
