@@ -140,6 +140,18 @@ body {
   --color-text: #1A1A1A;
   --color-text-muted: #666666;
   --color-border: #E5DDD0;
+  
+  /* Display/script text should be readable on light backgrounds */
+  --color-cream: #8B4513; /* Saddle brown - readable on cream */
+  --color-pink: #E91E63; /* Material pink - vivid on light */
+  --color-pink-hover: #C2185B;
+  --color-pink-light: rgba(233, 30, 99, 0.15);
+  --color-yellow: #E65100; /* Dark orange - more visible on cream */
+  --color-yellow-hover: #BF360C;
+  --color-yellow-light: rgba(230, 81, 0, 0.15);
+  --color-turquoise: #00796B; /* Teal - readable on light */
+  --color-turquoise-hover: #004D40;
+  --color-turquoise-light: rgba(0, 121, 107, 0.15);
 }
 
 /* ------------------------------------------
@@ -154,6 +166,18 @@ body {
   --color-text: #FFFFFF;
   --color-text-muted: #D0D0D0;
   --color-border: #333333;
+  
+  /* Restore original brand colors for dark mode */
+  --color-cream: #FFEFD5;
+  --color-pink: #FF5C8A;
+  --color-pink-hover: #E64F7A;
+  --color-pink-light: rgba(255, 92, 138, 0.15);
+  --color-yellow: #FFD45A;
+  --color-yellow-hover: #E5BF52;
+  --color-yellow-light: rgba(255, 212, 90, 0.15);
+  --color-turquoise: #3ED6C4;
+  --color-turquoise-hover: #35C2B3;
+  --color-turquoise-light: rgba(62, 214, 196, 0.15);
 }
 
 /* ------------------------------------------
