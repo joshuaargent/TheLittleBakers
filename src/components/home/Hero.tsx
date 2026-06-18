@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { ArrowRight, Mail, Play } from 'lucide-react';
+import { ArrowRight, Mail } from 'lucide-react';
 import { Avatar } from '@/components/ui/Avatar';
+import { Button } from '@/components/ui/Button';
 import { siteConfig } from '@/lib/constants';
 
 // ============================================
@@ -14,41 +15,32 @@ export function Hero() {
         <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
           {/* Text Content */}
           <div className="flex-1 text-center lg:text-left">
-            <h1 className="text-text-primary text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-              Hi, I&apos;m <span className="text-accent">{siteConfig.author.name}</span>
+            <h1 className="font-[family-name:var(--font-display)] text-[var(--color-cream)] text-4xl font-normal tracking-tight md:text-5xl lg:text-6xl">
+              Welcome to <span className="text-[var(--color-pink)]">{siteConfig.name}</span>
             </h1>
-            <p className="text-text-secondary mx-auto mt-6 max-w-xl text-lg md:text-xl lg:mx-0">
-              {siteConfig.author.bio}
+            <p className="text-[var(--color-text-muted)] mx-auto mt-6 max-w-xl text-lg md:text-xl lg:mx-0">
+              {siteConfig.description}
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
-              <Link
-                href="/about"
-                style={{ backgroundColor: '#0D9488', color: '#ffffff' }}
-                className="focus-visible:ring-accent inline-flex h-14 items-center justify-center gap-2 rounded-lg px-7 text-lg font-medium shadow-sm transition-all duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                Read my story
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-              <Link
-                href="/contact"
-                className="focus-visible:ring-accent border-border text-text-primary hover:bg-bg-secondary inline-flex h-14 items-center justify-center gap-2 rounded-lg border bg-transparent px-7 text-lg font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                <Mail className="mr-2 h-4 w-4" />
-                Get in touch
-              </Link>
+              <Button variant="primary" size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                Order Now
+              </Button>
+              <Button variant="outline" size="lg" leftIcon={<Mail className="h-4 w-4" />}>
+                Contact Us
+              </Button>
             </div>
           </div>
 
           {/* Avatar */}
           <div className="flex-shrink-0">
             <div className="relative">
-              <div className="bg-accent/20 absolute inset-0 rounded-full blur-3xl" />
+              <div className="bg-[var(--color-pink)]/20 absolute inset-0 rounded-full blur-3xl" />
               <Avatar
-                alt={siteConfig.author.name}
+                alt={siteConfig.name}
                 size="xl"
-                className="border-bg-card relative border-4 shadow-xl"
+                className="relative border-4 border-[var(--color-cream)] shadow-xl"
               >
-                <span className="text-2xl">{siteConfig.author.name.charAt(0)}</span>
+                <span className="text-4xl">🍞</span>
               </Avatar>
             </div>
           </div>

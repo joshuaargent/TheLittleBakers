@@ -7,9 +7,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { mainNav } from '@/lib/constants';
 import { siteConfig } from '@/lib/constants';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { useTheme } from '@/components/providers/ThemeProvider';
 
 // ============================================
 // Navbar Component
@@ -19,7 +18,6 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { theme, toggleTheme } = useTheme();
 
   // Handle scroll effect
   useEffect(() => {
@@ -53,7 +51,9 @@ export function Navbar() {
       <header
         className={cn(
           'fixed top-0 right-0 left-0 z-[50] transition-all duration-200',
-          isScrolled ? 'bg-bg-primary/95 border-border border-b backdrop-blur-md' : 'bg-transparent'
+          isScrolled 
+            ? 'bg-[var(--color-bg)]/95 border-[var(--color-border)] border-b backdrop-blur-md' 
+            : 'bg-transparent'
         )}
         style={{ transform: 'translateZ(0)' }}
       >
@@ -62,7 +62,7 @@ export function Navbar() {
             {/* Logo */}
             <Link
               href="/"
-              className="text-text-primary hover:text-accent text-xl font-semibold transition-colors"
+              className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-cream)] hover:text-[var(--color-pink)] transition-colors"
             >
               {siteConfig.name}
             </Link>
@@ -74,37 +74,22 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                    'rounded-[var(--radius-pill)] px-4 py-2 text-sm font-medium transition-colors',
                     pathname === item.href
-                      ? 'text-accent bg-accent-light'
-                      : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
+                      ? 'text-[var(--color-pink)] bg-[var(--color-pink-light)]'
+                      : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]'
                   )}
                 >
                   {item.label}
                 </Link>
               ))}
-              
-              {/* Theme Toggle */}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-                className="ml-1"
-              >
-                {theme === 'dark' ? (
-                  <Sun className="h-5 w-5 text-text-primary" />
-                ) : (
-                  <Moon className="h-5 w-5 text-text-primary" />
-                )}
-              </Button>
             </div>
 
             {/* Mobile Menu Button */}
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden text-text-primary"
+              className="md:hidden text-[var(--color-cream)]"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
@@ -122,11 +107,11 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="bg-bg-primary fixed inset-0 z-[45] pt-16 md:hidden"
+            className="fixed inset-0 z-[45] bg-[var(--color-bg)] pt-16 md:hidden"
             style={{ transform: 'translateZ(0)' }}
           >
             <nav className="container py-6">
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-2">
                 {mainNav.map((item, index) => (
                   <motion.div
                     key={item.href}
@@ -137,10 +122,10 @@ export function Navbar() {
                     <Link
                       href={item.href}
                       className={cn(
-                        'flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors',
+                        'flex items-center rounded-[var(--radius-md)] px-4 py-3 text-base font-medium transition-colors',
                         pathname === item.href
-                          ? 'text-accent bg-accent-light'
-                          : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
+                          ? 'text-[var(--color-pink)] bg-[var(--color-pink-light)]'
+                          : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]'
                       )}
                     >
                       {item.label}
@@ -150,36 +135,13 @@ export function Navbar() {
               </div>
 
               {/* Mobile Menu Footer */}
-              <div className="border-border mt-8 border-t pt-8">
-                {/* Theme Toggle for Mobile */}
-                <div className="mb-6 flex justify-center">
-                  <button
-                    onClick={() => {
-                      toggleTheme();
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 px-4 py-2 border border-border bg-bg-card text-text-primary hover:bg-bg-secondary"
-                  >
-                    {theme === 'dark' ? (
-                      <>
-                        <Sun className="h-4 w-4" />
-                        <span>Light Mode</span>
-                      </>
-                    ) : (
-                      <>
-                        <Moon className="h-4 w-4" />
-                        <span>Dark Mode</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-                
+              <div className="mt-8 border-t border-[var(--color-border)] pt-8">
                 <div className="flex items-center justify-center gap-4">
                   <a
                     href={siteConfig.links.youtube}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-text-secondary hover:text-text-primary p-2 transition-colors"
+                    className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] p-2 transition-colors"
                     aria-label="YouTube"
                   >
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -187,21 +149,10 @@ export function Navbar() {
                     </svg>
                   </a>
                   <a
-                    href={siteConfig.links.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-text-secondary hover:text-text-primary p-2 transition-colors"
-                    aria-label="GitHub"
-                  >
-                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                    </svg>
-                  </a>
-                  <a
                     href={siteConfig.links.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-text-secondary hover:text-text-primary p-2 transition-colors"
+                    className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] p-2 transition-colors"
                     aria-label="Instagram"
                   >
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -212,22 +163,11 @@ export function Navbar() {
                     href={siteConfig.links.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-text-secondary hover:text-text-primary p-2 transition-colors"
+                    className="text-[var(--color-text-muted)] hover:text-[var(--color-pink)] p-2 transition-colors"
                     aria-label="Facebook"
                   >
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.413c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.571.238 2.571.238v2.941h-1.455c-1.434 0-1.881.897-1.881 1.818v2.187h3.219l-.484 3.469h-2.735v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                    </svg>
-                  </a>
-                  <a
-                    href={siteConfig.links.strava}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-text-secondary hover:text-text-primary p-2 transition-colors"
-                    aria-label="Strava"
-                  >
-                    <svg className="h-5 w-5" viewBox="0 0 16 16">
-                      <path fill="currentColor" d="M6.731 0 2 9.125h2.788L6.73 5.497l1.93 3.628h2.766zm4.694 9.125-1.372 2.756L8.66 9.125H6.547L10.053 16l3.484-6.875z"/>
                     </svg>
                   </a>
                 </div>

@@ -1,30 +1,29 @@
-import { Inter, Lora, JetBrains_Mono } from "next/font/google";
+import { Poppins, Pacifico, JetBrains_Mono } from "next/font/google";
 
 // ============================================
 // Font Configuration
 // ============================================
 
 /**
- * Inter - Primary sans-serif font for UI and body text
- * Supports: Latin, Latin Extended, Cyrillic, Greek, Vietnamese
+ * Poppins - Primary sans-serif font for UI and body text
+ * Clean, modern, friendly - perfect for a bakery brand
  */
-export const inter = Inter({
+export const poppins = Poppins({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-body",
   weight: ["400", "500", "600", "700"],
 });
 
 /**
- * Lora - Serif font for long-form reading content
- * Supports: Latin, Latin Extended, Cyrillic, Vietnamese
+ * Pacifico - Script font for display/headings
+ * Playful, friendly script for logo-like elements
  */
-export const lora = Lora({
+export const pacifico = Pacifico({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-lora",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  variable: "--font-display",
+  weight: ["400"],
 });
 
 /**

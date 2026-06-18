@@ -6,12 +6,16 @@ import { cn } from "@/lib/utils";
 // ============================================
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  /** Enable hover lift effect */
   hover?: boolean;
+  /** Card padding size */
   padding?: "none" | "sm" | "md" | "lg";
+  /** Card background variant */
+  variant?: "dark" | "cream" | "elevated";
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ className, hover = false, padding = "md", children, ...props }, ref) => {
+  ({ className, hover = false, padding = "md", variant = "dark", children, ...props }, ref) => {
     const paddingClasses = {
       none: "",
       sm: "p-4",
@@ -19,14 +23,20 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       lg: "p-8",
     };
 
+    const variantClasses = {
+      dark: "bg-[var(--color-bg-card)] border-[var(--color-border)]",
+      cream: "bg-[var(--color-cream)] border-[var(--color-cream-dark)]",
+      elevated: "bg-[var(--color-bg-elevated)] border-[var(--color-border)]",
+    };
+
     return (
       <div
         ref={ref}
         className={cn(
-          "bg-bg-card rounded-xl border border-border",
+          "rounded-[var(--radius-card)] border",
           paddingClasses[padding],
-          hover &&
-            "transition-all duration-200 hover:shadow-md hover:border-border/80",
+          variantClasses[variant],
+          hover && "transition-all duration-200 hover:shadow-[var(--shadow-card)] hover:-translate-y-1",
           className,
         )}
         {...props}
@@ -49,7 +59,7 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("flex flex-col space-y-1.5", className)}
+      className={cn("flex flex-col space-y-1.5 pb-4", className)}
       {...props}
     />
   ),
@@ -68,7 +78,7 @@ export const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
     <h3
       ref={ref}
       className={cn(
-        "text-xl font-semibold leading-none tracking-tight",
+        "text-xl font-semibold leading-none tracking-tight text-[var(--color-text)]",
         className,
       )}
       {...props}
@@ -90,7 +100,7 @@ export const CardDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-text-secondary", className)}
+    className={cn("text-sm text-[var(--color-text-muted)]", className)}
     {...props}
   />
 ));
@@ -121,7 +131,7 @@ export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("flex items-center pt-0", className)}
+      className={cn("flex items-center pt-4 mt-4 border-t border-[var(--color-border)]", className)}
       {...props}
     />
   ),

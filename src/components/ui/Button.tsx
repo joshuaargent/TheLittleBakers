@@ -29,14 +29,14 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 // ============================================
 
 const sizeStyles: Record<string, string> = {
-  sm: 'h-9 px-3 text-sm',
-  md: 'h-11 px-5 text-base',
-  lg: 'h-14 px-7 text-lg',
+  sm: 'h-9 px-4 text-sm',
+  md: 'h-11 px-6 text-base',
+  lg: 'h-14 px-8 text-lg',
   icon: 'h-10 w-10',
 };
 
 const buttonBaseStyles =
-  'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
+  'inline-flex items-center justify-center gap-2 rounded-[var(--radius-pill)] font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:pointer-events-none disabled:opacity-50';
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -54,30 +54,36 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // Build variant styles with explicit text colors
+    // Build variant styles with brand colors
     let variantStyles = '';
 
     switch (variant) {
       case 'primary':
-        variantStyles = 'bg-accent text-white hover:bg-accent-hover shadow-sm';
+        // Brand CTA - Pink pill button
+        variantStyles = 'bg-[var(--color-pink)] text-black hover:bg-[var(--color-pink-hover)] shadow-md hover:shadow-lg hover:-translate-y-0.5 focus-visible:ring-[var(--color-pink)]';
         break;
       case 'secondary':
-        variantStyles = 'bg-bg-secondary text-text-primary hover:bg-border border border-border';
+        // Yellow accent button
+        variantStyles = 'bg-[var(--color-yellow)] text-black hover:bg-[var(--color-yellow-hover)] shadow-md hover:shadow-lg hover:-translate-y-0.5 focus-visible:ring-[var(--color-yellow)]';
         break;
       case 'outline':
-        variantStyles = 'border border-border bg-transparent text-text-primary hover:bg-bg-secondary';
+        // Cream outline pill
+        variantStyles = 'border-2 border-[var(--color-cream)] bg-transparent text-[var(--color-cream)] hover:bg-[var(--color-cream)] hover:text-black focus-visible:ring-[var(--color-cream)]';
         break;
       case 'ghost':
-        variantStyles = 'text-text-primary hover:bg-bg-secondary';
+        // Ghost with cream text
+        variantStyles = 'text-[var(--color-cream)] hover:bg-[var(--color-bg-secondary)]';
         break;
       case 'link':
-        variantStyles = 'text-accent hover:text-accent-hover underline-offset-4 hover:underline';
+        // Turquoise link
+        variantStyles = 'text-[var(--color-turquoise)] hover:text-[var(--color-turquoise-hover)] underline-offset-4 hover:underline';
         break;
       case 'danger':
-        variantStyles = 'bg-red-600 text-white hover:bg-red-700';
+        // Danger button
+        variantStyles = 'bg-[var(--color-danger)] text-white hover:opacity-90 focus-visible:ring-[var(--color-danger)]';
         break;
       default:
-        variantStyles = 'bg-accent text-white hover:bg-accent-hover';
+        variantStyles = 'bg-[var(--color-pink)] text-black hover:bg-[var(--color-pink-hover)]';
     }
 
     const buttonStyles = cn(buttonBaseStyles, variantStyles, sizeStyles[size], className);
